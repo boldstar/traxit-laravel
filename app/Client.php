@@ -9,31 +9,29 @@ class Client extends Model
     protected $fillable = 
     [
         'category',
+        'referral_type', 
         'first_name', 
         'middle_initial', 
         'last_name', 
         'occupation', 
-        'email',
-        'cell_phone',
+        'dob', 
+        'email', 
+        'cell_phone', 
         'work_phone',
-        'spouse_first_name',
-        'spouse_middle_initial',
-        'spouse_last_name',
-        'spouse_occupation',
-        'spouse_dob',
-        'spouse_email',
-        'spouse_cell_phone',
-        'spouse_work_phone',
+        'spouse_first_name', 
+        'spouse_middle_initial', 
+        'spouse_last_name', 
+        'spouse_occupation', 
+        'spouse_dob', 
+        'spouse_email', 
+        'spouse_cell_phone', 
+        'spouse_work_phone', 
         'street_address',
         'city',
         'state',
-        'postal_code',
-        'created_at',
-        'updated_at',
+        'postal_code', 
     ];
 
-    public function account() 
-    {
-        return $this->hasOne('App\Account')
-    }
+    protected $hidden = ['created_at', 'updated_at'];
+
 }

@@ -37,6 +37,7 @@ class ClientsController extends Controller
     {
         $data = $request->validate([
             'category' => 'required|string',
+            'referral_type' => 'required|string',
             'first_name' => 'required|string',
             'middle_initial' => 'required|string',
             'last_name' => 'required|string',
@@ -48,6 +49,7 @@ class ClientsController extends Controller
             'spouse_first_name' => 'required|string',
             'spouse_middle_initial' => 'required|string',
             'spouse_last_name' => 'required|string',
+            'spouse_occupation' => 'required|string',
             'spouse_dob' => 'required|string',
             'spouse_email' => 'required|string',
             'spouse_cell_phone' => 'required|string',
@@ -55,10 +57,7 @@ class ClientsController extends Controller
             'street_address' => 'required|string',
             'city' => 'required|string',
             'state' => 'required|string',
-            'state' => 'required|string',
             'postal_code' => 'required|string',
-            'created_at' => 'required|string',
-            'updated_at' => 'required|string',
         ]);
 
         $client = Client::create($data);
@@ -100,6 +99,7 @@ class ClientsController extends Controller
     {
         $data = $request->validate([
             'category' => 'required|string',
+            'referral_type' => 'required|string',
             'first_name' => 'required|string',
             'middle_initial' => 'required|string',
             'last_name' => 'required|string',
@@ -111,6 +111,7 @@ class ClientsController extends Controller
             'spouse_first_name' => 'required|string',
             'spouse_middle_initial' => 'required|string',
             'spouse_last_name' => 'required|string',
+            'spouse_occupation' => 'required|string',
             'spouse_dob' => 'required|string',
             'spouse_email' => 'required|string',
             'spouse_cell_phone' => 'required|string',
@@ -118,10 +119,7 @@ class ClientsController extends Controller
             'street_address' => 'required|string',
             'city' => 'required|string',
             'state' => 'required|string',
-            'state' => 'required|string',
             'postal_code' => 'required|string',
-            'created_at' => 'required|string',
-            'updated_at' => 'required|string',
         ]);
 
         $client->update($data);
