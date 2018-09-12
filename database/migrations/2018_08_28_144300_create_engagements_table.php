@@ -17,7 +17,12 @@ class CreateEngagementsTable extends Migration
             $table->increments('id');
             $table->integer('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients');
-            $table->string('name', 8)->unique();
+            $table->integer('task_id');
+            $table->string('return_type');
+            $table->string('assigned_to');
+            $table->string('status');
+            $table->boolean('done')->default(false);
+            $table->timestamps();
         });
     }
 

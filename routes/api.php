@@ -26,3 +26,5 @@ Route::get('/clients/{id}', 'ClientsController@show');
 Route::post('/clients', 'ClientsController@store');
 Route::patch('/clients/{client}', 'ClientsController@update');
 Route::delete('/clients/{client}', 'ClientsController@destroy');
+
+Route::get('/engagements', 'EngagementsController@index');

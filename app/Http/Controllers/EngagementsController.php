@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Engagement;
 use Illuminate\Http\Request;
 
 class EngagementsController extends Controller
@@ -13,7 +14,7 @@ class EngagementsController extends Controller
      */
     public function index()
     {
-        //
+        return Engagement::all();
     }
 
     /**

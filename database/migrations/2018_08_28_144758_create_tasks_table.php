@@ -16,8 +16,7 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('individual_id')->unsigned();
-            $table->integer('business_id')->unsigned();
+            $table->integer('engagement_id');
             $table->boolean('is_complete')->default(false);
             $table->nullableTimestamps();
         });
@@ -25,8 +24,6 @@ class CreateTasksTable extends Migration
         Schema::table('tasks', function(Blueprint $table)
         {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            // $table->foreign('individual_id')->references('id')->on('individuals')->onDelete('cascade');
-            // $table->foreign('business_id')->references('id')->on('businesses')->onDelete('cascade');
         });
     }
 
