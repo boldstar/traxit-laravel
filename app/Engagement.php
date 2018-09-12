@@ -4,15 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Account extends Model
+class Engagement extends Model
 {
     
-    public function client() {
-        return $this->belongsTo('App\Client')
-    }
-
     public function individual() {
-        return $this->hasOne('App\Individual')
+        return $this->hasMany('App\Individual')
     }
 
     public function business() {

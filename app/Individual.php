@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Individual extends Model
 {
-    public function account() {
-        return $this->belongsTo('App\Account')
+    public function engagement() {
+        return $this->belongsTo('App\Engagement')
     }
 }
