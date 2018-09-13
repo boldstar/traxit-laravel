@@ -14,7 +14,14 @@ class EngagementsController extends Controller
      */
     public function index()
     {
-        return Engagement::all();
+        $engagements = Engagement::with('client')->get();
+
+        foreach ($engagements as $engagement) {
+            json_decode($engagement);
+        }
+
+        return response($engagements);
+
     }
 
     /**
