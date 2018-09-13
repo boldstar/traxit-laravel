@@ -18,6 +18,16 @@ class EngagementsController extends Controller
     }
 
     /**
+     * Display a listing of the resource belonging to client.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function clientindex($client_id)
+    {
+        return Engagement::where('client_id', $client_id)->get();
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

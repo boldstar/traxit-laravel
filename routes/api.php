@@ -28,3 +28,4 @@ Route::patch('/clients/{client}', 'ClientsController@update');
 Route::delete('/clients/{client}', 'ClientsController@destroy');
 
 Route::get('/engagements', 'EngagementsController@index');
+Route::get('/client-engagements/{id}', 'EngagementsController@clientindex');
