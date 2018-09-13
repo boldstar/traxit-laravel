@@ -34,4 +34,9 @@ class Client extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    public function engagements()
+    {
+        return $this->hasMany('App\Engagement');
+    }
+
 }
