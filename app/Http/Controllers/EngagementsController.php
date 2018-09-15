@@ -52,7 +52,25 @@ class EngagementsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'client_id' => 'required|integer',
+            'return_type' => 'required|string',
+            'year' => 'required|string',
+            'status' => 'required|string',
+            'assigned_to' => 'required|string',
+            'done' => 'required|boolean'
+        ]);
+
+        $engagement = Engagement::create([
+            'client_id' => $request->client_id,
+            'return_type' => $request->return_type,
+            'year' => $request->year,
+            'assigned_to' => $request->assigned_to,
+            'status' => $request->status,
+            'done' => $request->done,
+        ]);
+
+        return response($engagement, 201);
     }
 
     /**

@@ -17,6 +17,7 @@ class CreateEngagementsTable extends Migration
             $table->increments('id');
             $table->integer('client_id')->unsigned();
             $table->string('return_type');
+            $table->string('year');
             $table->string('assigned_to');
             $table->string('status');
             $table->boolean('done')->default(false);
