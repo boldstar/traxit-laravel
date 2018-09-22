@@ -81,7 +81,8 @@ class EngagementsController extends Controller
      */
     public function show($id)
     {
-        //
+        $engagement = Engagement::find($id);
+        return response($engagement);
     }
 
     /**
@@ -113,8 +114,10 @@ class EngagementsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Engagement $engagement)
     {
-        //
+        $engagement->delete();
+
+        return response('Engagement Is Deleted', 200);
     }
 }
