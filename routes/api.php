@@ -31,4 +31,5 @@ Route::get('/engagements', 'EngagementsController@index');
 Route::get('/engagements/{id}', 'EngagementsController@clientindex');
 Route::get('/clientengagement/{id}', 'EngagementsController@show');
 Route::post('/engagements', 'EngagementsController@store');
+Route::patch('/engagements/{engagement}', 'EngagementsController@update');
 Route::delete('/engagements/{engagement}', 'EngagementsController@destroy');

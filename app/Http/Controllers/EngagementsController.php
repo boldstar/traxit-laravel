@@ -103,9 +103,20 @@ class EngagementsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Engagement $engagement)
     {
-        //
+        $data = $request->validate([
+            'client_id' => 'required|integer',
+            'return_type' => 'required|string',
+            'year' => 'required|string',
+            'status' => 'required|string',
+            'assigned_to' => 'required|string',
+            'done' => 'required|boolean'
+        ]);
+
+        $engagement->update($data);
+
+        return response($engagement, 200);
     }
 
     /**
