@@ -39,4 +39,9 @@ class Client extends Model
         return $this->hasMany('App\Engagement');
     }
 
+    public function dependents()
+    {
+        return $this->hasMany('App\Dependent');
+    }
+
 }
