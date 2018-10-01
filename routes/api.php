@@ -33,3 +33,11 @@ Route::get('/clientengagement/{id}', 'EngagementsController@show');
 Route::post('/engagements', 'EngagementsController@store');
 Route::patch('/engagements/{engagement}', 'EngagementsController@update');
 Route::delete('/engagements/{engagement}', 'EngagementsController@destroy');
+
+Route::post('/questions', 'QuestionsController@store');
+Route::patch('/questions/{question}', 'QuestionsController@update');
+Route::delete('/questions/{question}', 'QuestionsController@destroy');
+
+Route::post('/dependents', 'DependentsController@store');
+Route::patch('/dependents/{dependent}', 'DependentsController@update');
+Route::delete('/dependents/{dependent}', 'DependentsController@destroy');

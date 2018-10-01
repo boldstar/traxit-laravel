@@ -81,7 +81,8 @@ class EngagementsController extends Controller
      */
     public function show($id)
     {
-        $engagement = Engagement::with('client')->find($id);
+        $engagement = Engagement::with(['client', 'questions'])->find($id);
+
         return response($engagement);
     }
 

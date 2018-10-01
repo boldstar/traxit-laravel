@@ -73,7 +73,8 @@ class ClientsController extends Controller
      */
     public function show($id)
     {
-        $client = Client::find($id);
+        $client = Client::with('dependents')->find($id);
+
         return response($client);
     }
 
