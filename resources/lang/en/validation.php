@@ -108,6 +108,7 @@ return [
         'array'   => 'The :attribute must contain :size items.',
     ],
     'string'               => 'The :attribute must be a string.',
+    'text'                 => 'The :attribute must be text.',
     'timezone'             => 'The :attribute must be a valid zone.',
     'unique'               => 'The :attribute has already been taken.',
     'uploaded'             => 'The :attribute failed to upload.',

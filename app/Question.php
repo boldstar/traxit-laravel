@@ -8,6 +8,7 @@ class Question extends Model
 {
     protected $fillable = 
     [
+        'engagement_id',
         'question',
         'answered'
     ];

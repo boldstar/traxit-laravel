@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Question;
 use Illuminate\Http\Request;
 
 class QuestionsController extends Controller
@@ -18,7 +19,7 @@ class QuestionsController extends Controller
     {
         $data = $request->validate([
             'engagement_id' => 'required|integer',
-            'question' => 'required|text',
+            'question' => 'required|string',
             'answered' => 'required|boolean',
         ]);
 
