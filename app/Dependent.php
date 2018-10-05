@@ -8,8 +8,9 @@ class Dependent extends Model
 {
     protected $fillable = 
     [
+        'client_id',
         'first_name', 
-        'middle_initial', 
+        'middle_name', 
         'last_name',  
         'dob',
     ];

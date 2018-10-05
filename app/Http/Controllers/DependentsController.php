@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dependent;
 use Illuminate\Http\Request;
 
 class DependentsController extends Controller
@@ -17,13 +18,14 @@ class DependentsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'client_id' => 'required|integer',
             'first_name' => 'required|string',
-            'middle_initial' => 'required|string',
+            'middle_name' => 'required|string',
             'last_name' => 'required|string',
             'dob' => 'required|string',
         ]);
 
-        $dependent = Client::create($data);
+        $dependent = Dependent::create($data);
 
         return response($dependent, 201);
     }
@@ -36,7 +38,9 @@ class DependentsController extends Controller
      */
     public function show($id)
     {
-        //
+        $dependent = Dependent::find($id);
+
+        return response($dependent);
     }
 
     /**
@@ -46,16 +50,17 @@ class DependentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Dependent $dependent)
     {
         $data = $request->validate([
+            'client_id' => 'required|integer',
             'first_name' => 'required|string',
-            'middle_initial' => 'required|string',
+            'middle_name' => 'required|string',
             'last_name' => 'required|string',
             'dob' => 'required|string',
         ]);
 
-        $dependent = Client::create($data);
+        $dependent = Dependent::create($data);
 
         return response($dependent, 201);
     }
@@ -66,7 +71,7 @@ class DependentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Dependent $dependent)
     {
         $dependent->delete();
 

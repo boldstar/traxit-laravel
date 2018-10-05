@@ -34,10 +34,12 @@ Route::post('/engagements', 'EngagementsController@store');
 Route::patch('/engagements/{engagement}', 'EngagementsController@update');
 Route::delete('/engagements/{engagement}', 'EngagementsController@destroy');
 
+Route::get('/questions/{id}', 'QuestionsController@show');
 Route::post('/questions', 'QuestionsController@store');
 Route::patch('/questions/{question}', 'QuestionsController@update');
 Route::delete('/questions/{question}', 'QuestionsController@destroy');
 
+Route::get('/dependents/{id}', 'DependentsController@show');
 Route::post('/dependents', 'DependentsController@store');
 Route::patch('/dependents/{dependent}', 'DependentsController@update');
 Route::delete('/dependents/{dependent}', 'DependentsController@destroy');

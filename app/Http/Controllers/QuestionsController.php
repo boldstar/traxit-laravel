@@ -36,7 +36,9 @@ class QuestionsController extends Controller
      */
     public function show($id)
     {
-        //
+        $question = Question::find($id);
+
+        return response($question);
     }
 
 
@@ -47,11 +49,11 @@ class QuestionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Question $question)
     {
         $data = $request->validate([
             'engagement_id' => 'required|integer',
-            'question' => 'required|text',
+            'question' => 'required|string',
             'answered' => 'required|boolean',
         ]);
 
@@ -66,7 +68,7 @@ class QuestionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Question $question)
     {
         $question->delete();
 
