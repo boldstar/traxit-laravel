@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 class QuestionsController extends Controller
 {
 
-
     /**
      * Store a newly created resource in storage.
      *

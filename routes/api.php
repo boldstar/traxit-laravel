@@ -29,6 +29,7 @@ Route::delete('/clients/{client}', 'ClientsController@destroy');
 
 Route::get('/engagements', 'EngagementsController@index');
 Route::get('/engagements/{id}', 'EngagementsController@clientindex');
+Route::get('/engagementquestions/{id}', 'EngagementsController@questionindex');
 Route::get('/clientengagement/{id}', 'EngagementsController@show');
 Route::post('/engagements', 'EngagementsController@store');
 Route::patch('/engagements/{engagement}', 'EngagementsController@update');
