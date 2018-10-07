@@ -44,3 +44,9 @@ Route::get('/dependents/{id}', 'DependentsController@show');
 Route::post('/dependents', 'DependentsController@store');
 Route::patch('/dependents/{dependent}', 'DependentsController@update');
 Route::delete('/dependents/{dependent}', 'DependentsController@destroy');
+
+Route::get('/clientnotes/{id}', 'NotesController@index');
+Route::get('/notes/{id}', 'NotesController@show');
+Route::post('/notes', 'NotesController@store');
+Route::patch('/notes/{note}', 'NotesController@update');
+Route::delete('/notes/{note}', 'NotesController@destroy');

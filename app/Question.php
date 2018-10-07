@@ -13,7 +13,7 @@ class Question extends Model
         'answered'
     ];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['updated_at'];
 
     public function engagement() {
         return $this->belongsTo('App\Engagement');

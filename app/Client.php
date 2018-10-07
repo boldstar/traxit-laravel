@@ -44,4 +44,9 @@ class Client extends Model
         return $this->hasMany('App\Dependent');
     }
 
+    public function notes()
+    {
+        return $this->hasMany('App\Note');
+    }
+
 }
