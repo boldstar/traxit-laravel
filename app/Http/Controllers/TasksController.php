@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Task;
 use Illuminate\Http\Request;
 
 class TasksController extends Controller
@@ -13,7 +14,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        //
+        return Task::where('user_id', auth()->user()->id)-with('engagements')->get();
     }
 
     /**

@@ -25,6 +25,7 @@ class CreateQuestionsTable extends Migration
         {
             $table->foreign('engagement_id')->references('id')->on('engagements')->onDelete('cascade');
         });
+
     }
 
     /**

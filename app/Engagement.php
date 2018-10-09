@@ -19,7 +19,7 @@ class Engagement extends Model
         return $this->belongsTo('App\Client');
     }
 
-    public function engagement_tasks()
+    public function tasks()
     {
         return $this->belongsToMany('App\Task');
     }
