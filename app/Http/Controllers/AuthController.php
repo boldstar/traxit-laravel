@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return User::all();
+    }
+
     public function login(Request $request)
     {
         $http = new \GuzzleHttp\Client;

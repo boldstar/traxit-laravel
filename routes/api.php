@@ -19,12 +19,15 @@ Route::middleware('auth:api')->group(function() {
     });
 
     Route::get('/tasks', 'TasksController@index');
+    Route::patch('/tasks/{task}', 'TasksController@update');
     Route::post('/logout', 'AuthController@logout');
 });
 
 
 Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AuthController@register');
+
+Route::get('/users', 'AuthController@index');
 
 Route::get('/clients', 'ClientsController@index');
 Route::get('/clients/{id}', 'ClientsController@show');
