@@ -54,7 +54,13 @@ class TasksController extends Controller
             'user_id' => 'required|integer',
         ]);
 
-        Task::where('user_id', auth()->user()->id)->update($data);
+        $task->update($data);
+
+        $status = $request->validate([
+            'status' => 'required|string'
+        ]);
+        
+        $task->engagements()->update($status);
 
         return response($task, 200);
     }
