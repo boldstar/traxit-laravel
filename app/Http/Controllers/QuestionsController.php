@@ -62,6 +62,27 @@ class QuestionsController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateanswer(Request $request, Question $question)
+    {
+
+            $data = $request->validate([
+                'answer' => 'required|string',
+                'answered' => 'required|boolean',
+            ]);
+    
+            $question->update($data);
+            
+            return response($question, 201);
+
+
+    }
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

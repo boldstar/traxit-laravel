@@ -19,4 +19,5 @@ class Task extends Model
     {
         return $this->belongsToMany('App\Engagement', 'engagement_task', 'task_id', 'engagement_id');
     }
+
 }

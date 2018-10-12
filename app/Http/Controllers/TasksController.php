@@ -14,7 +14,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return Task::where('user_id', auth()->user()->id)->with('engagements')->get();
+        return Task::where('user_id', auth()->user()->id)->with(['engagements', 'engagements.client'])->get();
     }
 
 
@@ -49,6 +49,10 @@ class TasksController extends Controller
      */
     public function update(Request $request, Task $task)
     {
+
+        if ($task->user_id !== auth()->user()->id) {
+            return response()->json('Unauthorized', 401);
+        }
 
         $data = $request->validate([
             'user_id' => 'required|integer',

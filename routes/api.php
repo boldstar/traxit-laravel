@@ -46,6 +46,7 @@ Route::delete('/engagements/{engagement}', 'EngagementsController@destroy');
 Route::get('/questions/{id}', 'QuestionsController@show');
 Route::post('/questions', 'QuestionsController@store');
 Route::patch('/questions/{question}', 'QuestionsController@update');
+Route::patch('/questionsanswer/{question}', 'QuestionsController@updateanswer');
 Route::delete('/questions/{question}', 'QuestionsController@destroy');
 
 Route::get('/dependents/{id}', 'DependentsController@show');

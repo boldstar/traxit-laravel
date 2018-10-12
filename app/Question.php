@@ -10,7 +10,9 @@ class Question extends Model
     [
         'engagement_id',
         'question',
-        'answered'
+        'answer',
+        'answered',
+        'created_at',
     ];
 
     protected $hidden = ['updated_at'];
