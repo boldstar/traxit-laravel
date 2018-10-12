@@ -17,6 +17,7 @@ class ClientsController extends Controller
         return Client::all();
     }
 
+
     /**
      * Show the form for creating a new resource.
      *

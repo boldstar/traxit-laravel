@@ -34,14 +34,20 @@ class EngagementsController extends Controller
         return Engagement::where('client_id', $client_id)->get();
     }
 
-    /**
+     /**
      * Display a listing of the resource belonging to client.
      *
      * @return \Illuminate\Http\Response
      */
     public function questionindex($client_id)
     {
-        return Engagement::where('client_id', $client_id)->with('questions')->get();
+        $engagements = Engagement::where('client_id', $client_id)->with('questions')->get();
+
+        $questions = $engagements->pluck('questions');
+
+        $flatten = $questions->flatten(1);
+
+        return response($flatten);
     }
 
     /**
