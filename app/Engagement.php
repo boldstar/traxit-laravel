@@ -21,7 +21,7 @@ class Engagement extends Model
 
     public function tasks()
     {
-        return $this->belongsToMany('App\Task');
+        return $this->belongsToMany('App\Task', 'engagement_task', 'engagement_id', 'task_id');
     }
 
     public function questions()

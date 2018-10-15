@@ -9,6 +9,12 @@ class Task extends Model
     protected $fillable =
     [
         'user_id',
+        'title',
+    ];
+
+    protected $hidden =
+    [
+        'updated_at'
     ];
 
     public function user() {

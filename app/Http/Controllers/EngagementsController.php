@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Engagement;
+use App\Task;
 use Illuminate\Http\Request;
 
 class EngagementsController extends Controller
@@ -41,13 +42,8 @@ class EngagementsController extends Controller
      */
     public function questionindex($client_id)
     {
-        $engagements = Engagement::where('client_id', $client_id)->with('questions')->get();
+        return Engagement::where('client_id', $client_id)->with('questions')->get();
 
-        $questions = $engagements->pluck('questions');
-
-        $flatten = $questions->flatten(1);
-
-        return response($flatten);
     }
 
     /**
@@ -62,8 +58,8 @@ class EngagementsController extends Controller
             'client_id' => 'required|integer',
             'return_type' => 'required|string',
             'year' => 'required|string',
+            'assigned_to' => 'required|integer',
             'status' => 'required|string',
-            'assigned_to' => 'required|string',
             'done' => 'required|boolean'
         ]);
 
@@ -75,6 +71,13 @@ class EngagementsController extends Controller
             'status' => $request->status,
             'done' => $request->done,
         ]);
+
+        $task = Task::create([
+            'user_id' => $request->get('assigned_to'),
+            'title' => $request->get('return_type')
+        ]);
+
+        $engagement->tasks()->attach($task->id);
 
         return response($engagement, 201);
     }
