@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Engagement;
 use App\Task;
+use App\User;
 use Illuminate\Http\Request;
 
 class EngagementsController extends Controller
@@ -62,12 +63,14 @@ class EngagementsController extends Controller
             'status' => 'required|string',
             'done' => 'required|boolean'
         ]);
+        
+        $userName = User::findOrFail($request->assigned_to)->value('name');
 
         $engagement = Engagement::create([
             'client_id' => $request->client_id,
             'return_type' => $request->return_type,
             'year' => $request->year,
-            'assigned_to' => $request->assigned_to,
+            'assigned_to' => $userName,
             'status' => $request->status,
             'done' => $request->done,
         ]);

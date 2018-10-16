@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\User;
 use Illuminate\Http\Request;
 
 class TasksController extends Controller
@@ -59,6 +60,10 @@ class TasksController extends Controller
         ]);
 
         $task->update($data);
+
+        $assigned_to = User::findOrFail($request->user_id)->value('name');
+
+        $task->engagements()->update([ 'assigned_to' => $assigned_to ]);
 
         $status = $request->validate([
             'status' => 'required|string'

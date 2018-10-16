@@ -29,4 +29,9 @@ class Engagement extends Model
         return $this->hasMany('App\Question');
     }
 
+    public function user()
+    {
+        return $this->hasManyThrough('App\User', 'App\Task');
+    }
+
 }
