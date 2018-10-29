@@ -61,7 +61,7 @@ class TasksController extends Controller
 
         $task->update($data);
 
-        $assigned_to = User::findOrFail($request->user_id)->value('name');
+        $assigned_to = User::where('id', $request->user_id)->value('name');
 
         $task->engagements()->update([ 'assigned_to' => $assigned_to ]);
 

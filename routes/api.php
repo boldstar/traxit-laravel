@@ -39,8 +39,10 @@ Route::get('/engagements', 'EngagementsController@index');
 Route::get('/engagements/{id}', 'EngagementsController@clientindex');
 Route::get('/clientengagement/{id}', 'EngagementsController@show');
 Route::get('/engagementquestions/{id}', 'EngagementsController@questionindex');
+Route::get('/engagementsdata', 'EngagementsController@chartdata');
 Route::post('/engagements', 'EngagementsController@store');
 Route::patch('/engagements/{engagement}', 'EngagementsController@update');
+Route::patch('/engagementsarray', 'EngagementsController@updateCheckedEngagements');
 Route::delete('/engagements/{engagement}', 'EngagementsController@destroy');
 
 Route::get('/questions/{id}', 'QuestionsController@show');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Engagement;
 use App\Task;
 use App\User;
+use App\Question;
 use Illuminate\Http\Request;
 
 class EngagementsController extends Controller
@@ -23,6 +24,21 @@ class EngagementsController extends Controller
         }
 
         return response($engagements);
+
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function chartdata()
+    {
+        $engagements = Engagement::all();
+
+        $data = $engagements->groupBy('status');
+
+        return response($data);
 
     }
 
@@ -64,7 +80,7 @@ class EngagementsController extends Controller
             'done' => 'required|boolean'
         ]);
         
-        $userName = User::findOrFail($request->assigned_to)->value('name');
+        $userName = User::where('id', $request->assigned_to)->value('name');
 
         $engagement = Engagement::create([
             'client_id' => $request->client_id,
@@ -119,6 +135,39 @@ class EngagementsController extends Controller
         $engagement->update($data);
 
         return response($engagement, 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCheckedEngagements(Request $request)
+    {
+
+        $engagements = $request->validate([
+            'engagements' => 'required|array',
+            'assigned_to' => 'required|integer',
+            'status' => 'required|string',
+        ]);
+
+        $user = User::where('id', $request->assigned_to)->value('name');
+
+        Engagement::whereIn('id', $request->engagements)->update([ 
+            'assigned_to' => $user,
+            'status' => $request->status 
+        ]);
+
+        $engagements = Engagement::whereIn('id', $request->engagements)->get();
+        foreach ($engagements as $engagement) {
+            $engagement->tasks()->update([ 
+                'user_id' => $request->assigned_to 
+            ]);
+        };
+        
+        return response($engagements, 200);
     }
 
     /**
