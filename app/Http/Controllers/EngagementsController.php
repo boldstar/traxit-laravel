@@ -71,6 +71,7 @@ class EngagementsController extends Controller
      */
     public function store(Request $request)
     {
+        // validate form data
         $data = $request->validate([
             'client_id' => 'required|integer',
             'return_type' => 'required|string',
@@ -80,8 +81,10 @@ class EngagementsController extends Controller
             'done' => 'required|boolean'
         ]);
         
+        // grab name of user by id
         $userName = User::where('id', $request->assigned_to)->value('name');
 
+        // create new engagement
         $engagement = Engagement::create([
             'client_id' => $request->client_id,
             'return_type' => $request->return_type,
@@ -91,11 +94,13 @@ class EngagementsController extends Controller
             'done' => $request->done,
         ]);
 
+        // create task
         $task = Task::create([
             'user_id' => $request->get('assigned_to'),
             'title' => $request->get('return_type')
         ]);
 
+        // create record on pivot table
         $engagement->tasks()->attach($task->id);
 
         return response($engagement, 201);
@@ -146,20 +151,23 @@ class EngagementsController extends Controller
      */
     public function updateCheckedEngagements(Request $request)
     {
-
+        // validate form data
         $engagements = $request->validate([
             'engagements' => 'required|array',
             'assigned_to' => 'required|integer',
             'status' => 'required|string',
         ]);
 
+        // grab name of user by id
         $user = User::where('id', $request->assigned_to)->value('name');
 
+        // for each engagment update the assigned to and status fields
         Engagement::whereIn('id', $request->engagements)->update([ 
             'assigned_to' => $user,
             'status' => $request->status 
         ]);
 
+        // for each engagement update the associated task through the pivot table function
         $engagements = Engagement::whereIn('id', $request->engagements)->get();
         foreach ($engagements as $engagement) {
             $engagement->tasks()->update([ 
