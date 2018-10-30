@@ -61,3 +61,5 @@ Route::get('/notes/{id}', 'NotesController@show');
 Route::post('/notes', 'NotesController@store');
 Route::patch('/notes/{note}', 'NotesController@update');
 Route::delete('/notes/{note}', 'NotesController@destroy');
+
+Route::get('/workflowstatuses', 'WorkflowsController@index');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Workflow;
 use Illuminate\Http\Request;
 
 class WorkflowsController extends Controller
@@ -13,7 +14,7 @@ class WorkflowsController extends Controller
      */
     public function index()
     {
-        //
+        return Workflow::with('statuses')->get();
     }
 
     /**

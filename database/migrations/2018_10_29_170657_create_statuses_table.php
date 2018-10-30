@@ -15,7 +15,13 @@ class CreateStatusesTable extends Migration
     {
         Schema::create('statuses', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('workflow_id')->unsigned();
+            $table->string('status');
             $table->timestamps();
+        });
+
+        Schema::table('statuses', function (Blueprint $table) {
+            $table->foreign('workflow_id')->references('id')->on('workflows')->onDelete('cascade');
         });
     }
 
