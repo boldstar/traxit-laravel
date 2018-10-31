@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return User::with('roles')->get();
     }
 
     public function login(Request $request)
