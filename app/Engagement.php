@@ -9,6 +9,7 @@ class Engagement extends Model
     protected $fillable =
     [
         'client_id',
+        'workflow_id',
         'return_type',
         'year',
         'assigned_to',
@@ -17,6 +18,11 @@ class Engagement extends Model
     public function client() 
     {
         return $this->belongsTo('App\Client');
+    }
+
+    public function workflow() 
+    {
+        return $this->belongsTo('App\Workflow');
     }
 
     public function tasks()

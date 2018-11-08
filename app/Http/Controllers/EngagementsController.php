@@ -19,10 +19,6 @@ class EngagementsController extends Controller
     {
         $engagements = Engagement::with('client')->get();
 
-        foreach ($engagements as $engagement) {
-            json_decode($engagement);
-        }
-
         return response($engagements);
 
     }
@@ -71,9 +67,11 @@ class EngagementsController extends Controller
      */
     public function store(Request $request)
     {
+
         // validate form data
         $data = $request->validate([
             'client_id' => 'required|integer',
+            'workflow_id' => 'required|integer',
             'return_type' => 'required|string',
             'year' => 'required|string',
             'assigned_to' => 'required|integer',
@@ -87,6 +85,7 @@ class EngagementsController extends Controller
         // create new engagement
         $engagement = Engagement::create([
             'client_id' => $request->client_id,
+            'workflow_id' => $request->workflow_id,
             'return_type' => $request->return_type,
             'year' => $request->year,
             'assigned_to' => $userName,

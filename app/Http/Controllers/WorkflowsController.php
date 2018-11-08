@@ -18,16 +18,6 @@ class WorkflowsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,7 +25,18 @@ class WorkflowsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // validate form data
+        $data = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        // create new workflow
+        $workflow = Workflow::create([
+            'workflow' => $request->name,
+        ]);
+
+        return response($workflow, 201);
     }
 
     /**
@@ -46,7 +47,9 @@ class WorkflowsController extends Controller
      */
     public function show($id)
     {
-        //
+        $workflow = Workflow::with('statuses')->find($id);
+
+        return response($workflow);
     }
 
     /**
@@ -67,11 +70,36 @@ class WorkflowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function workflowStatuses(Request $request, Workflow $workflow)
     {
-        //
-    }
+    
+        // validate form data
+        $validated = $request->validate([
+            'workflow' => 'required|string',
+            'statuses' => 'nullable|array',
+            'newStatuses' => 'nullable|array',
+        ]);
 
+        $statuses = $validated['statuses'];
+        $newStatuses = $validated['newStatuses'];
+
+        $workflow->update($validated);
+       
+        foreach($statuses as $status){
+            $workflow->statuses()->where('id', $status['id'])->update([
+                'status' =>  $status['status']
+            ]);
+        };
+
+        foreach($newStatuses as $newStatus){
+            $workflow->statuses()->create([
+                'status' => $newStatus['value']
+            ]);
+        };
+        
+        return response($workflow, 200);
+
+    }
     /**
      * Remove the specified resource from storage.
      *

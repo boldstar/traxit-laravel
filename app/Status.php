@@ -8,7 +8,10 @@ class Status extends Model
 {
     protected $fillable = [
         'workflow_id',
-        'status'
+        'status',
+        'order',
+        'created_at',
+        'updated_at'
     ];
     
     public function workflow()
