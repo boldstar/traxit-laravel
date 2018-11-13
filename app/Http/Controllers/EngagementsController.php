@@ -136,7 +136,20 @@ class EngagementsController extends Controller
             'done' => 'required|boolean'
         ]);
 
-        $engagement->update($data);
+        $engagement->update([
+            'client_id' => $request->client_id,
+            'return_type' => $request->return_type,
+            'year' => $request->year,
+            'status' => $request->status,
+            'assigned_to' => $request->assigned_to,
+            'done' => $request->done
+        ]);
+
+        $user = User::where('name', $request->assigned_to)->value('id');
+
+        $engagement->tasks()->update([ 
+            'user_id' => $user 
+        ]);
 
         return response($engagement, 200);
     }

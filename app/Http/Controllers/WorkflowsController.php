@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Workflow;
+use App\Status;
 use Illuminate\Http\Request;
 
 class WorkflowsController extends Controller
@@ -53,17 +54,6 @@ class WorkflowsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -93,21 +83,56 @@ class WorkflowsController extends Controller
 
         foreach($newStatuses as $newStatus){
             $workflow->statuses()->create([
-                'status' => $newStatus['value']
+                'status' => $newStatus['value'],
+                'order' => $newStatus['order']
             ]);
         };
         
-        return response($workflow, 200);
+        return response($workflow->load('statuses'), 200);
 
     }
+
+  /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateWorkflowStatuses(Request $request)
+    {
+        // validate form data
+        $validated = $request->validate([
+            'id' => 'required|integer',
+            'statuses' => 'required|array',
+        ]);
+
+        $workflow = Workflow::where('id', $validated['id'])->firstOrFail();
+
+        $statuses = $validated['statuses'];
+
+        $workflow->statuses->each->delete();
+       
+        foreach($statuses as $status){
+            $workflow->statuses()->create([
+                'status' => $status['status'],
+                'order' => $status['order']
+            ]);
+        };
+
+        return response('Update Succesful', 200);
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Status $status)
     {
-        //
+        $status->delete();
+
+        return response('Status Has Been Deleted', 200);
     }
 }
