@@ -68,3 +68,5 @@ Route::post('/workflowstatuses', 'WorkflowsController@store');
 Route::put('/workflowstatuses', 'WorkflowsController@updateWorkflowStatuses');
 Route::patch('/workflowstatuses/{workflow}', 'WorkflowsController@workflowStatuses');
 Route::delete('/workflowstatuses/{status}', 'WorkflowsController@destroy');
+
+Route::post('/search', 'SearchController@search');
