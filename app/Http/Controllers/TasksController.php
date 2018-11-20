@@ -51,9 +51,7 @@ class TasksController extends Controller
     public function update(Request $request, Task $task)
     {
 
-        if ($task->user_id !== auth()->user()->id) {
-            return response()->json('Unauthorized', 401);
-        }
+        $this->authorize('update', $task);
 
         $data = $request->validate([
             'user_id' => 'required|integer',

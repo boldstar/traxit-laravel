@@ -19,27 +19,27 @@ class CreateClientsTable extends Migration
             $table->string('referral_type');
 
             $table->string('first_name');
-            $table->string('middle_initial');
+            $table->string('middle_initial')->nullable($value = 'undefined');
             $table->string('last_name');
-            $table->string('occupation');
-            $table->string('dob');
-            $table->string('email');
-            $table->string('cell_phone');
-            $table->string('work_phone');
+            $table->string('occupation')->nullable($value = 'N/A');
+            $table->string('dob')->nullable($value = 'N/A');
+            $table->string('email')->nullable($value = 'N/A');
+            $table->string('cell_phone')->nullable($value = 'N/A');
+            $table->string('work_phone')->nullable($value = 'N/A');
 
-            $table->string('spouse_first_name');
-            $table->string('spouse_middle_initial');
-            $table->string('spouse_last_name');
-            $table->string('spouse_occupation');
-            $table->string('spouse_dob');
-            $table->string('spouse_email');
-            $table->string('spouse_cell_phone');
-            $table->string('spouse_work_phone');
+            $table->string('spouse_first_name')->nullable();
+            $table->string('spouse_middle_initial')->nullable();
+            $table->string('spouse_last_name')->nullable();
+            $table->string('spouse_occupation')->nullable();
+            $table->string('spouse_dob')->nullable();
+            $table->string('spouse_email')->nullable();
+            $table->string('spouse_cell_phone')->nullable();
+            $table->string('spouse_work_phone')->nullable();
 
-            $table->string('street_address');
-            $table->string('city');
-            $table->string('state');
-            $table->string('postal_code');
+            $table->string('street_address')->nullable($value = 'N/A');
+            $table->string('city')->nullable($value = 'N/A');
+            $table->string('state')->nullable($value = 'N/A');
+            $table->string('postal_code')->nullable($value = 'N/A');
             $table->timestamps();
         });
     }

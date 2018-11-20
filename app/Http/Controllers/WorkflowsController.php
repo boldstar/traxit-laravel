@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Workflow;
 use App\Status;
+use App\Engagement;
 use Illuminate\Http\Request;
 
 class WorkflowsController extends Controller
@@ -131,8 +132,61 @@ class WorkflowsController extends Controller
      */
     public function destroy(Status $status)
     {
-        $status->delete();
+        $statusToDelete = Status::where('id', $status->id)->first();
+
+        $allEngagements = Engagement::all();
+
+        $engagementsExist = $allEngagements->containsStrict('workflow_id', $statusToDelete->workflow_id);
+
+        if($engagementsExist === false) {
+            $statusToDelete->delete();
+
+            return response('Status Has Been Deleted', 200);
+        };
+
+        $engagements = Engagement::where('workflow_id', $statusToDelete->workflow_id)->get();
+
+        $statusInUse = $engagements->containsStrict('status', $statusToDelete->status);
+
+        if($statusInUse === false) {
+            $statusToDelete->delete();
+        } else {
+            return response('Status Is Currently In Use, Please Re-assign Engagements Before Deleting', 401);
+        };
 
         return response('Status Has Been Deleted', 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyWorkflow(Workflow $workflow)
+    {
+        $workflowToDelete = Workflow::where('id', $workflow->id)->first();
+
+        $allEngagements = Engagement::all();
+
+        $engagementsExist = $allEngagements->containsStrict('workflow_id', $workflowToDelete->id);
+
+        if($engagementsExist === false) {
+            $workflowToDelete->delete();
+
+            return response('Workflow Has Been Deleted', 200);
+        };
+
+        $engagements = Engagement::where('workflow_id', $workflowToDelete->id)->get();
+
+        $workflowInUse = $engagements->containsStrict('workflow_id', $workflowToDelete->id);
+
+        if($workflowInUse === false) {
+            $workflowToDelete->delete();
+        } else {
+            return response('Workflow Is Currently In Use, Please Re-assign Engagements Before Deleting', 401);
+        };
+
+        return response('Workflow Has Been Deleted', 200);
     }
 }

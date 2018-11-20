@@ -33,6 +33,7 @@ class AuthController extends Controller
                     'password' => $request->password,
                     ]
                     ]);
+
                     return $response->getBody();
                 } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                     if ($e->getCode() === 400) {
@@ -61,9 +62,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-         $user->roles()->attach(Role::where('name', 'Admin')->first());
+        $user->roles()->attach(Role::where('name', 'Admin')->first());
 
-         return response($user->load('roles'), 200);
+        return response($user->load('roles'), 200);
     }
 
     public function logout()
@@ -75,3 +76,4 @@ class AuthController extends Controller
     }
 }
 
+// $user = User::where('email', $request->username)->with('roles')->get();

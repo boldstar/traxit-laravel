@@ -18,4 +18,5 @@ class Status extends Model
     {
         return $this->belongsTo('App\Workflow');
     }
+
 }

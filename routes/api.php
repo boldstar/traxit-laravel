@@ -19,6 +19,7 @@ Route::middleware('auth:api')->group(function() {
     });
 
     Route::get('/tasks', 'TasksController@index');
+    Route::get('/role', 'AuthController@role');
     Route::patch('/tasks/{task}', 'TasksController@update');
     Route::post('/logout', 'AuthController@logout');
 });
@@ -68,5 +69,6 @@ Route::post('/workflowstatuses', 'WorkflowsController@store');
 Route::put('/workflowstatuses', 'WorkflowsController@updateWorkflowStatuses');
 Route::patch('/workflowstatuses/{workflow}', 'WorkflowsController@workflowStatuses');
 Route::delete('/workflowstatuses/{status}', 'WorkflowsController@destroy');
+Route::delete('/workflow/{workflow}', 'WorkflowsController@destroyWorkflow');
 
 Route::post('/search', 'SearchController@search');
