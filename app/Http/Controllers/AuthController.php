@@ -34,7 +34,17 @@ class AuthController extends Controller
                     ]
                     ]);
 
-                    return $response->getBody();
+                    $token = $response->getBody();
+
+                    $data = json_decode($token, true);
+
+                    $user = User::where('email', $request->username)->with('roles.rules')->get();
+
+                    $rules = $user->pluck('roles')->collapse()->pluck('rules');
+
+                    $rules->put('access_token', $data['access_token']);
+
+                    return response()->json($rules);
                 } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                     if ($e->getCode() === 400) {
                         return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
@@ -75,5 +85,3 @@ class AuthController extends Controller
         return response()->json('Logged out successfully', 200);
     }
 }
-
-// $user = User::where('email', $request->username)->with('roles')->get();

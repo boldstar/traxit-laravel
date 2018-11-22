@@ -19,7 +19,7 @@ class Role extends Model
         return $this->belongsToMany('App\User', 'user_role', 'role_id', 'user_id');
     }
 
-    public function subjects() {
-        return $this->hasMany('App\Subject');
+    public function rules() {
+        return $this->hasMany('App\Rule');
     }
 }
