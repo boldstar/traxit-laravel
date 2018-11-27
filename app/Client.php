@@ -18,6 +18,7 @@ class Client extends Model
         'email', 
         'cell_phone', 
         'work_phone',
+        'has_spouse',
         'spouse_first_name', 
         'spouse_middle_initial', 
         'spouse_last_name', 

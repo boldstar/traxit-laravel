@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use Illuminate\Http\Request;
+use App\Imports\ClientsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClientsController extends Controller
 {
@@ -17,17 +19,6 @@ class ClientsController extends Controller
         return Client::all();
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -37,16 +28,17 @@ class ClientsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'category' => 'nullable|string',
-            'referral_type' => 'nullable|string',
-            'first_name' => 'nullable|string',
+            'category' => 'required|string',
+            'referral_type' => 'required|string',
+            'first_name' => 'required|string',
             'middle_initial' => 'nullable|string',
-            'last_name' => 'nullable|string',
+            'last_name' => 'required|string',
             'occupation' => 'nullable|string',
             'dob' => 'nullable|string',
             'email' => 'nullable|string',
             'cell_phone' => 'nullable|string',
             'work_phone' => 'nullable|string',
+            'has_spouse' => 'required|boolean',
             'spouse_first_name' => 'nullable|string',
             'spouse_middle_initial' => 'nullable|string',
             'spouse_last_name' => 'nullable|string',
@@ -79,15 +71,18 @@ class ClientsController extends Controller
         return response($client);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Client $client)
+    public function importExcel(Request $request) 
     {
-        //
+
+        if (empty($request->file('file')->getRealPath())) {
+            return back()->with('success','No file selected');
+        }
+        else {
+        Excel::import(new ClientsImport, $request->file('file'));
+   
+        return response('Import Succesful, Please Refresh Page');
+        }
+
     }
 
     /**
@@ -110,6 +105,7 @@ class ClientsController extends Controller
             'email' => 'nullable|string',
             'cell_phone' => 'nullable|string',
             'work_phone' => 'nullable|string',
+            'has_spouse' => 'required|boolean',
             'spouse_first_name' => 'nullable|string',
             'spouse_middle_initial' => 'nullable|string',
             'spouse_last_name' => 'nullable|string',

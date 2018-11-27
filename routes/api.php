@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use App\Exports\EngagementsExport;
+use App\Exports\ClientsExport;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -72,3 +73,13 @@ Route::delete('/workflowstatuses/{status}', 'WorkflowsController@destroy');
 Route::delete('/workflow/{workflow}', 'WorkflowsController@destroyWorkflow');
 
 Route::post('/search', 'SearchController@search');
+
+Route::get('/downloadengagements', function () {
+    return Excel::download(new EngagementsExport, 'engagements.xlsx');
+});
+
+Route::get('/downloadclients', function () {
+    return Excel::download(new ClientsExport, 'clients.xlsx');
+});
+
+Route::post('/importclients', 'ClientsController@importExcel');

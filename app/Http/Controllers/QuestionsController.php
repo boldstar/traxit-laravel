@@ -56,7 +56,7 @@ class QuestionsController extends Controller
             'answered' => 'required|boolean',
         ]);
 
-        $question = Question::create($data);
+        $question->update($data);
 
         return response($question, 201);
     }
