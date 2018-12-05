@@ -30,6 +30,8 @@ Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AuthController@register');
 
 Route::get('/users', 'AuthController@index');
+Route::get('/users/{id}', 'AuthController@show');
+Route::patch('/users/{user}', 'AuthController@update');
 
 Route::get('/clients', 'ClientsController@index');
 Route::get('/clients/{id}', 'ClientsController@show');
@@ -83,3 +85,13 @@ Route::get('/downloadclients', function () {
 });
 
 Route::post('/importclients', 'ClientsController@importExcel');
+
+Route::group([    
+    'namespace' => 'Auth',    
+    'middleware' => 'api',    
+    'prefix' => 'password'
+], function () {    
+    Route::post('create', 'PasswordResetController@create');
+    Route::get('find/{token}', 'PasswordResetController@find');
+    Route::post('reset', 'PasswordResetController@reset');
+});

@@ -19,6 +19,43 @@ class AuthController extends Controller
         return User::with('roles')->get();
     }
 
+     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Client  $client
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $user = User::with('roles')->find($id);
+
+        return response($user);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Client  $client
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'role' => 'required|string'
+        ]);
+
+        $user->update($data);
+
+        $user->roles()->detach();
+
+        $user->roles()->attach(Role::where('name', $request->role)->first());
+
+        return response($user->load('roles'), 200);
+    }
+
     public function login(Request $request)
     {
         $http = new \GuzzleHttp\Client;
@@ -62,6 +99,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'role' => 'required|string'
         ]);
 
        
@@ -72,7 +110,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->roles()->attach(Role::where('name', 'Admin')->first());
+        $user->roles()->attach(Role::where('name', $request->role)->first());
 
         return response($user->load('roles'), 200);
     }
@@ -82,6 +120,7 @@ class AuthController extends Controller
         auth()->user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
+
         return response()->json('Logged out successfully', 200);
     }
 }
