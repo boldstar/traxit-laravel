@@ -6,6 +6,7 @@ use App\Engagement;
 use App\Task;
 use App\User;
 use App\Question;
+use App\ReturnType;
 use Illuminate\Http\Request;
 
 class EngagementsController extends Controller
@@ -28,13 +29,11 @@ class EngagementsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function chartdata()
+    public function returnType_index()
     {
-        $engagements = Engagement::all();
+        $return_types = ReturnType::all();
 
-        $data = $engagements->groupBy('status');
-
-        return response($data);
+        return response($return_types);
 
     }
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Business extends Model
 {
     protected $fillable = [
+        'client_id',
         'business_name',
         'business_type',
         'address',
@@ -21,4 +22,8 @@ class Business extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
+
+    public function client() {
+        return $this->belongsTo('App\Client');
+    }
 }

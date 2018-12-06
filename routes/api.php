@@ -25,7 +25,7 @@ Route::middleware('auth:api')->group(function() {
     Route::post('/logout', 'AuthController@logout');
 });
 
-
+Route::get('/account', 'AuthController@account');
 Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AuthController@register');
 
@@ -39,11 +39,17 @@ Route::post('/clients', 'ClientsController@store');
 Route::patch('/clients/{client}', 'ClientsController@update');
 Route::delete('/clients/{client}', 'ClientsController@destroy');
 
+Route::get('/businesses', 'BusinessesController@index');
+Route::get('/businesses/{id}', 'BusinessesController@show');
+Route::post('/businesses', 'BusinessesController@store');
+Route::patch('/businesses/{business}', 'BusinessesController@update');
+Route::delete('/businesses/{business}', 'BusinessesController@delete');
+
 Route::get('/engagements', 'EngagementsController@index');
 Route::get('/engagements/{id}', 'EngagementsController@clientindex');
 Route::get('/clientengagement/{id}', 'EngagementsController@show');
 Route::get('/engagementquestions/{id}', 'EngagementsController@questionindex');
-Route::get('/engagementsdata', 'EngagementsController@chartdata');
+Route::get('/engagementReturnTypes', 'EngagementsController@returnType_index');
 Route::post('/engagements', 'EngagementsController@store');
 Route::patch('/engagements/{engagement}', 'EngagementsController@update');
 Route::patch('/engagementsarray', 'EngagementsController@updateCheckedEngagements');

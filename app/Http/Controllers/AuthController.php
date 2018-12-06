@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Role;
+use App\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    public function account()
+    {
+        return Account::all();
+    }
     /**
      * Display a listing of the resource.
      *

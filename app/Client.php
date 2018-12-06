@@ -50,5 +50,8 @@ class Client extends Model
         return $this->hasMany('App\Note');
     }
 
-
+    public function businesses()
+    {
+        return $this->hasMany('App\Business');
+    }
 }

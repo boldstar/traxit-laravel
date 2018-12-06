@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Return extends Model
+class ReturnType extends Model
 {
     protected $fillable = [
         'return_type'

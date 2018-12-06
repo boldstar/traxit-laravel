@@ -66,7 +66,7 @@ class ClientsController extends Controller
      */
     public function show($id)
     {
-        $client = Client::with('dependents')->find($id);
+        $client = Client::with('dependents', 'businesses')->find($id);
 
         return response($client);
     }
