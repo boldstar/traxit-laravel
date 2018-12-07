@@ -21,27 +21,36 @@ Route::middleware('auth:api')->group(function() {
 
     Route::get('/tasks', 'TasksController@index');
     Route::get('/role', 'AuthController@role');
+    Route::get('/userProfile/', 'AuthController@show');
     Route::patch('/tasks/{task}', 'TasksController@update');
     Route::post('/logout', 'AuthController@logout');
 });
 
-
+Route::get('/account', 'AuthController@account');
 Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AuthController@register');
 
 Route::get('/users', 'AuthController@index');
+Route::patch('/users/{user}', 'AuthController@update');
 
 Route::get('/clients', 'ClientsController@index');
+Route::get('/clientsWithBusinesses', 'ClientsController@clientWithBusinesses');
 Route::get('/clients/{id}', 'ClientsController@show');
 Route::post('/clients', 'ClientsController@store');
 Route::patch('/clients/{client}', 'ClientsController@update');
 Route::delete('/clients/{client}', 'ClientsController@destroy');
 
+Route::get('/businesses', 'BusinessesController@index');
+Route::get('/businesses/{id}', 'BusinessesController@show');
+Route::post('/businesses', 'BusinessesController@store');
+Route::patch('/businesses/{business}', 'BusinessesController@update');
+Route::delete('/businesses/{business}', 'BusinessesController@destroy');
+
 Route::get('/engagements', 'EngagementsController@index');
 Route::get('/engagements/{id}', 'EngagementsController@clientindex');
 Route::get('/clientengagement/{id}', 'EngagementsController@show');
 Route::get('/engagementquestions/{id}', 'EngagementsController@questionindex');
-Route::get('/engagementsdata', 'EngagementsController@chartdata');
+Route::get('/engagementReturnTypes', 'EngagementsController@returnType_index');
 Route::post('/engagements', 'EngagementsController@store');
 Route::patch('/engagements/{engagement}', 'EngagementsController@update');
 Route::patch('/engagementsarray', 'EngagementsController@updateCheckedEngagements');
@@ -83,3 +92,13 @@ Route::get('/downloadclients', function () {
 });
 
 Route::post('/importclients', 'ClientsController@importExcel');
+
+Route::group([    
+    'namespace' => 'Auth',    
+    'middleware' => 'api',    
+    'prefix' => 'password'
+], function () {    
+    Route::post('create', 'PasswordResetController@create');
+    Route::get('find/{token}', 'PasswordResetController@find');
+    Route::post('reset', 'PasswordResetController@reset');
+});

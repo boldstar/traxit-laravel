@@ -15,7 +15,7 @@ class EngagementsExport implements FromQuery, WithHeadings
     */
     public function query()
     {
-        return Engagement::select('id', 'return_type', 'year', 'assigned_to', 'status', 'created_at');
+        return Engagement::select('id', 'category', 'name', 'return_type', 'year', 'assigned_to', 'status', 'created_at');
 
     }
 
@@ -23,6 +23,8 @@ class EngagementsExport implements FromQuery, WithHeadings
     {
         return [
             'Id',
+            'Category',
+            'Name',
             'Return Type',
             'Year',
             'Assigned To',

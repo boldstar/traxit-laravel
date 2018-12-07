@@ -75,12 +75,6 @@ class WorkflowsController extends Controller
         $newStatuses = $validated['newStatuses'];
 
         $workflow->update($validated);
-       
-        foreach($statuses as $status){
-            $workflow->statuses()->where('id', $status['id'])->update([
-                'status' =>  $status['status']
-            ]);
-        };
 
         foreach($newStatuses as $newStatus){
             $workflow->statuses()->create([
@@ -89,6 +83,22 @@ class WorkflowsController extends Controller
             ]);
         };
         
+        $engagements = Engagement::where('workflow_id', $workflow->id)->get();
+        $engagementsExist = $engagements->containsStrict('workflow_id', $workflow->id);
+        
+        if($engagementsExist === true) {
+            return response()->json([
+                'workflow' => $workflow->load('statuses'),
+                'message' => 'New Statuses Added! But Engagements Containing Old Statuses Exist, Please Update Enagagements First',
+            ], 403);
+        };
+        
+        foreach($statuses as $status){
+            $workflow->statuses()->where('id', $status['id'])->update([
+                'status' =>  $status['status']
+            ]);
+        };
+
         return response($workflow->load('statuses'), 200);
 
     }

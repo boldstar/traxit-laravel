@@ -50,5 +50,22 @@ class Client extends Model
         return $this->hasMany('App\Note');
     }
 
+    public function businesses()
+    {
+        return $this->hasMany('App\Business');
+    }
 
+    public function fullName() {
+
+        return "{$this->last_name}, {$this->first_name}";
+    
+    }
+
+    public function fullNameWithSpouse()
+    {
+        if (!is_null($this->spouse_first_name))
+        return $this->fullName() . " & " . $this->spouse_first_name;
+
+        return $this->fullName();  // if no spouse
+    }
 }

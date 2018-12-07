@@ -20,6 +20,16 @@ class ClientsController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function clientWithBusinesses()
+    {
+        return Client::with('businesses')->get();
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -66,7 +76,7 @@ class ClientsController extends Controller
      */
     public function show($id)
     {
-        $client = Client::with('dependents')->find($id);
+        $client = Client::with('dependents', 'businesses')->find($id);
 
         return response($client);
     }

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Engagement;
+use App\Client;
 use App\Task;
 use App\User;
 use App\Question;
+use App\ReturnType;
+use DB;
 use Illuminate\Http\Request;
 
 class EngagementsController extends Controller
@@ -28,13 +31,11 @@ class EngagementsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function chartdata()
+    public function returnType_index()
     {
-        $engagements = Engagement::all();
+        $return_types = ReturnType::all();
 
-        $data = $engagements->groupBy('status');
-
-        return response($data);
+        return response($return_types);
 
     }
 
@@ -66,11 +67,13 @@ class EngagementsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {  
 
         // validate form data
         $data = $request->validate([
+            'category' => 'required|string',
             'client_id' => 'required|integer',
+            'name' => 'nullable|string',
             'workflow_id' => 'required|integer',
             'return_type' => 'required|string',
             'year' => 'required|string',
@@ -79,19 +82,37 @@ class EngagementsController extends Controller
             'done' => 'required|boolean'
         ]);
         
-        // grab name of user by id
         $userName = User::where('id', $request->assigned_to)->value('name');
+        
+        $client = Client::findOrFail($request->client_id);
 
-        // create new engagement
-        $engagement = Engagement::create([
-            'client_id' => $request->client_id,
-            'workflow_id' => $request->workflow_id,
-            'return_type' => $request->return_type,
-            'year' => $request->year,
-            'assigned_to' => $userName,
-            'status' => $request->status,
-            'done' => $request->done,
-        ]);
+        if($request->category == 'personal') {
+            $engagement = Engagement::create([
+                'category' => $request->category,
+                'client_id' => $request->client_id,
+                'name' => $client->fullNameWithSpouse(),
+                'workflow_id' => $request->workflow_id,
+                'return_type' => $request->return_type,
+                'year' => $request->year,
+                'assigned_to' => $userName,
+                'status' => $request->status,
+                'done' => $request->done,
+            ]);
+        }
+
+        if($request->category == 'business') {
+            $engagement = Engagement::create([
+                'category' => $request->category,
+                'client_id' => $request->client_id,
+                'name' => $request->name,
+                'workflow_id' => $request->workflow_id,
+                'return_type' => $request->return_type,
+                'year' => $request->year,
+                'assigned_to' => $userName,
+                'status' => $request->status,
+                'done' => $request->done,
+            ]);
+        }
 
         // create task
         $task = Task::create([
