@@ -17,7 +17,7 @@ class SearchController extends Controller
 
         if($request->category == 'name') {
             $results = Client::query()
-                    ->select(\DB::raw("*, CONCAT(first_name,' ',last_name) AS name") )       
+                    ->select(\DB::raw("*, CONCAT(first_name,' ',last_name) AS name") ) 
                     ->havingRaw( " name LIKE '%$request->keyword%'")
                     ->with('engagements')
                     ->get();

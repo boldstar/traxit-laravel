@@ -31,9 +31,9 @@ class AuthController extends Controller
      * @param  \App\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        $user = User::with('roles')->find($id);
+        $user = User::where('id', auth()->user()->id)->with('roles.rules')->get();
 
         return response($user);
     }

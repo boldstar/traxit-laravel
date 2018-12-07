@@ -108,7 +108,7 @@ class PasswordResetController extends Controller
         $user->save();
         $passwordReset->delete();
         $user->notify(new PasswordResetSuccess($passwordReset));
-        return response()->json($user);
+        return response()->json('Your password has been succesfully reset, please proceed to login screen!');
     }
 }
 

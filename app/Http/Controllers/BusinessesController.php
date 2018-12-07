@@ -95,7 +95,7 @@ class BusinessesController extends Controller
      */
     public function update(Request $request, Business $business)
     {
-        $date = $request->validate([
+        $data = $request->validate([
             'client_id' => 'required|integer',
             'business_name' => 'required|string',
             'business_type' => 'required|string',

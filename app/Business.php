@@ -16,7 +16,7 @@ class Business extends Model
         'postal_code',
         'phone_number',
         'fax_number',
-        'email_address'
+        'email'
     ];
 
     protected $hidden = [
