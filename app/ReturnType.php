@@ -9,4 +9,6 @@ class ReturnType extends Model
     protected $fillable = [
         'return_type'
     ];
+
+    public $timestamps = false;
 }

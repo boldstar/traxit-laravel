@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Rule;
 
-class RuleSeeder extends Seeder
+class RuleTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

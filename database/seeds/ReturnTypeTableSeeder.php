@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\ReturnType;
 
-class ReturnTypeSeeder extends Seeder
+class ReturnTypeTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -35,6 +35,5 @@ class ReturnTypeSeeder extends Seeder
         $return = new ReturnType();
         $return->return_type = '1065';
         $return->save();
-
     }
 }

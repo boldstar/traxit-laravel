@@ -23,6 +23,7 @@ class ClientTableSeeder extends Seeder
         $client->email = 'john@example.com';
         $client->cell_phone = '528-965-7456';
         $client->work_phone = '528-965-7456';
+        $client->has_spouse = 1;
         $client->spouse_first_name = 'Jane';
         $client->spouse_middle_initial = 'R';
         $client->spouse_last_name = 'Smith';
