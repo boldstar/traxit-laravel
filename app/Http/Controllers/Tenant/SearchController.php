@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Client;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class SearchController extends Controller
 {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Business;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class BusinessesController extends Controller
 {
@@ -61,7 +62,7 @@ class BusinessesController extends Controller
             'fax_number' => $request->fax_number
         ]);
 
-        return response($business, 200);
+        return response()->json([ 'business' => $business, 'message' => 'A new business has been added!'], 200);
     }
 
     /**

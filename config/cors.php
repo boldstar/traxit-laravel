@@ -1,8 +1,9 @@
 <?php
 
 return [
+
     /*
-     * A cors profile determines which orgins, methods, headers are allowed for
+     * A cors profile determines which origins, methods, headers are allowed for
      * a given requests. The `DefaultProfile` reads its configuration from this
      * config file.
      *
@@ -46,7 +47,7 @@ return [
             'Last-Modified',
             'Pragma',
         ],
-        
+
         'forbidden_response' => [
             'message' => 'Forbidden (cors).',
             'status' => 403,

@@ -40,22 +40,22 @@ class Client extends Model
 
     public function engagements()
     {
-        return $this->hasMany('App\Engagement');
+        return $this->hasMany('App\Models\Tenant\Engagement');
     }
 
     public function dependents()
     {
-        return $this->hasMany('App\Dependent');
+        return $this->hasMany('App\Models\Tenant\Dependent');
     }
 
     public function notes()
     {
-        return $this->hasMany('App\Note');
+        return $this->hasMany('App\Models\Tenant\Note');
     }
 
     public function businesses()
     {
-        return $this->hasMany('App\Business');
+        return $this->hasMany('App\Models\Tenant\Business');
     }
 
     public function fullName() {

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Models;
+namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Client;
 use Illuminate\Http\Request;
 use App\Imports\ClientsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Controller;
 
 class ClientsController extends Controller
 {

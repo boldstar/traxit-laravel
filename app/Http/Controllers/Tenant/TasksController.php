@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TasksController extends Controller
 {

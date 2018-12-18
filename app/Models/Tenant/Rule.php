@@ -17,6 +17,6 @@ class Rule extends Model
     ];
 
     public function role() {
-        return $this->belongsTo('App\Role');
+        return $this->belongsTo('App\Models\Tenant\Role');
     }
 }

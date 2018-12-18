@@ -19,10 +19,10 @@ class Role extends Model
     ];
 
     public function users() {
-        return $this->belongsToMany('App\User', 'user_role', 'role_id', 'user_id');
+        return $this->belongsToMany('App\Models\Tenant\User', 'user_role', 'role_id', 'user_id');
     }
 
     public function rules() {
-        return $this->hasMany('App\Rule');
+        return $this->hasMany('App\Models\Tenant\Rule');
     }
 }

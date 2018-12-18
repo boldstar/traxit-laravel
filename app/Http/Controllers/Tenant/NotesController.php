@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Note;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class NotesController extends Controller
 {

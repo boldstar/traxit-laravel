@@ -17,7 +17,7 @@ class CreateEngagementTaskTable extends Migration
             $table->integer('task_id')->unsigned();
             $table->foreign('task_id')->references('id')->on('tasks');
             $table->integer('engagement_id')->unsigned();
-            $table->foreign('engagement_id')->references('id')->on('engagements');
+            $table->foreign('engagement_id')->references('id')->on('engagements')->onDelete('cascade');
         });
     }
 

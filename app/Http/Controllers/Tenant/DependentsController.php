@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Dependent;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DependentsController extends Controller
 {

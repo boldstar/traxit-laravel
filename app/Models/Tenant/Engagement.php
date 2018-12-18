@@ -22,22 +22,22 @@ class Engagement extends Model
     ];
     public function client() 
     {
-        return $this->belongsTo('App\Client');
+        return $this->belongsTo('App\Models\Tenant\Client');
     }
 
     public function workflow() 
     {
-        return $this->belongsTo('App\Workflow');
+        return $this->belongsTo('App\Models\Tenant\Workflow');
     }
 
     public function tasks()
     {
-        return $this->belongsToMany('App\Task', 'engagement_task', 'engagement_id', 'task_id');
+        return $this->belongsToMany('App\Models\Tenant\Task', 'engagement_task', 'engagement_id', 'task_id');
     }
 
     public function questions()
     {
-        return $this->hasMany('App\Question');
+        return $this->hasMany('App\Models\Tenant\Question');
     }
 
 }

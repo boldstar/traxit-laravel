@@ -15,11 +15,11 @@ class Workflow extends Model
 
     public function statuses()
     {
-        return $this->hasMany('App\Status');
+        return $this->hasMany('App\Models\Tenant\Status');
     }
 
     public function engagements()
     {
-        return $this->hasMany('App\Engagement');
+        return $this->hasMany('App\Models\Tenant\Engagement');
     }
 }

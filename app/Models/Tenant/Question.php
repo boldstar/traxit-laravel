@@ -21,6 +21,6 @@ class Question extends Model
     protected $hidden = ['updated_at'];
 
     public function engagement() {
-        return $this->belongsTo('App\Engagement');
+        return $this->belongsTo('App\Models\Tenant\Engagement');
     }
 }

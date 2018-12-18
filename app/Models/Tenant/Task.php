@@ -21,12 +21,12 @@ class Task extends Model
     ];
 
     public function user() {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\Tenant\User');
     }
 
     public function engagements()
     {
-        return $this->belongsToMany('App\Engagement', 'engagement_task', 'task_id', 'engagement_id');
+        return $this->belongsToMany('App\Models\Tenant\Engagement', 'engagement_task', 'task_id', 'engagement_id');
     }
 
 }

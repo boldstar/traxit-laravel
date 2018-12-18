@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Hyn\Tenancy\Environment;
 use Illuminate\Support\Facades\DB;
 use Hyn\Tenancy\Database\Connection;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {

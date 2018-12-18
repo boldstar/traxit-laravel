@@ -9,6 +9,7 @@ use App\Models\Tenant\User;
 use App\Models\Tenant\Question;
 use App\Models\Tenant\ReturnType;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use DB;
 
 class EngagementsController extends Controller
@@ -123,7 +124,7 @@ class EngagementsController extends Controller
         // create record on pivot table
         $engagement->tasks()->attach($task->id);
 
-        return response($engagement, 201);
+        return response()->json([ 'engagement' => $engagement, 'message' => 'A new engagement has been added!'], 201);
     }
 
     /**
@@ -219,7 +220,11 @@ class EngagementsController extends Controller
      */
     public function destroy(Engagement $engagement)
     {
+        $task = $engagement->tasks()->first();
+
         $engagement->delete();
+
+        $task->delete();
 
         return response('Engagement Is Deleted', 200);
     }

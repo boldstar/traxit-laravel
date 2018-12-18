@@ -19,7 +19,7 @@ class Status extends Model
     
     public function workflow()
     {
-        return $this->belongsTo('App\Workflow');
+        return $this->belongsTo('App\Models\Tenant\Workflow');
     }
 
 }
