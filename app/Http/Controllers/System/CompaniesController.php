@@ -104,14 +104,14 @@ class CompaniesController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-
+      
         $request->merge(['fqdn' => $request->fqdn . '.' . env('APP_URL_BASE')]);
-
+        
         $company = Tenant::create($request);
-
+        
         event(new Registered($user = $this->create($request->all())));
         
-        return response()->json(['message' => 'Company has been created!'], 200);
+        return response()->json(['message' => 'A New Company Has Been Created!'], 200);
     }
 
        /**
