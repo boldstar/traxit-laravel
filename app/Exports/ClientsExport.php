@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Client;
+use App\Models\Tenant\Client;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
