@@ -19,6 +19,9 @@
                     <router-link to="/" class="nav-link"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</router-link>
                 </li>
                 <li class="nav-item mr-3">
+                    <router-link to="/subscriptions" class="nav-link"><i class="fas fa-file-invoice-dollar mr-2"></i>Subscriptions</router-link>
+                </li>
+                <li class="nav-item mr-3">
                     <router-link to="/register" class="nav-link"><i class="far fa-building mr-2"></i>Add Company</router-link>
                 </li>
                 <li class="nav-item">

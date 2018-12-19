@@ -19,6 +19,8 @@ export default new Vuex.Store({
     token: JSON.parse(localStorage.getItem('access_token')) || false,
     companies: [],
     company: '',
+    subscriptions: [],
+    subscription: '',
     modal: false,
     loading: false
   },
@@ -31,6 +33,12 @@ export default new Vuex.Store({
     },
     company(state) {
         return state.company
+    },
+    subscriptions(state) {
+        return state.subscriptions
+    },
+    subscription(state) {
+        return state.subscription
     },
     companyToUpdate(state) {
         return state.company
@@ -68,6 +76,23 @@ export default new Vuex.Store({
     updateCompany(state, company) {
         const index = state.companies.findIndex(item => item.uuid == company.uuid)
         state.companies.splice(index, 1, company)
+    },
+    getSubscriptions(state, subscriptions) {
+        state.subscriptions = subscriptions
+    },
+    getSubscription(state, subscription) {
+        state.subscription = subscription
+    },
+    addSubscription(state, subscripion) {
+        state.subscriptions.push(subscripion)
+    },
+    deleteSubscription(state, id) {
+        const index = state.subscriptions.findIndex(subscripion => subscription.id == id)
+        state.subscriptions.splice(index, 1)
+    },
+    updateSubscription(state, subscription) {
+        const index = state.subscriptions.findIndex(item => item.id == subscription.id)
+        state.subscriptions.splice(index, 1, subscription)
     },
     successAlert(state, alert) {
         state.successalert = alert
@@ -185,6 +210,71 @@ export default new Vuex.Store({
         .then(response => {
             context.commit('successAlert', response.data)
             context.commit('deleteCompany', uuid)
+            router.push('/')
+        })
+        .catch(error => {
+            context.commit('errorAlert', error.response.data)
+            console.log(error.response.data)
+        })
+    },
+    addSubscription(context, subscripion) {
+        context.commit('loadingRequest')
+        axios.post('/subscriptions', {
+            
+        })
+        .then(response => {
+            context.commit('loadingRequest')
+            context.commit('successAlert', response.data)
+            router.push('/subscriptions')
+        })
+        .catch(error => {
+            context.commit('loadingRequest')
+            console.log(error.response.data)
+        })
+    },
+    getSubscriptions(context) {
+        axios.get('/subscriptions')
+        .then(response => {
+            context.commit('getSubscriptions', response.data)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+        })
+    },
+    getSubscription(context, id) {
+        axios.get('/subscriptions/' + id)
+        .then(response => {
+            context.commit('getSubscription', response.data)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+        })
+    },
+    getSubscriptionToUpdate(context, id) {
+        axios.get('/subscriptionToUpdate/' + id)
+        .then(response => {
+            context.commit('getSubscriptionToUpdate', response.data)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+        })
+    },
+    updateSubscription(context, subscripion) {
+        axios.patch('/subscriptions/' + subscripion.id, {
+         
+        })
+        .then(response => {
+            context.commit('updateSubscription', response.data)
+        })        
+        .catch(error => {
+            console.log(error.response.data)
+        })
+    },
+    deleteSubscription(context, id) {
+        axios.delete('/subscriptions/' + id)
+        .then(response => {
+            context.commit('successAlert', response.data)
+            context.commit('deleteSubscriptions', id)
             router.push('/')
         })
         .catch(error => {

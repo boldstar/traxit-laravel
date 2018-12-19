@@ -29,6 +29,10 @@ export default {
 li {
     list-style: none;
 }
+
+.subscription-card {
+    height: 275px;
+}
 </style>
 
 
