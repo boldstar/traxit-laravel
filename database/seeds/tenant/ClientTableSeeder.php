@@ -1,7 +1,9 @@
 <?php
 
+namespace database\seeds\tenant;
+
 use Illuminate\Database\Seeder;
-use App\Client;
+use App\Models\Tenant\Client;
 
 class ClientTableSeeder extends Seeder
 {

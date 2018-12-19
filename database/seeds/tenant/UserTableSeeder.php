@@ -1,8 +1,10 @@
 <?php
 
+namespace database\seeds\tenant;
+
 use Illuminate\Database\Seeder;
-use App\User;
-use App\Role;
+use App\Models\Tenant\User;
+use App\Models\Tenant\Role;
 
 class UserTableSeeder extends Seeder
 {
@@ -19,7 +21,7 @@ class UserTableSeeder extends Seeder
         $admin = new User();
         $admin->name = 'Admin';
         $admin->email = 'admin@example.com';
-        $admin->password = bcrypt('secret');
+        $admin->password = bcrypt('secretadmin');
         $admin->save();
         $admin->roles()->attach($role_admin);
 

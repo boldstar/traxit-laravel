@@ -1,7 +1,9 @@
 <?php
 
+namespace database\seeds\tenant;
+
 use Illuminate\Database\Seeder;
-use App\Role;
+use App\Models\Tenant\Role;
 
 class RoleTableSeeder extends Seeder
 {

@@ -1,7 +1,9 @@
 <?php
 
+namespace database\seeds\tenant;
+
 use Illuminate\Database\Seeder;
-use App\Rule;
+use App\Models\Tenant\Rule;
 
 class RuleTableSeeder extends Seeder
 {

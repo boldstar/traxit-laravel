@@ -1,7 +1,9 @@
 <?php
 
+namespace database\seeds\tenant;
+
 use Illuminate\Database\Seeder;
-use App\ReturnType;
+use App\Models\Tenant\ReturnType;
 
 class ReturnTypeTableSeeder extends Seeder
 {
@@ -14,6 +16,10 @@ class ReturnTypeTableSeeder extends Seeder
     {
         $return = new ReturnType();
         $return->return_type = '1040';
+        $return->save();
+
+        $return = new ReturnType();
+        $return->return_type = '1040X';
         $return->save();
 
         $return = new ReturnType();
