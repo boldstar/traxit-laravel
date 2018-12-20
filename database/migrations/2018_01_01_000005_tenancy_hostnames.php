@@ -24,7 +24,7 @@ class TenancyHostnames extends AbstractMigration
     {
         Schema::create('hostnames', function (Blueprint $table) {
             $table->bigIncrements('id');
-
+            $table->string('subdomain');
             $table->string('fqdn')->unique();
             $table->string('redirect_to')->nullable();
             $table->boolean('force_https')->default(false);

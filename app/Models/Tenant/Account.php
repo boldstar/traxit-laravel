@@ -17,6 +17,7 @@ class Account extends Model
         'postal_code',
         'email',
         'phone_number',
+        'fax_number',
         'logo',
         'subscription',
     ];

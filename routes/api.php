@@ -26,6 +26,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 //tenancy.enforce is a middleware for making routes aware of tenancy
 Route::group(['middleware' => 'tenancy.enforce'], function () {
     Route::get('/account', 'Tenant\AccountsController@account');
+    Route::post('/account', 'Tenant\AccountsController@store');
+    Route::patch('/account/{id}', 'Tenant\AccountsController@update');
     Route::post('/login', 'Tenant\AuthController@login');
     Route::post('/register', 'Tenant\AuthController@register');
 
@@ -98,8 +100,8 @@ Route::group(['middleware' => 'tenancy.enforce'], function () {
         'middleware' => 'api',    
         'prefix' => 'password'
     ], function () {    
-        Route::post('create', 'Auth\PasswordResetController@create');
-        Route::get('find/{token}', 'Auth\PasswordResetController@find');
-        Route::post('reset', 'Auth\PasswordResetController@reset');
+        Route::post('create', 'PasswordResetController@create');
+        Route::get('find/{token}', 'PasswordResetController@find');
+        Route::post('reset', 'PasswordResetController@reset');
     });
 });

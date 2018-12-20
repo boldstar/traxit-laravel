@@ -106,8 +106,6 @@ class CompaniesController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-      
-        $request->merge(['fqdn' => $request->fqdn . '.' . env('APP_URL_BASE')]);
         
         $company = Tenant::create($request);
         

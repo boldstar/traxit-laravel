@@ -39,6 +39,8 @@ class Tenant
         
         // associate the website with a hostname
         $hostname = new Hostname;
+        $hostname->subdomain = $request->fqdn;
+        $request->merge(['fqdn' => $request->fqdn . '.' . env('APP_URL_BASE')]);
         $hostname->fqdn = $request->fqdn;
         app(HostnameRepository::class)->attach($hostname, $website);
         
