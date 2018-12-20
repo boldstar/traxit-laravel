@@ -13220,10 +13220,19 @@ module.exports = Component.exports
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_Company_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__views_Company_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue__ = __webpack_require__(52);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_Subscriptions_vue__ = __webpack_require__(79);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_Subscriptions_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__views_Subscriptions_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_SubscriptionForm_vue__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_SubscriptionForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_SubscriptionForm_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue__ = __webpack_require__(88);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue__);
+
+
+
 
 
 
@@ -13237,7 +13246,9 @@ module.exports = Component.exports
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
-  routes: [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_3__views_Dashboard_vue___default.a }, { path: '/login', component: __WEBPACK_IMPORTED_MODULE_2__views_Login_vue___default.a }, { path: '/register', component: __WEBPACK_IMPORTED_MODULE_4__views_Register_vue___default.a }, { path: '/company/:uuid', component: __WEBPACK_IMPORTED_MODULE_5__views_Company_vue___default.a }, { path: '/edit-company/:uuid', component: __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue___default.a }, { path: '/subscriptions', component: __WEBPACK_IMPORTED_MODULE_7__views_Subscriptions_vue___default.a }, { path: '/add-subscription', component: __WEBPACK_IMPORTED_MODULE_8__components_SubscriptionForm_vue___default.a }],
+  routes: [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_3__views_Dashboard_vue___default.a }, { path: '/login', component: __WEBPACK_IMPORTED_MODULE_2__views_Login_vue___default.a }, { path: '/register', component: __WEBPACK_IMPORTED_MODULE_4__views_Register_vue___default.a }, { path: '/company/:uuid', name: 'company', component: __WEBPACK_IMPORTED_MODULE_5__views_Company_vue___default.a,
+    children: [{ path: 'account', component: __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue___default.a }, { path: 'add-account', component: __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue___default.a }, { path: 'edit-account', component: __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue___default.a }]
+  }, { path: '/edit-company/:uuid', component: __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue___default.a }, { path: '/subscriptions', component: __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue___default.a }, { path: '/add-subscription', component: __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue___default.a }],
   mode: 'history'
 }));
 
@@ -17997,6 +18008,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
 
 
 
@@ -18295,176 +18309,101 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "row justify-content-center" }, [
-            _c(
-              "div",
-              { staticClass: "col-md-6" },
-              [
+          _vm.$route.name == "company"
+            ? _c("div", { staticClass: "row justify-content-center" }, [
                 _c(
-                  "router-link",
-                  { staticClass: "nav-link", attrs: { to: "/" } },
+                  "div",
+                  { staticClass: "col-md-6" },
                   [
-                    _c("i", { staticClass: "fas fa-arrow-left mr-2" }),
-                    _vm._v("Back")
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "card card-default" }, [
-                  _vm.website
-                    ? _c(
-                        "div",
-                        {
-                          staticClass:
-                            "card-header d-flex justify-content-between"
-                        },
-                        [
-                          _c(
-                            "span",
+                    _c(
+                      "router-link",
+                      { staticClass: "nav-link", attrs: { to: "/" } },
+                      [
+                        _c("i", { staticClass: "fas fa-arrow-left mr-2" }),
+                        _vm._v("Back")
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card card-default" }, [
+                      _vm.website
+                        ? _c(
+                            "div",
                             {
                               staticClass:
-                                "align-self-center font-weight-bold text-primary"
+                                "card-header d-flex justify-content-between"
                             },
                             [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(_vm.website[0].company) +
-                                  "\n                    "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "d-flex" },
-                            [
                               _c(
-                                "router-link",
+                                "span",
                                 {
-                                  staticClass: "btn btn-sm btn-primary mr-3",
-                                  attrs: {
-                                    to: {
-                                      path:
-                                        "/edit-company/" + _vm.website[0].uuid
-                                    }
-                                  }
+                                  staticClass:
+                                    "align-self-center font-weight-bold text-primary"
                                 },
-                                [_vm._v("Edit")]
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(_vm.website[0].company) +
+                                      "\n                    "
+                                  )
+                                ]
                               ),
                               _vm._v(" "),
                               _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-sm btn-secondary",
-                                  on: { click: _vm.requestDelete }
-                                },
-                                [_vm._v("Delete")]
+                                "div",
+                                { staticClass: "d-flex" },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass:
+                                        "btn btn-sm btn-outline-info  mr-3",
+                                      attrs: {
+                                        to:
+                                          "/company/" +
+                                          _vm.website[0].uuid +
+                                          "/account"
+                                      }
+                                    },
+                                    [_vm._v("Account Details")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass:
+                                        "btn btn-sm btn-primary mr-3",
+                                      attrs: {
+                                        to: {
+                                          path:
+                                            "/edit-company/" +
+                                            _vm.website[0].uuid
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Edit")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-sm btn-secondary",
+                                      on: { click: _vm.requestDelete }
+                                    },
+                                    [_vm._v("Delete")]
+                                  )
+                                ],
+                                1
                               )
-                            ],
-                            1
+                            ]
                           )
-                        ]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-body p-0" }, [
-                    _c("div", [
-                      _vm.website
-                        ? _c("div", { staticClass: "col-12" }, [
-                            _vm._m(0),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "d-flex justify-content-between" },
-                              [
-                                _c(
-                                  "span",
-                                  { staticClass: "mb-2  font-weight-bold" },
-                                  [_vm._v("Company Email")]
-                                ),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "mb-2" }, [
-                                  _vm._v(
-                                    " " + _vm._s(_vm.website[0].email) + " "
-                                  )
-                                ])
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "d-flex justify-content-between" },
-                              [
-                                _c(
-                                  "span",
-                                  { staticClass: "mb-2  font-weight-bold" },
-                                  [_vm._v("Company Number")]
-                                ),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "mb-2" }, [
-                                  _vm._v(
-                                    " " + _vm._s(_vm.website[0].number) + " "
-                                  )
-                                ])
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "d-flex justify-content-between" },
-                              [
-                                _c(
-                                  "span",
-                                  { staticClass: "mb-2  font-weight-bold" },
-                                  [_vm._v("Database")]
-                                ),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "mb-2" }, [
-                                  _vm._v(" " + _vm._s(_vm.website[0].uuid))
-                                ])
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "d-flex justify-content-between" },
-                              [
-                                _c(
-                                  "span",
-                                  { staticClass: "mb-2  font-weight-bold" },
-                                  [_vm._v("Domain")]
-                                ),
-                                _vm._v(" "),
-                                _vm.website[0].hostnames
-                                  ? _c("span", { staticClass: "mb-2" }, [
-                                      _vm._v(
-                                        " " +
-                                          _vm._s(
-                                            _vm.website[0].hostnames[0].fqdn
-                                          )
-                                      )
-                                    ])
-                                  : _vm._e()
-                              ]
-                            )
-                          ])
                         : _vm._e(),
                       _vm._v(" "),
-                      _c("hr"),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-12" }, [
-                        _vm._m(1),
-                        _vm._v(" "),
-                        _c(
-                          "ul",
-                          { staticClass: "p-0" },
-                          _vm._l(_vm.company.users, function(user) {
-                            return _c(
-                              "li",
-                              {
-                                key: user.id,
-                                staticClass: "card-body border mb-3"
-                              },
-                              [
+                      _c("div", { staticClass: "card-body p-0" }, [
+                        _c("div", [
+                          _vm.website
+                            ? _c("div", { staticClass: "col-12" }, [
+                                _vm._m(0),
+                                _vm._v(" "),
                                 _c(
                                   "div",
                                   {
@@ -18475,11 +18414,13 @@ var render = function() {
                                     _c(
                                       "span",
                                       { staticClass: "mb-2  font-weight-bold" },
-                                      [_vm._v("Name")]
+                                      [_vm._v("Company Email")]
                                     ),
                                     _vm._v(" "),
                                     _c("span", { staticClass: "mb-2" }, [
-                                      _vm._v(" " + _vm._s(user.name) + " ")
+                                      _vm._v(
+                                        " " + _vm._s(_vm.website[0].email) + " "
+                                      )
                                     ])
                                   ]
                                 ),
@@ -18493,26 +18434,137 @@ var render = function() {
                                   [
                                     _c(
                                       "span",
-                                      { staticClass: "font-weight-bold" },
-                                      [_vm._v("Email")]
+                                      { staticClass: "mb-2  font-weight-bold" },
+                                      [_vm._v("Company Number")]
                                     ),
                                     _vm._v(" "),
-                                    _c("span", [_vm._v(_vm._s(user.email))])
+                                    _c("span", { staticClass: "mb-2" }, [
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(_vm.website[0].number) +
+                                          " "
+                                      )
+                                    ])
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "d-flex justify-content-between"
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      { staticClass: "mb-2  font-weight-bold" },
+                                      [_vm._v("Database")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("span", { staticClass: "mb-2" }, [
+                                      _vm._v(" " + _vm._s(_vm.website[0].uuid))
+                                    ])
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "d-flex justify-content-between"
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      { staticClass: "mb-2  font-weight-bold" },
+                                      [_vm._v("Domain")]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm.website[0].hostnames
+                                      ? _c("span", { staticClass: "mb-2" }, [
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(
+                                                _vm.website[0].hostnames[0].fqdn
+                                              )
+                                          )
+                                        ])
+                                      : _vm._e()
                                   ]
                                 )
-                              ]
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("hr"),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-12" }, [
+                            _vm._m(1),
+                            _vm._v(" "),
+                            _c(
+                              "ul",
+                              { staticClass: "p-0" },
+                              _vm._l(_vm.company.users, function(user) {
+                                return _c(
+                                  "li",
+                                  {
+                                    key: user.id,
+                                    staticClass: "card-body border mb-3"
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "d-flex justify-content-between"
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "mb-2  font-weight-bold"
+                                          },
+                                          [_vm._v("Name")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("span", { staticClass: "mb-2" }, [
+                                          _vm._v(" " + _vm._s(user.name) + " ")
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "d-flex justify-content-between"
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          { staticClass: "font-weight-bold" },
+                                          [_vm._v("Email")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("span", [_vm._v(_vm._s(user.email))])
+                                      ]
+                                    )
+                                  ]
+                                )
+                              }),
+                              0
                             )
-                          }),
-                          0
-                        )
+                          ])
+                        ])
                       ])
                     ])
-                  ])
-                ])
-              ],
-              1
-            )
-          ])
+                  ],
+                  1
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("router-view")
         ],
         1
       )
@@ -18861,6 +18913,7 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         token: JSON.parse(localStorage.getItem('access_token')) || false,
         companies: [],
         company: '',
+        companyAccount: '',
         subscriptions: [],
         subscription: '',
         modal: false,
@@ -18875,6 +18928,9 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         company: function company(state) {
             return state.company;
+        },
+        companyAccount: function companyAccount(state) {
+            return state.companyAccount;
         },
         subscriptions: function subscriptions(state) {
             return state.subscriptions;
@@ -18907,6 +18963,9 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         getCompany: function getCompany(state, company) {
             state.company = company;
+        },
+        getCompanyAccount: function getCompanyAccount(state, account) {
+            state.companyAccount = account;
         },
         getCompanyToUpdate: function getCompanyToUpdate(state, company) {
             state.company = company;
@@ -19051,14 +19110,48 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
                 console.log(error.response.data);
             });
         },
-        addSubscription: function addSubscription(context, subscripion) {
+        getCompanyAccount: function getCompanyAccount(context, uuid) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/companyAccount/' + uuid).then(function (response) {
+                context.commit('getCompanyAccount', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        addCompanyAccount: function addCompanyAccount(context, account) {
             context.commit('loadingRequest');
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/subscriptions', {}).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/companyAccount', {
+                business_name: account.business_name,
+                email: account.email,
+                phone_number: account.phone_number,
+                fax_number: account.fax_number,
+                address: account.address,
+                city: account.city,
+                state: account.state,
+                postal_code: account.postal_code
+            }).then(function (response) {
                 context.commit('loadingRequest');
-                context.commit('successAlert', response.data);
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
+                context.commit('successAlert', response.data.message);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
             }).catch(function (error) {
                 context.commit('loadingRequest');
+                console.log(error.response.data);
+            });
+        },
+        updateCompanyAccount: function updateCompanyAccount(context, account) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/updateCompanyAccount/' + account.uuid, {
+                business_name: account.business_name,
+                email: account.email,
+                phone_number: account.phone_number,
+                fax_number: account.fax_number,
+                address: account.address,
+                city: account.city,
+                state: account.state,
+                postal_code: account.postal_code,
+                subscription: account.subscription
+            }).then(function (response) {
+                console.log(response.data);
+                context.commit('successAlert', response.data.message);
+            }).catch(function (error) {
                 console.log(error.response.data);
             });
         },
@@ -19076,15 +19169,29 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
                 console.log(error.response.data);
             });
         },
-        getSubscriptionToUpdate: function getSubscriptionToUpdate(context, id) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptionToUpdate/' + id).then(function (response) {
-                context.commit('getSubscriptionToUpdate', response.data);
+        addSubscription: function addSubscription(context, subscripion) {
+            context.commit('loadingRequest');
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/subscriptions', {
+                title: subscripion.title,
+                amount: subscripion.amount,
+                basis: subscripion.basis,
+                description: subscripion.description
+            }).then(function (response) {
+                context.commit('loadingRequest');
+                context.commit('successAlert', response.data);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
             }).catch(function (error) {
+                context.commit('loadingRequest');
                 console.log(error.response.data);
             });
         },
         updateSubscription: function updateSubscription(context, subscripion) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/subscriptions/' + subscripion.id, {}).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/subscriptions/' + subscripion.id, {
+                title: subscripion.title,
+                amount: subscripion.amount,
+                basis: subscripion.basis,
+                description: subscripion.description
+            }).then(function (response) {
                 context.commit('updateSubscription', response.data);
             }).catch(function (error) {
                 console.log(error.response.data);
@@ -20313,7 +20420,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'subscription',
+    name: 'subscription-form',
     data: function data() {
         return {
             subscription: {
@@ -20537,6 +20644,1215 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-c4b87590", module.exports)
+  }
+}
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(86)
+/* template */
+var __vue_template__ = __webpack_require__(87)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/CompanyAccount.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-065aef83", Component.options)
+  } else {
+    hotAPI.reload("data-v-065aef83", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(2);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'company',
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['companyAccount']), {
+        website: function website() {
+            return this.company.website;
+        }
+    }),
+    methods: {},
+    created: function created() {
+        this.$store.dispatch('getCompanyAccount', this.$route.params.uuid);
+    }
+});
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c(
+        "div",
+        { staticClass: "col-md-6" },
+        [
+          _c(
+            "router-link",
+            {
+              staticClass: "nav-link",
+              attrs: { to: { path: "/company/" + _vm.$route.params.uuid } }
+            },
+            [_c("i", { staticClass: "fas fa-arrow-left mr-2" }), _vm._v("Back")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "card card-default" }, [
+            _c(
+              "div",
+              { staticClass: "card-header d-flex justify-content-between" },
+              [
+                _c(
+                  "span",
+                  {
+                    staticClass:
+                      "align-self-center font-weight-bold text-primary"
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Account Details\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _c(
+                      "router-link",
+                      {
+                        staticClass: "btn btn-sm btn-secondary mr-3",
+                        attrs: {
+                          to: {
+                            path:
+                              "/company/" +
+                              _vm.$route.params.uuid +
+                              "/add-account"
+                          }
+                        }
+                      },
+                      [_vm._v("Add Details")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass: "btn btn-sm btn-primary",
+                        attrs: {
+                          to: {
+                            path:
+                              "/company/" +
+                              _vm.$route.params.uuid +
+                              "/edit-account"
+                          }
+                        }
+                      },
+                      [_vm._v("Edit")]
+                    )
+                  ],
+                  1
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "p-0" }, [
+              _vm.companyAccount
+                ? _c("div", { staticClass: "col-12" }, [
+                    _vm.companyAccount <= 0
+                      ? _c(
+                          "div",
+                          { staticClass: "p-4 d-flex justify-content-center" },
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "btn btn-sm btn-secondary mr-3",
+                                attrs: {
+                                  to: {
+                                    path:
+                                      "/company/" +
+                                      _vm.$route.params.uuid +
+                                      "/add-account"
+                                  }
+                                }
+                              },
+                              [_vm._v("Add Details")]
+                            )
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Business Name")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.companyAccount[0].business_name))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Address")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.companyAccount[0].address))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("City")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [_vm._v(_vm._s(_vm.companyAccount[0].city))])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("State")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.companyAccount[0].state))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Postal Code")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.companyAccount[0].postal_code))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Phone Number")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.companyAccount[0].phone_number))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Fax Number")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.companyAccount[0].fax_number))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "d-flex justify-content-between p-3" },
+                      [
+                        _c("span", { staticClass: "font-weight-bold" }, [
+                          _vm._v("Subscription")
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.companyAccount[0].subscription))
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ])
+          ])
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-065aef83", module.exports)
+  }
+}
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(89)
+/* template */
+var __vue_template__ = __webpack_require__(90)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/EditAccount.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5f63a1c0", Component.options)
+  } else {
+    hotAPI.reload("data-v-5f63a1c0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(2);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'edit-account',
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['companyAccount'])),
+    methods: {
+        updateAccount: function updateAccount() {
+            var _this = this;
+
+            this.$store.dispatch('updateCompanyAccount', {
+                uuid: this.$route.params.uuid,
+                subscription: this.companyAccount[0].subscription,
+                business_name: this.companyAccount[0].business_name,
+                email: this.companyAccount[0].email,
+                phone_number: this.companyAccount[0].phone_number,
+                fax_number: this.companyAccount[0].fax_number,
+                address: this.companyAccount[0].address,
+                city: this.companyAccount[0].city,
+                state: this.companyAccount[0].state,
+                postal_code: this.companyAccount[0].postal_code
+            }).then(function (response) {
+                _this.$router.go(-1);
+            });
+        }
+    },
+    created: function created() {
+        this.$store.dispatch('getCompanyAccount', this.$route.params.uuid);
+    }
+});
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.companyAccount
+    ? _c("div", { staticClass: "container" }, [
+        _c("div", { staticClass: "row justify-content-center" }, [
+          _c(
+            "div",
+            { staticClass: "col-md-6" },
+            [
+              _c(
+                "router-link",
+                {
+                  staticClass: "nav-link",
+                  attrs: {
+                    to: {
+                      path: "/company/" + _vm.$route.params.uuid + "/account"
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-arrow-left mr-2" }),
+                  _vm._v("Back")
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "card card-default" }, [
+                _c("div", { staticClass: "card-header" }, [
+                  _vm._v("\n                    Edit Account\n                ")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body" }, [
+                  _c(
+                    "form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.updateAccount($event)
+                        }
+                      }
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].subscription,
+                            expression: "companyAccount[0].subscription"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "Subscription" },
+                        domProps: { value: _vm.companyAccount[0].subscription },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "subscription",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].business_name,
+                            expression: "companyAccount[0].business_name"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "Business Name" },
+                        domProps: {
+                          value: _vm.companyAccount[0].business_name
+                        },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "business_name",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].email,
+                            expression: "companyAccount[0].email"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "Email" },
+                        domProps: { value: _vm.companyAccount[0].email },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "email",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].phone_number,
+                            expression: "companyAccount[0].phone_number"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "Phone Number" },
+                        domProps: { value: _vm.companyAccount[0].phone_number },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "phone_number",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].fax_number,
+                            expression: "companyAccount[0].fax_number"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "Fax Number" },
+                        domProps: { value: _vm.companyAccount[0].fax_number },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "fax_number",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].address,
+                            expression: "companyAccount[0].address"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "Address" },
+                        domProps: { value: _vm.companyAccount[0].address },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "address",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].city,
+                            expression: "companyAccount[0].city"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "City" },
+                        domProps: { value: _vm.companyAccount[0].city },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "city",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].state,
+                            expression: "companyAccount[0].state"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "State" },
+                        domProps: { value: _vm.companyAccount[0].state },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "state",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.companyAccount[0].postal_code,
+                            expression: "companyAccount[0].postal_code"
+                          }
+                        ],
+                        staticClass: "form-control mb-3",
+                        attrs: { type: "text", placeholder: "Postal Code" },
+                        domProps: { value: _vm.companyAccount[0].postal_code },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.companyAccount[0],
+                              "postal_code",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-block",
+                          attrs: { type: "submit" }
+                        },
+                        [_vm._v("Update")]
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ],
+            1
+          )
+        ])
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5f63a1c0", module.exports)
+  }
+}
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(92)
+/* template */
+var __vue_template__ = __webpack_require__(93)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/AccountForm.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-516a20ac", Component.options)
+  } else {
+    hotAPI.reload("data-v-516a20ac", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 92 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'account-form',
+    data: function data() {
+        return {
+            account: {
+                subscription: '',
+                business_name: '',
+                email: '',
+                phone_number: '',
+                fax_number: '',
+                address: '',
+                city: '',
+                state: '',
+                postal_code: ''
+            }
+        };
+    },
+
+    methods: {
+        addAccount: function addAccount() {
+            var _this = this;
+
+            this.$store.dispatch('addCompanyAccount', {
+                subscription: this.account.subscription,
+                business_name: this.account.business_name,
+                email: this.account.email,
+                phone_number: this.account.phone_number,
+                fax_number: this.account.fax_number,
+                address: this.account.address,
+                city: this.account.city,
+                state: this.account.state,
+                postal_code: this.account.postal_code
+            }).then(function (response) {
+                _this.$router.go(-1);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "subscription container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c(
+        "div",
+        { staticClass: "col-md-6" },
+        [
+          _c(
+            "router-link",
+            {
+              staticClass: "nav-link",
+              attrs: {
+                to: { path: "/company/" + _vm.$route.params.uuid + "/account" }
+              }
+            },
+            [_c("i", { staticClass: "fas fa-arrow-left mr-2" }), _vm._v("Back")]
+          ),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              staticClass: "align-self-center col-md-12 p-3 border",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.addAccount($event)
+                }
+              }
+            },
+            [
+              _c("div", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.subscription,
+                      expression: "account.subscription"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Subscription" },
+                  domProps: { value: _vm.account.subscription },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "subscription", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.business_name,
+                      expression: "account.business_name"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Business Name" },
+                  domProps: { value: _vm.account.business_name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.account,
+                        "business_name",
+                        $event.target.value
+                      )
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.email,
+                      expression: "account.email"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Email" },
+                  domProps: { value: _vm.account.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "email", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.phone_number,
+                      expression: "account.phone_number"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Phone Number" },
+                  domProps: { value: _vm.account.phone_number },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "phone_number", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.fax_number,
+                      expression: "account.fax_number"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Fax Number" },
+                  domProps: { value: _vm.account.fax_number },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "fax_number", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.address,
+                      expression: "account.address"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Address" },
+                  domProps: { value: _vm.account.address },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "address", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.city,
+                      expression: "account.city"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "City" },
+                  domProps: { value: _vm.account.city },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "city", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.state,
+                      expression: "account.state"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "State" },
+                  domProps: { value: _vm.account.state },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "state", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.postal_code,
+                      expression: "account.postal_code"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Postal Code" },
+                  domProps: { value: _vm.account.postal_code },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "postal_code", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-block",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v("Submit")]
+              )
+            ]
+          )
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "card-header p-0 font-weight-bold p-3 border-primary d-flex justify-content-between h4"
+      },
+      [
+        _c("span", [_vm._v("Account Form")]),
+        _vm._v(" "),
+        _c("div", [_c("i", { staticClass: "fas fa-file-invoice-dollar" })])
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-516a20ac", module.exports)
   }
 }
 

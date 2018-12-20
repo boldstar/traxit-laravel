@@ -1,7 +1,7 @@
 <template>
     <div class="container"  v-if="website">
         <Modal v-if="modalState" :name="companyName" :alert="messageAlert" :id="companyUUID" />
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" v-if="$route.name == 'company'">
             <div class="col-md-6">
                 <router-link to="/" class="nav-link"><i class="fas fa-arrow-left mr-2"></i>Back</router-link>
                 <div class="card card-default">
@@ -10,6 +10,7 @@
                                 {{ website[0].company }}
                         </span>
                         <div class="d-flex">
+                            <router-link :to="'/company/' +website[0].uuid+ '/account'" class="btn btn-sm btn-outline-info  mr-3">Account Details</router-link>
                             <router-link class="btn btn-sm btn-primary mr-3" :to="{path: '/edit-company/' + website[0].uuid}">Edit</router-link>
                             <button class="btn btn-sm btn-secondary" @click="requestDelete">Delete</button>
                         </div>
@@ -60,6 +61,8 @@
                 </div>
             </div>
         </div>
+
+        <router-view></router-view>
     </div>
 </template>
 

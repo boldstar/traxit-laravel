@@ -28,7 +28,7 @@
 
 <script>
 export default {
-    name: 'subscription',
+    name: 'subscription-form',
     data() {
         return {
             subscription: {

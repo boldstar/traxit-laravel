@@ -19,6 +19,7 @@ export default new Vuex.Store({
     token: JSON.parse(localStorage.getItem('access_token')) || false,
     companies: [],
     company: '',
+    companyAccount: '',
     subscriptions: [],
     subscription: '',
     modal: false,
@@ -33,6 +34,9 @@ export default new Vuex.Store({
     },
     company(state) {
         return state.company
+    },
+    companyAccount(state) {
+        return state.companyAccount
     },
     subscriptions(state) {
         return state.subscriptions
@@ -65,6 +69,9 @@ export default new Vuex.Store({
     },
     getCompany(state, company) {
         state.company = company
+    },
+    getCompanyAccount(state, account) {
+        state.companyAccount = account
     },
     getCompanyToUpdate(state, company) {
         state.company = company
@@ -217,18 +224,54 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
-    addSubscription(context, subscripion) {
+    getCompanyAccount(context, uuid) {
+        axios.get('/companyAccount/' + uuid)
+        .then(response => {
+            context.commit('getCompanyAccount', response.data)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+        })
+    },
+    addCompanyAccount(context, account) {
         context.commit('loadingRequest')
-        axios.post('/subscriptions', {
-            
+        axios.post('/companyAccount', {
+            business_name: account.business_name,
+            email: account.email,
+            phone_number: account.phone_number,
+            fax_number: account.fax_number,
+            address: account.address,
+            city: account.city,
+            state: account.state,
+            postal_code: account.postal_code
         })
         .then(response => {
             context.commit('loadingRequest')
-            context.commit('successAlert', response.data)
-            router.push('/subscriptions')
+            context.commit('successAlert', response.data.message)
+            router.push('/')
         })
         .catch(error => {
             context.commit('loadingRequest')
+            console.log(error.response.data)
+        })
+    },
+    updateCompanyAccount(context, account) {
+        axios.patch('/updateCompanyAccount/' +account.uuid, {
+            business_name: account.business_name,
+            email: account.email,
+            phone_number: account.phone_number,
+            fax_number: account.fax_number,
+            address: account.address,
+            city: account.city,
+            state: account.state,
+            postal_code: account.postal_code,
+            subscription: account.subscription
+        })
+        .then(response => {
+            console.log(response.data)
+            context.commit('successAlert', response.data.message)
+        })
+        .catch(error => {
             console.log(error.response.data)
         })
     },
@@ -250,18 +293,30 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
-    getSubscriptionToUpdate(context, id) {
-        axios.get('/subscriptionToUpdate/' + id)
+    addSubscription(context, subscripion) {
+        context.commit('loadingRequest')
+        axios.post('/subscriptions', {
+            title: subscripion.title,
+            amount: subscripion.amount,
+            basis: subscripion.basis,
+            description: subscripion.description
+        })
         .then(response => {
-            context.commit('getSubscriptionToUpdate', response.data)
+            context.commit('loadingRequest')
+            context.commit('successAlert', response.data)
+            router.push('/subscriptions')
         })
         .catch(error => {
+            context.commit('loadingRequest')
             console.log(error.response.data)
         })
-    },
+    }, 
     updateSubscription(context, subscripion) {
         axios.patch('/subscriptions/' + subscripion.id, {
-         
+            title: subscripion.title,
+            amount: subscripion.amount,
+            basis: subscripion.basis,
+            description: subscripion.description
         })
         .then(response => {
             context.commit('updateSubscription', response.data)

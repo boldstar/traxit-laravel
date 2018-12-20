@@ -53,6 +53,7 @@ class CompaniesController extends Controller
 
         return response()->json(['users' => $users, 'website' => $website]);
     }
+    
     /**
      * Display the specified resource.
      *
@@ -111,6 +112,8 @@ class CompaniesController extends Controller
         $company = Tenant::create($request);
         
         event(new Registered($user = $this->create($request->all())));
+
+        $user->roles()->attach(Role::where('name', 'Admin')->first());
         
         return response()->json(['message' => 'A New Company Has Been Created!'], 200);
     }
@@ -165,4 +168,57 @@ class CompaniesController extends Controller
         
         return response('Tenant Deleted Succesfully', 200);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showAccount($uuid)
+    {
+        $env = app(Environment::class);
+            
+        if ($fqdn = optional($env->hostname())->fqdn) {
+            config(['database.default' => $uuid]);
+        }
+        
+        $account = DB::table($uuid . '.accounts')->get();
+
+        return response($account);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCompanyAccount(Request $request, $uuid)
+    {
+
+        $collection = DB::table($uuid . '.accounts')->get();
+
+        $account = $collection->pluck('id');
+
+        $accountToUpdate = Account::where('id', $account[0])->firstOrFail();
+
+        $data = $request->validate([
+            'business_name' => 'required|string',
+            'email' => 'required|string',
+            'phone_number' => 'required|string',
+            'fax_number' => 'required|string',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'postal_code' => 'required|string',
+            'subscription' => 'required|string'
+        ]);
+
+        $accountToUpdate->update($data);
+
+        return response('Update Was Succesful', 200);
+    }
+
 }
