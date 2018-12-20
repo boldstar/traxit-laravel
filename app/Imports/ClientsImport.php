@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Client;
+use App\Models\Tenant\Client;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class ClientsImport implements ToModel

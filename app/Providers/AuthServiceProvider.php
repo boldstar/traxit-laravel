@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Task;
+use App\Models\Tenant\Task;
 use App\Policies\TaskPolicy;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Gate;
@@ -32,6 +32,12 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes(function ($router) {
             $router->forAccessTokens();
         });
+
+        $this->commands([
+            \Laravel\Passport\Console\InstallCommand::class,
+            \Laravel\Passport\Console\ClientCommand::class,
+            \Laravel\Passport\Console\KeysCommand::class,
+        ]);
 
         Passport::tokensExpireIn(now()->addDays(1));
     }

@@ -14,91 +14,94 @@ use App\Exports\ClientsExport;
 |
 */
 
-Route::middleware('auth:api')->group(function() {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
+//auth:api requires access token to access controllers
+Route::group(['middleware' => 'auth:api'], function () {   
+    Route::get('/tasks', 'Tenant\TasksController@index');
+    Route::get('/role', 'Tenant\AuthController@role');
+    Route::get('/userProfile/', 'Tenant\AuthController@show');
+    Route::patch('/tasks/{task}', 'Tenant\TasksController@update');
+    Route::post('/logout', 'Tenant\AuthController@logout');
+});
+
+//tenancy.enforce is a middleware for making routes aware of tenancy
+Route::group(['middleware' => 'tenancy.enforce'], function () {
+    Route::get('/account', 'Tenant\AccountsController@account');
+    Route::post('/account', 'Tenant\AccountsController@store');
+    Route::patch('/account/{id}', 'Tenant\AccountsController@update');
+    Route::post('/login', 'Tenant\AuthController@login');
+    Route::post('/register', 'Tenant\AuthController@register');
+
+    Route::get('/users', 'Tenant\AuthController@index');
+    Route::get('/userToUpdate/{id}', 'Tenant\AuthController@userToUpdate');
+    Route::patch('/users/{user}', 'Tenant\AuthController@update');
+
+    Route::get('/clients', 'Tenant\ClientsController@index');
+    Route::get('/clientsWithBusinesses', 'Tenant\ClientsController@clientWithBusinesses');
+    Route::get('/clients/{id}', 'Tenant\ClientsController@show');
+    Route::post('/clients', 'Tenant\ClientsController@store');
+    Route::patch('/clients/{client}', 'Tenant\ClientsController@update');
+    Route::delete('/clients/{client}', 'Tenant\ClientsController@destroy');
+
+    Route::get('/businesses', 'Tenant\BusinessesController@index');
+    Route::get('/businesses/{id}', 'Tenant\BusinessesController@show');
+    Route::post('/businesses', 'Tenant\BusinessesController@store');
+    Route::patch('/businesses/{business}', 'Tenant\BusinessesController@update');
+    Route::delete('/businesses/{business}', 'Tenant\BusinessesController@destroy');
+
+    Route::get('/engagements', 'Tenant\EngagementsController@index');
+    Route::get('/engagements/{id}', 'Tenant\EngagementsController@clientindex');
+    Route::get('/clientengagement/{id}', 'Tenant\EngagementsController@show');
+    Route::get('/engagementquestions/{id}', 'Tenant\EngagementsController@questionindex');
+    Route::get('/engagementReturnTypes', 'Tenant\EngagementsController@returnType_index');
+    Route::post('/engagements', 'Tenant\EngagementsController@store');
+    Route::patch('/engagements/{engagement}', 'Tenant\EngagementsController@update');
+    Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
+    Route::delete('/engagements/{engagement}', 'Tenant\EngagementsController@destroy');
+
+    Route::get('/questions/{id}', 'Tenant\QuestionsController@show');
+    Route::post('/questions', 'Tenant\QuestionsController@store');
+    Route::patch('/questions/{question}', 'Tenant\QuestionsController@update');
+    Route::patch('/questionsanswer/{question}', 'Tenant\QuestionsController@updateanswer');
+    Route::delete('/questions/{question}', 'Tenant\QuestionsController@destroy');
+
+    Route::get('/dependents/{id}', 'Tenant\DependentsController@show');
+    Route::post('/dependents', 'Tenant\DependentsController@store');
+    Route::patch('/dependents/{dependent}', 'Tenant\DependentsController@update');
+    Route::delete('/dependents/{dependent}', 'Tenant\DependentsController@destroy');
+
+    Route::get('/clientnotes/{id}', 'Tenant\NotesController@index');
+    Route::get('/notes/{id}', 'Tenant\NotesController@show');
+    Route::post('/notes', 'Tenant\NotesController@store');
+    Route::patch('/notes/{note}', 'Tenant\NotesController@update');
+    Route::delete('/notes/{note}', 'Tenant\NotesController@destroy');
+
+    Route::get('/workflowstatuses', 'Tenant\WorkflowsController@index');
+    Route::get('/workflowstatuses/{id}', 'Tenant\WorkflowsController@show');
+    Route::post('/workflowstatuses', 'Tenant\WorkflowsController@store');
+    Route::put('/workflowstatuses', 'Tenant\WorkflowsController@updateWorkflowStatuses');
+    Route::patch('/workflowstatuses/{workflow}', 'Tenant\WorkflowsController@workflowStatuses');
+    Route::delete('/workflowstatuses/{status}', 'Tenant\WorkflowsController@destroy');
+    Route::delete('/workflow/{workflow}', 'Tenant\WorkflowsController@destroyWorkflow');
+
+    Route::post('/search', 'Tenant\SearchController@search');
+
+    Route::get('/downloadengagements', function () {
+        return Excel::download(new EngagementsExport, 'engagements.xlsx');
     });
 
-    Route::get('/tasks', 'TasksController@index');
-    Route::get('/role', 'AuthController@role');
-    Route::get('/userProfile/', 'AuthController@show');
-    Route::patch('/tasks/{task}', 'TasksController@update');
-    Route::post('/logout', 'AuthController@logout');
-});
+    Route::get('/downloadclients', function () {
+        return Excel::download(new ClientsExport, 'clients.xlsx');
+    });
 
-Route::get('/account', 'AuthController@account');
-Route::post('/login', 'AuthController@login');
-Route::post('/register', 'AuthController@register');
+    Route::post('/importclients', 'Tenant\ClientsController@importExcel');
 
-Route::get('/users', 'AuthController@index');
-Route::patch('/users/{user}', 'AuthController@update');
-
-Route::get('/clients', 'ClientsController@index');
-Route::get('/clientsWithBusinesses', 'ClientsController@clientWithBusinesses');
-Route::get('/clients/{id}', 'ClientsController@show');
-Route::post('/clients', 'ClientsController@store');
-Route::patch('/clients/{client}', 'ClientsController@update');
-Route::delete('/clients/{client}', 'ClientsController@destroy');
-
-Route::get('/businesses', 'BusinessesController@index');
-Route::get('/businesses/{id}', 'BusinessesController@show');
-Route::post('/businesses', 'BusinessesController@store');
-Route::patch('/businesses/{business}', 'BusinessesController@update');
-Route::delete('/businesses/{business}', 'BusinessesController@destroy');
-
-Route::get('/engagements', 'EngagementsController@index');
-Route::get('/engagements/{id}', 'EngagementsController@clientindex');
-Route::get('/clientengagement/{id}', 'EngagementsController@show');
-Route::get('/engagementquestions/{id}', 'EngagementsController@questionindex');
-Route::get('/engagementReturnTypes', 'EngagementsController@returnType_index');
-Route::post('/engagements', 'EngagementsController@store');
-Route::patch('/engagements/{engagement}', 'EngagementsController@update');
-Route::patch('/engagementsarray', 'EngagementsController@updateCheckedEngagements');
-Route::delete('/engagements/{engagement}', 'EngagementsController@destroy');
-
-Route::get('/questions/{id}', 'QuestionsController@show');
-Route::post('/questions', 'QuestionsController@store');
-Route::patch('/questions/{question}', 'QuestionsController@update');
-Route::patch('/questionsanswer/{question}', 'QuestionsController@updateanswer');
-Route::delete('/questions/{question}', 'QuestionsController@destroy');
-
-Route::get('/dependents/{id}', 'DependentsController@show');
-Route::post('/dependents', 'DependentsController@store');
-Route::patch('/dependents/{dependent}', 'DependentsController@update');
-Route::delete('/dependents/{dependent}', 'DependentsController@destroy');
-
-Route::get('/clientnotes/{id}', 'NotesController@index');
-Route::get('/notes/{id}', 'NotesController@show');
-Route::post('/notes', 'NotesController@store');
-Route::patch('/notes/{note}', 'NotesController@update');
-Route::delete('/notes/{note}', 'NotesController@destroy');
-
-Route::get('/workflowstatuses', 'WorkflowsController@index');
-Route::get('/workflowstatuses/{id}', 'WorkflowsController@show');
-Route::post('/workflowstatuses', 'WorkflowsController@store');
-Route::put('/workflowstatuses', 'WorkflowsController@updateWorkflowStatuses');
-Route::patch('/workflowstatuses/{workflow}', 'WorkflowsController@workflowStatuses');
-Route::delete('/workflowstatuses/{status}', 'WorkflowsController@destroy');
-Route::delete('/workflow/{workflow}', 'WorkflowsController@destroyWorkflow');
-
-Route::post('/search', 'SearchController@search');
-
-Route::get('/downloadengagements', function () {
-    return Excel::download(new EngagementsExport, 'engagements.xlsx');
-});
-
-Route::get('/downloadclients', function () {
-    return Excel::download(new ClientsExport, 'clients.xlsx');
-});
-
-Route::post('/importclients', 'ClientsController@importExcel');
-
-Route::group([    
-    'namespace' => 'Auth',    
-    'middleware' => 'api',    
-    'prefix' => 'password'
-], function () {    
-    Route::post('create', 'PasswordResetController@create');
-    Route::get('find/{token}', 'PasswordResetController@find');
-    Route::post('reset', 'PasswordResetController@reset');
+    Route::group([    
+        'namespace' => 'Auth',    
+        'middleware' => 'api',    
+        'prefix' => 'password'
+    ], function () {    
+        Route::post('create', 'PasswordResetController@create');
+        Route::get('find/{token}', 'PasswordResetController@find');
+        Route::post('reset', 'PasswordResetController@reset');
+    });
 });

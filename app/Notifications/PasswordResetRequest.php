@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Notifications;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Hyn\Tenancy\Environment;
+
 class PasswordResetRequest extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -35,9 +39,11 @@ class PasswordResetRequest extends Notification implements ShouldQueue
      */
      public function toMail($notifiable)
      {
-        $url = url('http://localhost:8080/reset-password/'.$this->token);
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+
+        $url = url('https://'. $hostname->subdomain.'.traxit.io/reset-password/'.$this->token);
         return (new MailMessage)
-            ->line('You are receiving this email because we        received a password reset request for your account.')
+            ->line('You are receiving this email because we received a password reset request for your account.')
             ->action('Reset Password', url($url))
             ->line('If you did not request a password reset, no further action is required.');
     }
