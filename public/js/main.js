@@ -18898,7 +18898,7 @@ if (false) {
 
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.baseURL = 'http://traxit.test/web';
+__WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.baseURL = 'https://traxit.pro/web';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1'] = {
     'X-Requested-With': 'XMLHttpRequest',
