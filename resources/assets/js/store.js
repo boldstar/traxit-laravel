@@ -4,7 +4,7 @@ import axios from 'axios'
 import router from './router.js'
 
 Vue.use(Vuex)
-axios.defaults.baseURL = 'http://traxit.test/web'
+axios.defaults.baseURL = 'https://traxit.pro/web'
 const token = document.head.querySelector('meta[name="csrf-token"]');
 axios.defaults.headers.common['header1'] = {
     'X-Requested-With': 'XMLHttpRequest',
