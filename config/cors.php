@@ -21,6 +21,7 @@ return [
 
         'allow_origins' => [
             '*',
+            'https://aewcpa.traxit.io'
         ],
 
         'allow_methods' => [
