@@ -18,8 +18,7 @@ class PreflightResponses
         if ($request->getMethod() === "OPTIONS") {
             return response('');
         }
-        
+
         return $next($request);
-     }
     }
 }
