@@ -20,7 +20,7 @@ return [
         'allow_credentials' => false,
 
         'allow_origins' => [
-            'https://aewcpa.traxit.io',
+            '*',
         ],
 
         'allow_methods' => [
@@ -33,7 +33,6 @@ return [
         ],
 
         'allow_headers' => [
-            'header1',
             'Content-Type',
             'X-Auth-Token',
             'Origin',
