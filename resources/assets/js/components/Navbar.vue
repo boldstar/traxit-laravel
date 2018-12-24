@@ -1,7 +1,7 @@
 <template>
 <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
     <div class="container">
-        <span class="navbar-brand">TRAXIT</span>
+        <span class="navbar-brand"><i class="far fa-compass mr-2"></i>TRAXIT</span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
