@@ -76,11 +76,12 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        return response($request);
-
+        
         $passport = DB::table('oauth_clients')->where('id', 2)->first(); 
-
+        
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+
+        return response($hostname);
 
         $http = new \GuzzleHttp\Client;
 
