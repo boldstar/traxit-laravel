@@ -33,6 +33,7 @@ return [
         ],
 
         'allow_headers' => [
+            'header1',
             'Content-Type',
             'X-Auth-Token',
             'Origin',
