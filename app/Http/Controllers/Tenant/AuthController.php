@@ -81,12 +81,10 @@ class AuthController extends Controller
         
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
 
-        return response($hostname);
-
         $http = new \GuzzleHttp\Client;
 
         try {
-            $response = $http->post('http://' . $hostname->fqdn . '/oauth/token', [
+            $response = $http->post('https://' . $hostname->fqdn . '/oauth/token', [
                 'form_params' => [
                     'grant_type' => 'password',
                     'client_id' => $passport->id,
