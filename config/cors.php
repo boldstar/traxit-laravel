@@ -20,7 +20,7 @@ return [
         'allow_credentials' => false,
 
         'allow_origins' => [
-            'https://*.traxit.io/api/*',
+            'https://aewcpa.traxit.io',
         ],
 
         'allow_methods' => [
