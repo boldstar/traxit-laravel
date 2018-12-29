@@ -60,18 +60,127 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var bind = __webpack_require__(11);
-var isBuffer = __webpack_require__(58);
+var bind = __webpack_require__(12);
+var isBuffer = __webpack_require__(73);
 
 /*global toString:true*/
 
@@ -371,115 +480,6 @@ module.exports = {
   extend: extend,
   trim: trim
 };
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
 
 
 /***/ }),
@@ -12522,7 +12522,7 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(18).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(19).setImmediate))
 
 /***/ }),
 /* 4 */
@@ -12558,8 +12558,8 @@ module.exports = g;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(60);
+var utils = __webpack_require__(1);
+var normalizeHeaderName = __webpack_require__(75);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -12575,10 +12575,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(12);
+    adapter = __webpack_require__(13);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(12);
+    adapter = __webpack_require__(13);
   }
   return adapter;
 }
@@ -12947,7 +12947,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(23)
+var listToStyles = __webpack_require__(24)
 
 /*
 type StyleObject = {
@@ -13160,11 +13160,11 @@ function applyToTag (styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(28)
+var __vue_script__ = __webpack_require__(29)
 /* template */
-var __vue_template__ = __webpack_require__(29)
+var __vue_template__ = __webpack_require__(30)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -13209,10 +13209,10 @@ module.exports = Component.exports
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Login_vue__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Login_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__views_Login_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_Dashboard_vue__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_Dashboard_vue__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_Dashboard_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__views_Dashboard_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_Register_vue__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_Register_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__views_Register_vue__);
@@ -13220,15 +13220,15 @@ module.exports = Component.exports
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_Company_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__views_Company_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue__ = __webpack_require__(52);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue__ = __webpack_require__(58);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue__ = __webpack_require__(88);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue__);
 
 
@@ -13256,6 +13256,53 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(38)
+/* template */
+var __vue_template__ = __webpack_require__(39)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Alert.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1f8bf896", Component.options)
+  } else {
+    hotAPI.reload("data-v-1f8bf896", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -13271,19 +13318,19 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var settle = __webpack_require__(61);
-var buildURL = __webpack_require__(63);
-var parseHeaders = __webpack_require__(64);
-var isURLSameOrigin = __webpack_require__(65);
-var createError = __webpack_require__(13);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(66);
+var utils = __webpack_require__(1);
+var settle = __webpack_require__(76);
+var buildURL = __webpack_require__(78);
+var parseHeaders = __webpack_require__(79);
+var isURLSameOrigin = __webpack_require__(80);
+var createError = __webpack_require__(14);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(81);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -13380,7 +13427,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(67);
+      var cookies = __webpack_require__(82);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -13458,13 +13505,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(62);
+var enhanceError = __webpack_require__(77);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -13483,7 +13530,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13495,7 +13542,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13521,25 +13568,25 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(17);
-module.exports = __webpack_require__(75);
+__webpack_require__(18);
+module.exports = __webpack_require__(90);
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__App__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router_js__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store_js__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store_js__ = __webpack_require__(70);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -13563,7 +13610,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 });
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -13619,7 +13666,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(19);
+__webpack_require__(20);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -13633,7 +13680,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -13826,19 +13873,19 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(6)))
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(21)
+  __webpack_require__(22)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(24)
+var __vue_script__ = __webpack_require__(25)
 /* template */
-var __vue_template__ = __webpack_require__(30)
+var __vue_template__ = __webpack_require__(31)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -13877,13 +13924,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(22);
+var content = __webpack_require__(23);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -13903,7 +13950,7 @@ if(false) {
 }
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(7)(false);
@@ -13917,7 +13964,7 @@ exports.push([module.i, "\nli {\r\n    list-style: none;\n}\n.subscription-card 
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 /**
@@ -13950,12 +13997,12 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Navbar_vue__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Navbar_vue__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Navbar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Navbar_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Login_vue__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Login_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__views_Login_vue__);
@@ -13987,15 +14034,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 });
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(26)
+var __vue_script__ = __webpack_require__(27)
 /* template */
-var __vue_template__ = __webpack_require__(27)
+var __vue_template__ = __webpack_require__(28)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -14034,7 +14081,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14099,7 +14146,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 });
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -14111,9 +14158,9 @@ var render = function() {
     { staticClass: "navbar navbar-expand-md navbar-light navbar-laravel" },
     [
       _c("div", { staticClass: "container" }, [
-        _c("span", { staticClass: "navbar-brand" }, [_vm._v("TRAXIT")]),
-        _vm._v(" "),
         _vm._m(0),
+        _vm._v(" "),
+        _vm._m(1),
         _vm._v(" "),
         _c(
           "div",
@@ -14230,6 +14277,15 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "navbar-brand" }, [
+      _c("i", { staticClass: "far fa-compass mr-2" }),
+      _vm._v("TRAXIT")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c(
       "button",
       {
@@ -14256,7 +14312,7 @@ if (false) {
 }
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14320,7 +14376,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 });
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -14426,7 +14482,7 @@ if (false) {
 }
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -14459,7 +14515,7 @@ if (false) {
 }
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17084,13 +17140,13 @@ if (inBrowser && window.Vue) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(33)
+var __vue_script__ = __webpack_require__(34)
 /* template */
 var __vue_template__ = __webpack_require__(40)
 /* template functional */
@@ -17131,14 +17187,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Companies_vue__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Companies_vue__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Companies_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Companies_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Alert_vue__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Alert_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Alert_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Alert_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(2);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -17176,15 +17232,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 });
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(35)
+var __vue_script__ = __webpack_require__(36)
 /* template */
-var __vue_template__ = __webpack_require__(36)
+var __vue_template__ = __webpack_require__(37)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -17223,7 +17279,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17260,7 +17316,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -17336,53 +17392,6 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-57393c34", module.exports)
   }
 }
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(38)
-/* template */
-var __vue_template__ = __webpack_require__(39)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/Alert.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1f8bf896", Component.options)
-  } else {
-    hotAPI.reload("data-v-1f8bf896", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
 
 /***/ }),
 /* 38 */
@@ -17479,7 +17488,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(42)
 /* template */
@@ -17890,7 +17899,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(45)
 /* template */
@@ -18060,7 +18069,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(47)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(49)
 /* template */
@@ -18608,7 +18617,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(53)
 /* template */
@@ -18883,1780 +18892,14 @@ if (false) {
 
 /***/ }),
 /* 55 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__router_js__ = __webpack_require__(10);
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.baseURL = 'http://traxit.test/web';
-var token = document.head.querySelector('meta[name="csrf-token"]');
-__WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1'] = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN': token.content
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-    state: {
-        user: '',
-        successalert: '',
-        erroralert: '',
-        token: JSON.parse(localStorage.getItem('access_token')) || false,
-        companies: [],
-        company: '',
-        companyAccount: '',
-        subscriptions: [],
-        subscription: '',
-        modal: false,
-        loading: false
-    },
-    getters: {
-        loggedIn: function loggedIn(state) {
-            return state.token;
-        },
-        companies: function companies(state) {
-            return state.companies;
-        },
-        company: function company(state) {
-            return state.company;
-        },
-        companyAccount: function companyAccount(state) {
-            return state.companyAccount;
-        },
-        subscriptions: function subscriptions(state) {
-            return state.subscriptions;
-        },
-        subscription: function subscription(state) {
-            return state.subscription;
-        },
-        companyToUpdate: function companyToUpdate(state) {
-            return state.company;
-        },
-        successAlert: function successAlert(state) {
-            return state.successalert;
-        },
-        errorAlert: function errorAlert(state) {
-            return state.erroralert;
-        },
-        loading: function loading(state) {
-            return state.loading;
-        },
-        modalState: function modalState(state) {
-            return state.modal;
-        }
-    },
-    mutations: {
-        loggedIn: function loggedIn(state) {
-            state.token = !state.token;
-        },
-        getCompanies: function getCompanies(state, companies) {
-            state.companies = companies;
-        },
-        getCompany: function getCompany(state, company) {
-            state.company = company;
-        },
-        getCompanyAccount: function getCompanyAccount(state, account) {
-            state.companyAccount = account;
-        },
-        getCompanyToUpdate: function getCompanyToUpdate(state, company) {
-            state.company = company;
-        },
-        deleteCompany: function deleteCompany(state, uuid) {
-            var index = state.companies.findIndex(function (company) {
-                return company.uuid == uuid;
-            });
-            state.companies.splice(index, 1);
-        },
-        updateCompany: function updateCompany(state, company) {
-            var index = state.companies.findIndex(function (item) {
-                return item.uuid == company.uuid;
-            });
-            state.companies.splice(index, 1, company);
-        },
-        getSubscriptions: function getSubscriptions(state, subscriptions) {
-            state.subscriptions = subscriptions;
-        },
-        getSubscription: function getSubscription(state, subscription) {
-            state.subscription = subscription;
-        },
-        addSubscription: function addSubscription(state, subscripion) {
-            state.subscriptions.push(subscripion);
-        },
-        deleteSubscription: function deleteSubscription(state, id) {
-            var index = state.subscriptions.findIndex(function (subscripion) {
-                return subscription.id == id;
-            });
-            state.subscriptions.splice(index, 1);
-        },
-        updateSubscription: function updateSubscription(state, subscription) {
-            var index = state.subscriptions.findIndex(function (item) {
-                return item.id == subscription.id;
-            });
-            state.subscriptions.splice(index, 1, subscription);
-        },
-        successAlert: function successAlert(state, alert) {
-            state.successalert = alert;
-        },
-        errorAlert: function errorAlert(state, alert) {
-            state.erroralert = alert;
-        },
-        loadingRequest: function loadingRequest(state) {
-            state.loading = !state.loading;
-        },
-        closeModal: function closeModal(state) {
-            state.modal = !state.modal;
-        },
-        showModal: function showModal(state) {
-            state.modal = !state.modal;
-        }
-    },
-    actions: {
-        login: function login(context, credentials) {
-            context.commit('loadingRequest');
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/login', {
-                email: credentials.email,
-                password: credentials.password
-            }).then(function (response) {
-                context.commit('loggedIn');
-                localStorage.setItem('access_token', true);
-                context.commit('loadingRequest');
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
-            }).catch(function (error) {
-                console.log(error.response.data);
-                context.commit('loadingRequest');
-            });
-        },
-        logout: function logout(context) {
-            context.commit('loadingRequest');
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/logout').then(function (response) {
-                context.commit('loggedIn');
-                localStorage.removeItem('access_token');
-                context.commit('loadingRequest');
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/login');
-            }).catch(function (error) {
-                context.commit('loadingRequest');
-                context.commit('loggedIn');
-                console.log(error.response.data);
-            });
-        },
-        addCompany: function addCompany(context, company) {
-            context.commit('loadingRequest');
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/register', {
-                company: company.company,
-                company_email: company.company_email,
-                company_number: company.company_number,
-                name: company.name,
-                email: company.email,
-                fqdn: company.fqdn,
-                password: company.password,
-                password_confirmation: company.password_confirmation
-            }).then(function (response) {
-                context.commit('loadingRequest');
-                context.commit('successAlert', response.data.message);
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
-            }).catch(function (error) {
-                context.commit('loadingRequest');
-                console.log(error.response.data);
-            });
-        },
-        getCompanies: function getCompanies(context) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/companies').then(function (response) {
-                context.commit('getCompanies', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        getCompany: function getCompany(context, uuid) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/company/' + uuid).then(function (response) {
-                context.commit('getCompany', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        getCompanyToUpdate: function getCompanyToUpdate(context, uuid) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/companyToUpdate/' + uuid).then(function (response) {
-                context.commit('getCompanyToUpdate', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        updateCompany: function updateCompany(context, company) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/company/' + company.uuid, {
-                company: company.company,
-                email: company.email,
-                number: company.number
-            }).then(function (response) {
-                context.commit('updateCompany', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        deleteCompany: function deleteCompany(context, uuid) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.delete('/company/' + uuid).then(function (response) {
-                context.commit('successAlert', response.data);
-                context.commit('deleteCompany', uuid);
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
-            }).catch(function (error) {
-                context.commit('errorAlert', error.response.data);
-                console.log(error.response.data);
-            });
-        },
-        getCompanyAccount: function getCompanyAccount(context, uuid) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/companyAccount/' + uuid).then(function (response) {
-                context.commit('getCompanyAccount', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        addCompanyAccount: function addCompanyAccount(context, account) {
-            context.commit('loadingRequest');
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/companyAccount', {
-                business_name: account.business_name,
-                email: account.email,
-                phone_number: account.phone_number,
-                fax_number: account.fax_number,
-                address: account.address,
-                city: account.city,
-                state: account.state,
-                postal_code: account.postal_code
-            }).then(function (response) {
-                context.commit('loadingRequest');
-                context.commit('successAlert', response.data.message);
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
-            }).catch(function (error) {
-                context.commit('loadingRequest');
-                console.log(error.response.data);
-            });
-        },
-        updateCompanyAccount: function updateCompanyAccount(context, account) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/updateCompanyAccount/' + account.uuid, {
-                business_name: account.business_name,
-                email: account.email,
-                phone_number: account.phone_number,
-                fax_number: account.fax_number,
-                address: account.address,
-                city: account.city,
-                state: account.state,
-                postal_code: account.postal_code,
-                subscription: account.subscription
-            }).then(function (response) {
-                console.log(response.data);
-                context.commit('successAlert', response.data.message);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        getSubscriptions: function getSubscriptions(context) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptions').then(function (response) {
-                context.commit('getSubscriptions', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        getSubscription: function getSubscription(context, id) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptions/' + id).then(function (response) {
-                context.commit('getSubscription', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        addSubscription: function addSubscription(context, subscripion) {
-            context.commit('loadingRequest');
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/subscriptions', {
-                title: subscripion.title,
-                amount: subscripion.amount,
-                basis: subscripion.basis,
-                description: subscripion.description
-            }).then(function (response) {
-                context.commit('loadingRequest');
-                context.commit('successAlert', response.data);
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
-            }).catch(function (error) {
-                context.commit('loadingRequest');
-                console.log(error.response.data);
-            });
-        },
-        updateSubscription: function updateSubscription(context, subscripion) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/subscriptions/' + subscripion.id, {
-                title: subscripion.title,
-                amount: subscripion.amount,
-                basis: subscripion.basis,
-                description: subscripion.description
-            }).then(function (response) {
-                context.commit('updateSubscription', response.data);
-            }).catch(function (error) {
-                console.log(error.response.data);
-            });
-        },
-        deleteSubscription: function deleteSubscription(context, id) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.delete('/subscriptions/' + id).then(function (response) {
-                context.commit('successAlert', response.data);
-                context.commit('deleteSubscriptions', id);
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
-            }).catch(function (error) {
-                context.commit('errorAlert', error.response.data);
-                console.log(error.response.data);
-            });
-        }
-    }
-}));
-
-/***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(57);
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-var bind = __webpack_require__(11);
-var Axios = __webpack_require__(59);
-var defaults = __webpack_require__(5);
-
-/**
- * Create an instance of Axios
- *
- * @param {Object} defaultConfig The default config for the instance
- * @return {Axios} A new instance of Axios
- */
-function createInstance(defaultConfig) {
-  var context = new Axios(defaultConfig);
-  var instance = bind(Axios.prototype.request, context);
-
-  // Copy axios.prototype to instance
-  utils.extend(instance, Axios.prototype, context);
-
-  // Copy context to instance
-  utils.extend(instance, context);
-
-  return instance;
-}
-
-// Create the default instance to be exported
-var axios = createInstance(defaults);
-
-// Expose Axios class to allow class inheritance
-axios.Axios = Axios;
-
-// Factory for creating new instances
-axios.create = function create(instanceConfig) {
-  return createInstance(utils.merge(defaults, instanceConfig));
-};
-
-// Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(15);
-axios.CancelToken = __webpack_require__(73);
-axios.isCancel = __webpack_require__(14);
-
-// Expose all/spread
-axios.all = function all(promises) {
-  return Promise.all(promises);
-};
-axios.spread = __webpack_require__(74);
-
-module.exports = axios;
-
-// Allow use of default import syntax in TypeScript
-module.exports.default = axios;
-
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var defaults = __webpack_require__(5);
-var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(68);
-var dispatchRequest = __webpack_require__(69);
-
-/**
- * Create a new instance of Axios
- *
- * @param {Object} instanceConfig The default config for the instance
- */
-function Axios(instanceConfig) {
-  this.defaults = instanceConfig;
-  this.interceptors = {
-    request: new InterceptorManager(),
-    response: new InterceptorManager()
-  };
-}
-
-/**
- * Dispatch a request
- *
- * @param {Object} config The config specific for this request (merged with this.defaults)
- */
-Axios.prototype.request = function request(config) {
-  /*eslint no-param-reassign:0*/
-  // Allow for axios('example/url'[, config]) a la fetch API
-  if (typeof config === 'string') {
-    config = utils.merge({
-      url: arguments[0]
-    }, arguments[1]);
-  }
-
-  config = utils.merge(defaults, {method: 'get'}, this.defaults, config);
-  config.method = config.method.toLowerCase();
-
-  // Hook up interceptors middleware
-  var chain = [dispatchRequest, undefined];
-  var promise = Promise.resolve(config);
-
-  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-    chain.unshift(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-    chain.push(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  while (chain.length) {
-    promise = promise.then(chain.shift(), chain.shift());
-  }
-
-  return promise;
-};
-
-// Provide aliases for supported request methods
-utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
-  /*eslint func-names:0*/
-  Axios.prototype[method] = function(url, config) {
-    return this.request(utils.merge(config || {}, {
-      method: method,
-      url: url
-    }));
-  };
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  /*eslint func-names:0*/
-  Axios.prototype[method] = function(url, data, config) {
-    return this.request(utils.merge(config || {}, {
-      method: method,
-      url: url,
-      data: data
-    }));
-  };
-});
-
-module.exports = Axios;
-
-
-/***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-
-module.exports = function normalizeHeaderName(headers, normalizedName) {
-  utils.forEach(headers, function processHeader(value, name) {
-    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-      headers[normalizedName] = value;
-      delete headers[name];
-    }
-  });
-};
-
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var createError = __webpack_require__(13);
-
-/**
- * Resolve or reject a Promise based on response status.
- *
- * @param {Function} resolve A function that resolves the promise.
- * @param {Function} reject A function that rejects the promise.
- * @param {object} response The response.
- */
-module.exports = function settle(resolve, reject, response) {
-  var validateStatus = response.config.validateStatus;
-  // Note: status is not exposed by XDomainRequest
-  if (!response.status || !validateStatus || validateStatus(response.status)) {
-    resolve(response);
-  } else {
-    reject(createError(
-      'Request failed with status code ' + response.status,
-      response.config,
-      null,
-      response.request,
-      response
-    ));
-  }
-};
-
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Update an Error with the specified config, error code, and response.
- *
- * @param {Error} error The error to update.
- * @param {Object} config The config.
- * @param {string} [code] The error code (for example, 'ECONNABORTED').
- * @param {Object} [request] The request.
- * @param {Object} [response] The response.
- * @returns {Error} The error.
- */
-module.exports = function enhanceError(error, config, code, request, response) {
-  error.config = config;
-  if (code) {
-    error.code = code;
-  }
-  error.request = request;
-  error.response = response;
-  return error;
-};
-
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-
-function encode(val) {
-  return encodeURIComponent(val).
-    replace(/%40/gi, '@').
-    replace(/%3A/gi, ':').
-    replace(/%24/g, '$').
-    replace(/%2C/gi, ',').
-    replace(/%20/g, '+').
-    replace(/%5B/gi, '[').
-    replace(/%5D/gi, ']');
-}
-
-/**
- * Build a URL by appending params to the end
- *
- * @param {string} url The base of the url (e.g., http://www.google.com)
- * @param {object} [params] The params to be appended
- * @returns {string} The formatted url
- */
-module.exports = function buildURL(url, params, paramsSerializer) {
-  /*eslint no-param-reassign:0*/
-  if (!params) {
-    return url;
-  }
-
-  var serializedParams;
-  if (paramsSerializer) {
-    serializedParams = paramsSerializer(params);
-  } else if (utils.isURLSearchParams(params)) {
-    serializedParams = params.toString();
-  } else {
-    var parts = [];
-
-    utils.forEach(params, function serialize(val, key) {
-      if (val === null || typeof val === 'undefined') {
-        return;
-      }
-
-      if (utils.isArray(val)) {
-        key = key + '[]';
-      } else {
-        val = [val];
-      }
-
-      utils.forEach(val, function parseValue(v) {
-        if (utils.isDate(v)) {
-          v = v.toISOString();
-        } else if (utils.isObject(v)) {
-          v = JSON.stringify(v);
-        }
-        parts.push(encode(key) + '=' + encode(v));
-      });
-    });
-
-    serializedParams = parts.join('&');
-  }
-
-  if (serializedParams) {
-    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
-  }
-
-  return url;
-};
-
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-
-// Headers whose duplicates are ignored by node
-// c.f. https://nodejs.org/api/http.html#http_message_headers
-var ignoreDuplicateOf = [
-  'age', 'authorization', 'content-length', 'content-type', 'etag',
-  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
-  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
-  'referer', 'retry-after', 'user-agent'
-];
-
-/**
- * Parse headers into an object
- *
- * ```
- * Date: Wed, 27 Aug 2014 08:58:49 GMT
- * Content-Type: application/json
- * Connection: keep-alive
- * Transfer-Encoding: chunked
- * ```
- *
- * @param {String} headers Headers needing to be parsed
- * @returns {Object} Headers parsed into an object
- */
-module.exports = function parseHeaders(headers) {
-  var parsed = {};
-  var key;
-  var val;
-  var i;
-
-  if (!headers) { return parsed; }
-
-  utils.forEach(headers.split('\n'), function parser(line) {
-    i = line.indexOf(':');
-    key = utils.trim(line.substr(0, i)).toLowerCase();
-    val = utils.trim(line.substr(i + 1));
-
-    if (key) {
-      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-        return;
-      }
-      if (key === 'set-cookie') {
-        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-      } else {
-        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
-      }
-    }
-  });
-
-  return parsed;
-};
-
-
-/***/ }),
-/* 65 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-
-module.exports = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs have full support of the APIs needed to test
-  // whether the request URL is of the same origin as current location.
-  (function standardBrowserEnv() {
-    var msie = /(msie|trident)/i.test(navigator.userAgent);
-    var urlParsingNode = document.createElement('a');
-    var originURL;
-
-    /**
-    * Parse a URL to discover it's components
-    *
-    * @param {String} url The URL to be parsed
-    * @returns {Object}
-    */
-    function resolveURL(url) {
-      var href = url;
-
-      if (msie) {
-        // IE needs attribute set twice to normalize properties
-        urlParsingNode.setAttribute('href', href);
-        href = urlParsingNode.href;
-      }
-
-      urlParsingNode.setAttribute('href', href);
-
-      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-      return {
-        href: urlParsingNode.href,
-        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-        host: urlParsingNode.host,
-        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-        hostname: urlParsingNode.hostname,
-        port: urlParsingNode.port,
-        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-                  urlParsingNode.pathname :
-                  '/' + urlParsingNode.pathname
-      };
-    }
-
-    originURL = resolveURL(window.location.href);
-
-    /**
-    * Determine if a URL shares the same origin as the current location
-    *
-    * @param {String} requestURL The URL to test
-    * @returns {boolean} True if URL shares the same origin, otherwise false
-    */
-    return function isURLSameOrigin(requestURL) {
-      var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-      return (parsed.protocol === originURL.protocol &&
-            parsed.host === originURL.host);
-    };
-  })() :
-
-  // Non standard browser envs (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return function isURLSameOrigin() {
-      return true;
-    };
-  })()
-);
-
-
-/***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
-
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-function E() {
-  this.message = 'String contains an invalid character';
-}
-E.prototype = new Error;
-E.prototype.code = 5;
-E.prototype.name = 'InvalidCharacterError';
-
-function btoa(input) {
-  var str = String(input);
-  var output = '';
-  for (
-    // initialize result and counter
-    var block, charCode, idx = 0, map = chars;
-    // if the next str index does not exist:
-    //   change the mapping table to "="
-    //   check if d has no fractional digits
-    str.charAt(idx | 0) || (map = '=', idx % 1);
-    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
-    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
-  ) {
-    charCode = str.charCodeAt(idx += 3 / 4);
-    if (charCode > 0xFF) {
-      throw new E();
-    }
-    block = block << 8 | charCode;
-  }
-  return output;
-}
-
-module.exports = btoa;
-
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-
-module.exports = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs support document.cookie
-  (function standardBrowserEnv() {
-    return {
-      write: function write(name, value, expires, path, domain, secure) {
-        var cookie = [];
-        cookie.push(name + '=' + encodeURIComponent(value));
-
-        if (utils.isNumber(expires)) {
-          cookie.push('expires=' + new Date(expires).toGMTString());
-        }
-
-        if (utils.isString(path)) {
-          cookie.push('path=' + path);
-        }
-
-        if (utils.isString(domain)) {
-          cookie.push('domain=' + domain);
-        }
-
-        if (secure === true) {
-          cookie.push('secure');
-        }
-
-        document.cookie = cookie.join('; ');
-      },
-
-      read: function read(name) {
-        var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-        return (match ? decodeURIComponent(match[3]) : null);
-      },
-
-      remove: function remove(name) {
-        this.write(name, '', Date.now() - 86400000);
-      }
-    };
-  })() :
-
-  // Non standard browser env (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return {
-      write: function write() {},
-      read: function read() { return null; },
-      remove: function remove() {}
-    };
-  })()
-);
-
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-
-function InterceptorManager() {
-  this.handlers = [];
-}
-
-/**
- * Add a new interceptor to the stack
- *
- * @param {Function} fulfilled The function to handle `then` for a `Promise`
- * @param {Function} rejected The function to handle `reject` for a `Promise`
- *
- * @return {Number} An ID used to remove interceptor later
- */
-InterceptorManager.prototype.use = function use(fulfilled, rejected) {
-  this.handlers.push({
-    fulfilled: fulfilled,
-    rejected: rejected
-  });
-  return this.handlers.length - 1;
-};
-
-/**
- * Remove an interceptor from the stack
- *
- * @param {Number} id The ID that was returned by `use`
- */
-InterceptorManager.prototype.eject = function eject(id) {
-  if (this.handlers[id]) {
-    this.handlers[id] = null;
-  }
-};
-
-/**
- * Iterate over all the registered interceptors
- *
- * This method is particularly useful for skipping over any
- * interceptors that may have become `null` calling `eject`.
- *
- * @param {Function} fn The function to call for each interceptor
- */
-InterceptorManager.prototype.forEach = function forEach(fn) {
-  utils.forEach(this.handlers, function forEachHandler(h) {
-    if (h !== null) {
-      fn(h);
-    }
-  });
-};
-
-module.exports = InterceptorManager;
-
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-var transformData = __webpack_require__(70);
-var isCancel = __webpack_require__(14);
-var defaults = __webpack_require__(5);
-var isAbsoluteURL = __webpack_require__(71);
-var combineURLs = __webpack_require__(72);
-
-/**
- * Throws a `Cancel` if cancellation has been requested.
- */
-function throwIfCancellationRequested(config) {
-  if (config.cancelToken) {
-    config.cancelToken.throwIfRequested();
-  }
-}
-
-/**
- * Dispatch a request to the server using the configured adapter.
- *
- * @param {object} config The config that is to be used for the request
- * @returns {Promise} The Promise to be fulfilled
- */
-module.exports = function dispatchRequest(config) {
-  throwIfCancellationRequested(config);
-
-  // Support baseURL config
-  if (config.baseURL && !isAbsoluteURL(config.url)) {
-    config.url = combineURLs(config.baseURL, config.url);
-  }
-
-  // Ensure headers exist
-  config.headers = config.headers || {};
-
-  // Transform request data
-  config.data = transformData(
-    config.data,
-    config.headers,
-    config.transformRequest
-  );
-
-  // Flatten headers
-  config.headers = utils.merge(
-    config.headers.common || {},
-    config.headers[config.method] || {},
-    config.headers || {}
-  );
-
-  utils.forEach(
-    ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
-    function cleanHeaderConfig(method) {
-      delete config.headers[method];
-    }
-  );
-
-  var adapter = config.adapter || defaults.adapter;
-
-  return adapter(config).then(function onAdapterResolution(response) {
-    throwIfCancellationRequested(config);
-
-    // Transform response data
-    response.data = transformData(
-      response.data,
-      response.headers,
-      config.transformResponse
-    );
-
-    return response;
-  }, function onAdapterRejection(reason) {
-    if (!isCancel(reason)) {
-      throwIfCancellationRequested(config);
-
-      // Transform response data
-      if (reason && reason.response) {
-        reason.response.data = transformData(
-          reason.response.data,
-          reason.response.headers,
-          config.transformResponse
-        );
-      }
-    }
-
-    return Promise.reject(reason);
-  });
-};
-
-
-/***/ }),
-/* 70 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-
-/**
- * Transform the data for a request or a response
- *
- * @param {Object|String} data The data to be transformed
- * @param {Array} headers The headers for the request or response
- * @param {Array|Function} fns A single function or Array of functions
- * @returns {*} The resulting transformed data
- */
-module.exports = function transformData(data, headers, fns) {
-  /*eslint no-param-reassign:0*/
-  utils.forEach(fns, function transform(fn) {
-    data = fn(data, headers);
-  });
-
-  return data;
-};
-
-
-/***/ }),
-/* 71 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Determines whether the specified URL is absolute
- *
- * @param {string} url The URL to test
- * @returns {boolean} True if the specified URL is absolute, otherwise false
- */
-module.exports = function isAbsoluteURL(url) {
-  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-  // by any combination of letters, digits, plus, period, or hyphen.
-  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-};
-
-
-/***/ }),
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Creates a new URL by combining the specified URLs
- *
- * @param {string} baseURL The base URL
- * @param {string} relativeURL The relative URL
- * @returns {string} The combined URL
- */
-module.exports = function combineURLs(baseURL, relativeURL) {
-  return relativeURL
-    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-    : baseURL;
-};
-
-
-/***/ }),
-/* 73 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Cancel = __webpack_require__(15);
-
-/**
- * A `CancelToken` is an object that can be used to request cancellation of an operation.
- *
- * @class
- * @param {Function} executor The executor function.
- */
-function CancelToken(executor) {
-  if (typeof executor !== 'function') {
-    throw new TypeError('executor must be a function.');
-  }
-
-  var resolvePromise;
-  this.promise = new Promise(function promiseExecutor(resolve) {
-    resolvePromise = resolve;
-  });
-
-  var token = this;
-  executor(function cancel(message) {
-    if (token.reason) {
-      // Cancellation has already been requested
-      return;
-    }
-
-    token.reason = new Cancel(message);
-    resolvePromise(token.reason);
-  });
-}
-
-/**
- * Throws a `Cancel` if cancellation has been requested.
- */
-CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-  if (this.reason) {
-    throw this.reason;
-  }
-};
-
-/**
- * Returns an object that contains a new `CancelToken` and a function that, when called,
- * cancels the `CancelToken`.
- */
-CancelToken.source = function source() {
-  var cancel;
-  var token = new CancelToken(function executor(c) {
-    cancel = c;
-  });
-  return {
-    token: token,
-    cancel: cancel
-  };
-};
-
-module.exports = CancelToken;
-
-
-/***/ }),
-/* 74 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Syntactic sugar for invoking a function and expanding an array for arguments.
- *
- * Common use case would be to use `Function.prototype.apply`.
- *
- *  ```js
- *  function f(x, y, z) {}
- *  var args = [1, 2, 3];
- *  f.apply(null, args);
- *  ```
- *
- * With `spread` this example can be re-written.
- *
- *  ```js
- *  spread(function(x, y, z) {})([1, 2, 3]);
- *  ```
- *
- * @param {Function} callback
- * @returns {Function}
- */
-module.exports = function spread(callback) {
-  return function wrap(arr) {
-    return callback.apply(null, arr);
-  };
-};
-
-
-/***/ }),
-/* 75 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(80)
+var __vue_script__ = __webpack_require__(56)
 /* template */
-var __vue_template__ = __webpack_require__(81)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/views/Subscriptions.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7d560133", Component.options)
-  } else {
-    hotAPI.reload("data-v-7d560133", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 80 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Alert_vue__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Alert_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Alert_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'subscriptions',
-    components: {
-        Alert: __WEBPACK_IMPORTED_MODULE_0__components_Alert_vue___default.a
-    },
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapGetters */])(['subscriptions', 'successAlert'])),
-    methods: {
-        deleteSubscription: function deleteSubscription(id) {
-            this.$store.dispatch('deleteSubscription', id);
-        }
-    },
-    created: function created() {
-        this.$store.dispatch('getSubscriptions');
-    }
-});
-
-/***/ }),
-/* 81 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container" },
-    [
-      _vm.successAlert
-        ? _c("Alert", { attrs: { message: _vm.successAlert } })
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "card-header border-primary d-flex justify-content-between mb-3"
-        },
-        [
-          _c("span", { staticClass: "align-self-center" }, [
-            _vm._v("Subscriptions")
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "btn btn-sm btn-primary",
-              attrs: { to: "/add-subscription" }
-            },
-            [_vm._v("Add Subscription")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "d-flex flex-row justify-content-around flex-wrap p-0 col-md-12"
-        },
-        _vm._l(_vm.subscriptions, function(subscription) {
-          return _c(
-            "div",
-            {
-              key: subscription.id,
-              staticClass: "card col-3 p-0 d-flex flex-colum subscription-card"
-            },
-            [
-              _c(
-                "div",
-                { staticClass: "flex-column d-flex align-items-center" },
-                [
-                  _c("span", { staticClass: "p-4 h3" }, [
-                    _vm._v(_vm._s(subscription.title))
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "p-2 h3" }, [
-                    _vm._v(
-                      "$" +
-                        _vm._s(subscription.amount) +
-                        "/" +
-                        _vm._s(subscription.basis)
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "p-4 h6" }, [
-                    _vm._v(_vm._s(subscription.description))
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "card-footer d-flex justify-content-between p-3"
-                },
-                [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-light",
-                      on: {
-                        click: function($event) {
-                          _vm.deleteSubscription(subscription.id)
-                        }
-                      }
-                    },
-                    [_vm._v("Delete")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "btn btn-sm btn-primary",
-                      attrs: { to: "#" }
-                    },
-                    [_vm._v("Edit")]
-                  )
-                ],
-                1
-              )
-            ]
-          )
-        }),
-        0
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7d560133", module.exports)
-  }
-}
-
-/***/ }),
-/* 82 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(83)
-/* template */
-var __vue_template__ = __webpack_require__(84)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/SubscriptionForm.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-c4b87590", Component.options)
-  } else {
-    hotAPI.reload("data-v-c4b87590", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 83 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'subscription-form',
-    data: function data() {
-        return {
-            subscription: {
-                title: '',
-                amount: '',
-                basis: '',
-                description: ''
-            },
-            basises: ['yr', 'mth'],
-            option: 'Choose...'
-        };
-    },
-
-    methods: {
-        addSubscription: function addSubscription() {
-            this.$store.dispatch('addSubscription', {
-                title: this.subscription.title,
-                amount: this.subscription.amount,
-                basis: this.subscription.basis,
-                description: this.subscription.description
-            });
-        }
-    },
-    created: function created() {
-        this.subscription.basis = this.option;
-    }
-});
-
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "subscription container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c(
-        "div",
-        { staticClass: "col-md-6" },
-        [
-          _c(
-            "router-link",
-            { staticClass: "nav-link", attrs: { to: "/subscriptions" } },
-            [_c("i", { staticClass: "fas fa-arrow-left mr-2" }), _vm._v("Back")]
-          ),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "align-self-center col-md-12 p-0",
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.addSubscription($event)
-                }
-              }
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.title,
-                    expression: "subscription.title"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "text", placeholder: "Title" },
-                domProps: { value: _vm.subscription.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "title", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.amount,
-                    expression: "subscription.amount"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "decimal", placeholder: "000.00" },
-                domProps: { value: _vm.subscription.amount },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "amount", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.subscription.basis,
-                      expression: "subscription.basis"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { name: "basis", id: "basis" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.subscription,
-                        "basis",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { disabled: "" } }, [
-                    _vm._v(_vm._s(_vm.option))
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.basises, function(basis, index) {
-                    return _c(
-                      "option",
-                      { key: index, attrs: { value: "basis" } },
-                      [_vm._v(_vm._s(basis))]
-                    )
-                  })
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.title,
-                    expression: "subscription.title"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "textarea", placeholder: "Title" },
-                domProps: { value: _vm.subscription.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "title", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm._m(1)
-            ]
-          )
-        ],
-        1
-      )
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "card-header p-0 font-weight-bold mb-3 p-3 border-primary d-flex justify-content-between h4"
-      },
-      [
-        _c("span", [_vm._v("New Subscription")]),
-        _vm._v(" "),
-        _c("div", [_c("i", { staticClass: "fas fa-file-invoice-dollar" })])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary btn-block", attrs: { type: "submit" } },
-        [_vm._v("Submit")]
-      )
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-c4b87590", module.exports)
-  }
-}
-
-/***/ }),
-/* 85 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(86)
-/* template */
-var __vue_template__ = __webpack_require__(87)
+var __vue_template__ = __webpack_require__(57)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -20695,7 +18938,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 86 */
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20780,7 +19023,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 });
 
 /***/ }),
-/* 87 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -21018,15 +19261,425 @@ if (false) {
 }
 
 /***/ }),
-/* 88 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(89)
+var __vue_script__ = __webpack_require__(59)
 /* template */
-var __vue_template__ = __webpack_require__(90)
+var __vue_template__ = __webpack_require__(60)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/AccountForm.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-516a20ac", Component.options)
+  } else {
+    hotAPI.reload("data-v-516a20ac", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'account-form',
+    data: function data() {
+        return {
+            account: {
+                subscription: '',
+                business_name: '',
+                email: '',
+                phone_number: '',
+                fax_number: '',
+                address: '',
+                city: '',
+                state: '',
+                postal_code: ''
+            }
+        };
+    },
+
+    methods: {
+        addAccount: function addAccount() {
+            var _this = this;
+
+            this.$store.dispatch('addCompanyAccount', {
+                subscription: this.account.subscription,
+                business_name: this.account.business_name,
+                email: this.account.email,
+                phone_number: this.account.phone_number,
+                fax_number: this.account.fax_number,
+                address: this.account.address,
+                city: this.account.city,
+                state: this.account.state,
+                postal_code: this.account.postal_code
+            }).then(function (response) {
+                _this.$router.go(-1);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "subscription container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c(
+        "div",
+        { staticClass: "col-md-6" },
+        [
+          _c(
+            "router-link",
+            {
+              staticClass: "nav-link",
+              attrs: {
+                to: { path: "/company/" + _vm.$route.params.uuid + "/account" }
+              }
+            },
+            [_c("i", { staticClass: "fas fa-arrow-left mr-2" }), _vm._v("Back")]
+          ),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              staticClass: "align-self-center col-md-12 p-3 border",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.addAccount($event)
+                }
+              }
+            },
+            [
+              _c("div", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.subscription,
+                      expression: "account.subscription"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Subscription" },
+                  domProps: { value: _vm.account.subscription },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "subscription", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.business_name,
+                      expression: "account.business_name"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Business Name" },
+                  domProps: { value: _vm.account.business_name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.account,
+                        "business_name",
+                        $event.target.value
+                      )
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.email,
+                      expression: "account.email"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Email" },
+                  domProps: { value: _vm.account.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "email", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.phone_number,
+                      expression: "account.phone_number"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Phone Number" },
+                  domProps: { value: _vm.account.phone_number },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "phone_number", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.fax_number,
+                      expression: "account.fax_number"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Fax Number" },
+                  domProps: { value: _vm.account.fax_number },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "fax_number", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.address,
+                      expression: "account.address"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Address" },
+                  domProps: { value: _vm.account.address },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "address", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.city,
+                      expression: "account.city"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "City" },
+                  domProps: { value: _vm.account.city },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "city", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.state,
+                      expression: "account.state"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "State" },
+                  domProps: { value: _vm.account.state },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "state", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account.postal_code,
+                      expression: "account.postal_code"
+                    }
+                  ],
+                  staticClass: "form-control mb-3",
+                  attrs: { type: "text", placeholder: "Postal Code" },
+                  domProps: { value: _vm.account.postal_code },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.account, "postal_code", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-block",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v("Submit")]
+              )
+            ]
+          )
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "card-header p-0 font-weight-bold p-3 border-primary d-flex justify-content-between h4"
+      },
+      [
+        _c("span", [_vm._v("Account Form")]),
+        _vm._v(" "),
+        _c("div", [_c("i", { staticClass: "fas fa-file-invoice-dollar" })])
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-516a20ac", module.exports)
+  }
+}
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(62)
+/* template */
+var __vue_template__ = __webpack_require__(63)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -21065,7 +19718,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 89 */
+/* 62 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21134,7 +19787,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 });
 
 /***/ }),
-/* 90 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -21447,15 +20100,15 @@ if (false) {
 }
 
 /***/ }),
-/* 91 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(92)
+var __vue_script__ = __webpack_require__(65)
 /* template */
-var __vue_template__ = __webpack_require__(93)
+var __vue_template__ = __webpack_require__(66)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -21472,7 +20125,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/AccountForm.vue"
+Component.options.__file = "resources/assets/js/views/Subscriptions.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -21481,9 +20134,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-516a20ac", Component.options)
+    hotAPI.createRecord("data-v-7d560133", Component.options)
   } else {
-    hotAPI.reload("data-v-516a20ac", Component.options)
+    hotAPI.reload("data-v-7d560133", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -21494,7 +20147,237 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 92 */
+/* 65 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Alert_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Alert_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Alert_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'subscriptions',
+    components: {
+        Alert: __WEBPACK_IMPORTED_MODULE_0__components_Alert_vue___default.a
+    },
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapGetters */])(['subscriptions', 'successAlert'])),
+    methods: {
+        deleteSubscription: function deleteSubscription(id) {
+            this.$store.dispatch('deleteSubscription', id);
+        }
+    },
+    created: function created() {
+        this.$store.dispatch('getSubscriptions');
+    }
+});
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _vm.successAlert
+        ? _c("Alert", { attrs: { message: _vm.successAlert } })
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "card-header border-primary d-flex justify-content-between mb-3"
+        },
+        [
+          _c("span", { staticClass: "align-self-center" }, [
+            _vm._v("Subscriptions")
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "btn btn-sm btn-primary",
+              attrs: { to: "/add-subscription" }
+            },
+            [_vm._v("Add Subscription")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "d-flex flex-row justify-content-around flex-wrap p-0 col-md-12"
+        },
+        _vm._l(_vm.subscriptions, function(subscription) {
+          return _c(
+            "div",
+            {
+              key: subscription.id,
+              staticClass: "card col-3 p-0 d-flex flex-colum subscription-card"
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "flex-column d-flex align-items-center" },
+                [
+                  _c("span", { staticClass: "p-4 h3" }, [
+                    _vm._v(_vm._s(subscription.title))
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "p-2 h3" }, [
+                    _vm._v(
+                      "$" +
+                        _vm._s(subscription.amount) +
+                        "/" +
+                        _vm._s(subscription.basis)
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "p-4 h6" }, [
+                    _vm._v(_vm._s(subscription.description))
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "card-footer d-flex justify-content-between p-3"
+                },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-light",
+                      on: {
+                        click: function($event) {
+                          _vm.deleteSubscription(subscription.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Delete")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    {
+                      staticClass: "btn btn-sm btn-primary",
+                      attrs: { to: "#" }
+                    },
+                    [_vm._v("Edit")]
+                  )
+                ],
+                1
+              )
+            ]
+          )
+        }),
+        0
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7d560133", module.exports)
+  }
+}
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(68)
+/* template */
+var __vue_template__ = __webpack_require__(69)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/SubscriptionForm.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c4b87590", Component.options)
+  } else {
+    hotAPI.reload("data-v-c4b87590", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21527,50 +20410,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'account-form',
+    name: 'subscription-form',
     data: function data() {
         return {
-            account: {
-                subscription: '',
-                business_name: '',
-                email: '',
-                phone_number: '',
-                fax_number: '',
-                address: '',
-                city: '',
-                state: '',
-                postal_code: ''
-            }
+            subscription: {
+                title: '',
+                amount: '',
+                basis: '',
+                description: ''
+            },
+            basises: ['yr', 'mth'],
+            option: 'Choose...'
         };
     },
 
     methods: {
-        addAccount: function addAccount() {
-            var _this = this;
-
-            this.$store.dispatch('addCompanyAccount', {
-                subscription: this.account.subscription,
-                business_name: this.account.business_name,
-                email: this.account.email,
-                phone_number: this.account.phone_number,
-                fax_number: this.account.fax_number,
-                address: this.account.address,
-                city: this.account.city,
-                state: this.account.state,
-                postal_code: this.account.postal_code
-            }).then(function (response) {
-                _this.$router.go(-1);
+        addSubscription: function addSubscription() {
+            this.$store.dispatch('addSubscription', {
+                title: this.subscription.title,
+                amount: this.subscription.amount,
+                basis: this.subscription.basis,
+                description: this.subscription.description
             });
         }
+    },
+    created: function created() {
+        this.subscription.basis = this.option;
     }
 });
 
 /***/ }),
-/* 93 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -21585,12 +20457,7 @@ var render = function() {
         [
           _c(
             "router-link",
-            {
-              staticClass: "nav-link",
-              attrs: {
-                to: { path: "/company/" + _vm.$route.params.uuid + "/account" }
-              }
-            },
+            { staticClass: "nav-link", attrs: { to: "/subscriptions" } },
             [_c("i", { staticClass: "fas fa-arrow-left mr-2" }), _vm._v("Back")]
           ),
           _vm._v(" "),
@@ -21599,227 +20466,131 @@ var render = function() {
           _c(
             "form",
             {
-              staticClass: "align-self-center col-md-12 p-3 border",
+              staticClass: "align-self-center col-md-12 p-0",
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  return _vm.addAccount($event)
+                  return _vm.addSubscription($event)
                 }
               }
             },
             [
-              _c("div", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.subscription,
-                      expression: "account.subscription"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "Subscription" },
-                  domProps: { value: _vm.account.subscription },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "subscription", $event.target.value)
-                    }
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.subscription.title,
+                    expression: "subscription.title"
                   }
-                }),
-                _vm._v(" "),
-                _c("input", {
+                ],
+                staticClass: "form-control mb-3",
+                attrs: { type: "text", placeholder: "Title" },
+                domProps: { value: _vm.subscription.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.subscription, "title", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.subscription.amount,
+                    expression: "subscription.amount"
+                  }
+                ],
+                staticClass: "form-control mb-3",
+                attrs: { type: "decimal", placeholder: "000.00" },
+                domProps: { value: _vm.subscription.amount },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.subscription, "amount", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
                   directives: [
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.account.business_name,
-                      expression: "account.business_name"
+                      value: _vm.subscription.basis,
+                      expression: "subscription.basis"
                     }
                   ],
                   staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "Business Name" },
-                  domProps: { value: _vm.account.business_name },
+                  attrs: { name: "basis", id: "basis" },
                   on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
                       _vm.$set(
-                        _vm.account,
-                        "business_name",
-                        $event.target.value
+                        _vm.subscription,
+                        "basis",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
                       )
                     }
                   }
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.email,
-                      expression: "account.email"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "Email" },
-                  domProps: { value: _vm.account.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "email", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.phone_number,
-                      expression: "account.phone_number"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "Phone Number" },
-                  domProps: { value: _vm.account.phone_number },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "phone_number", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.fax_number,
-                      expression: "account.fax_number"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "Fax Number" },
-                  domProps: { value: _vm.account.fax_number },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "fax_number", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.address,
-                      expression: "account.address"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "Address" },
-                  domProps: { value: _vm.account.address },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "address", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.city,
-                      expression: "account.city"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "City" },
-                  domProps: { value: _vm.account.city },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "city", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.state,
-                      expression: "account.state"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "State" },
-                  domProps: { value: _vm.account.state },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "state", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account.postal_code,
-                      expression: "account.postal_code"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { type: "text", placeholder: "Postal Code" },
-                  domProps: { value: _vm.account.postal_code },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.account, "postal_code", $event.target.value)
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-block",
-                  attrs: { type: "submit" }
                 },
-                [_vm._v("Submit")]
-              )
+                [
+                  _c("option", { attrs: { disabled: "" } }, [
+                    _vm._v(_vm._s(_vm.option))
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.basises, function(basis, index) {
+                    return _c(
+                      "option",
+                      { key: index, attrs: { value: "basis" } },
+                      [_vm._v(_vm._s(basis))]
+                    )
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.subscription.title,
+                    expression: "subscription.title"
+                  }
+                ],
+                staticClass: "form-control mb-3",
+                attrs: { type: "textarea", placeholder: "Title" },
+                domProps: { value: _vm.subscription.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.subscription, "title", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm._m(1)
             ]
           )
         ],
@@ -21837,14 +20608,26 @@ var staticRenderFns = [
       "div",
       {
         staticClass:
-          "card-header p-0 font-weight-bold p-3 border-primary d-flex justify-content-between h4"
+          "card-header p-0 font-weight-bold mb-3 p-3 border-primary d-flex justify-content-between h4"
       },
       [
-        _c("span", [_vm._v("Account Form")]),
+        _c("span", [_vm._v("New Subscription")]),
         _vm._v(" "),
         _c("div", [_c("i", { staticClass: "fas fa-file-invoice-dollar" })])
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary btn-block", attrs: { type: "submit" } },
+        [_vm._v("Submit")]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -21852,9 +20635,1233 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-516a20ac", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-c4b87590", module.exports)
   }
 }
+
+/***/ }),
+/* 70 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__router_js__ = __webpack_require__(10);
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.baseURL = 'http://traxit.test/web';
+var token = document.head.querySelector('meta[name="csrf-token"]');
+__WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1'] = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': token.content
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
+    state: {
+        user: '',
+        successalert: '',
+        erroralert: '',
+        token: JSON.parse(localStorage.getItem('access_token')) || false,
+        companies: [],
+        company: '',
+        companyAccount: '',
+        subscriptions: [],
+        subscription: '',
+        modal: false,
+        loading: false
+    },
+    getters: {
+        loggedIn: function loggedIn(state) {
+            return state.token;
+        },
+        companies: function companies(state) {
+            return state.companies;
+        },
+        company: function company(state) {
+            return state.company;
+        },
+        companyAccount: function companyAccount(state) {
+            return state.companyAccount;
+        },
+        subscriptions: function subscriptions(state) {
+            return state.subscriptions;
+        },
+        subscription: function subscription(state) {
+            return state.subscription;
+        },
+        companyToUpdate: function companyToUpdate(state) {
+            return state.company;
+        },
+        successAlert: function successAlert(state) {
+            return state.successalert;
+        },
+        errorAlert: function errorAlert(state) {
+            return state.erroralert;
+        },
+        loading: function loading(state) {
+            return state.loading;
+        },
+        modalState: function modalState(state) {
+            return state.modal;
+        }
+    },
+    mutations: {
+        loggedIn: function loggedIn(state) {
+            state.token = !state.token;
+        },
+        getCompanies: function getCompanies(state, companies) {
+            state.companies = companies;
+        },
+        getCompany: function getCompany(state, company) {
+            state.company = company;
+        },
+        getCompanyAccount: function getCompanyAccount(state, account) {
+            state.companyAccount = account;
+        },
+        getCompanyToUpdate: function getCompanyToUpdate(state, company) {
+            state.company = company;
+        },
+        deleteCompany: function deleteCompany(state, uuid) {
+            var index = state.companies.findIndex(function (company) {
+                return company.uuid == uuid;
+            });
+            state.companies.splice(index, 1);
+        },
+        updateCompany: function updateCompany(state, company) {
+            var index = state.companies.findIndex(function (item) {
+                return item.uuid == company.uuid;
+            });
+            state.companies.splice(index, 1, company);
+        },
+        getSubscriptions: function getSubscriptions(state, subscriptions) {
+            state.subscriptions = subscriptions;
+        },
+        getSubscription: function getSubscription(state, subscription) {
+            state.subscription = subscription;
+        },
+        addSubscription: function addSubscription(state, subscripion) {
+            state.subscriptions.push(subscripion);
+        },
+        deleteSubscription: function deleteSubscription(state, id) {
+            var index = state.subscriptions.findIndex(function (subscripion) {
+                return subscription.id == id;
+            });
+            state.subscriptions.splice(index, 1);
+        },
+        updateSubscription: function updateSubscription(state, subscription) {
+            var index = state.subscriptions.findIndex(function (item) {
+                return item.id == subscription.id;
+            });
+            state.subscriptions.splice(index, 1, subscription);
+        },
+        successAlert: function successAlert(state, alert) {
+            state.successalert = alert;
+        },
+        errorAlert: function errorAlert(state, alert) {
+            state.erroralert = alert;
+        },
+        loadingRequest: function loadingRequest(state) {
+            state.loading = !state.loading;
+        },
+        closeModal: function closeModal(state) {
+            state.modal = !state.modal;
+        },
+        showModal: function showModal(state) {
+            state.modal = !state.modal;
+        }
+    },
+    actions: {
+        login: function login(context, credentials) {
+            context.commit('loadingRequest');
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/login', {
+                email: credentials.email,
+                password: credentials.password
+            }).then(function (response) {
+                context.commit('loggedIn');
+                localStorage.setItem('access_token', true);
+                context.commit('loadingRequest');
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
+            }).catch(function (error) {
+                console.log(error.response.data);
+                context.commit('loadingRequest');
+            });
+        },
+        logout: function logout(context) {
+            context.commit('loadingRequest');
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/logout').then(function (response) {
+                context.commit('loggedIn');
+                localStorage.removeItem('access_token');
+                context.commit('loadingRequest');
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/login');
+            }).catch(function (error) {
+                context.commit('loadingRequest');
+                localStorage.removeItem('access_token');
+                context.commit('loggedIn');
+                console.log(error.response.data);
+            });
+        },
+        addCompany: function addCompany(context, company) {
+            context.commit('loadingRequest');
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/register', {
+                company: company.company,
+                company_email: company.company_email,
+                company_number: company.company_number,
+                name: company.name,
+                email: company.email,
+                fqdn: company.fqdn,
+                password: company.password,
+                password_confirmation: company.password_confirmation
+            }).then(function (response) {
+                context.commit('loadingRequest');
+                context.commit('successAlert', response.data.message);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
+            }).catch(function (error) {
+                context.commit('loadingRequest');
+                console.log(error.response.data);
+            });
+        },
+        getCompanies: function getCompanies(context) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/companies').then(function (response) {
+                context.commit('getCompanies', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        getCompany: function getCompany(context, uuid) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/company/' + uuid).then(function (response) {
+                context.commit('getCompany', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        getCompanyToUpdate: function getCompanyToUpdate(context, uuid) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/companyToUpdate/' + uuid).then(function (response) {
+                context.commit('getCompanyToUpdate', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        updateCompany: function updateCompany(context, company) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/company/' + company.uuid, {
+                company: company.company,
+                email: company.email,
+                number: company.number
+            }).then(function (response) {
+                context.commit('updateCompany', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        deleteCompany: function deleteCompany(context, uuid) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.delete('/company/' + uuid).then(function (response) {
+                context.commit('successAlert', response.data);
+                context.commit('deleteCompany', uuid);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
+            }).catch(function (error) {
+                context.commit('errorAlert', error.response.data);
+                console.log(error.response.data);
+            });
+        },
+        getCompanyAccount: function getCompanyAccount(context, uuid) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/companyAccount/' + uuid).then(function (response) {
+                context.commit('getCompanyAccount', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        addCompanyAccount: function addCompanyAccount(context, account) {
+            context.commit('loadingRequest');
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/companyAccount', {
+                business_name: account.business_name,
+                email: account.email,
+                phone_number: account.phone_number,
+                fax_number: account.fax_number,
+                address: account.address,
+                city: account.city,
+                state: account.state,
+                postal_code: account.postal_code
+            }).then(function (response) {
+                context.commit('loadingRequest');
+                context.commit('successAlert', response.data.message);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
+            }).catch(function (error) {
+                context.commit('loadingRequest');
+                console.log(error.response.data);
+            });
+        },
+        updateCompanyAccount: function updateCompanyAccount(context, account) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/updateCompanyAccount/' + account.uuid, {
+                business_name: account.business_name,
+                email: account.email,
+                phone_number: account.phone_number,
+                fax_number: account.fax_number,
+                address: account.address,
+                city: account.city,
+                state: account.state,
+                postal_code: account.postal_code,
+                subscription: account.subscription
+            }).then(function (response) {
+                console.log(response.data);
+                context.commit('successAlert', response.data.message);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        getSubscriptions: function getSubscriptions(context) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptions').then(function (response) {
+                context.commit('getSubscriptions', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        getSubscription: function getSubscription(context, id) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptions/' + id).then(function (response) {
+                context.commit('getSubscription', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        addSubscription: function addSubscription(context, subscripion) {
+            context.commit('loadingRequest');
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/subscriptions', {
+                title: subscripion.title,
+                amount: subscripion.amount,
+                basis: subscripion.basis,
+                description: subscripion.description
+            }).then(function (response) {
+                context.commit('loadingRequest');
+                context.commit('successAlert', response.data);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
+            }).catch(function (error) {
+                context.commit('loadingRequest');
+                console.log(error.response.data);
+            });
+        },
+        updateSubscription: function updateSubscription(context, subscripion) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/subscriptions/' + subscripion.id, {
+                title: subscripion.title,
+                amount: subscripion.amount,
+                basis: subscripion.basis,
+                description: subscripion.description
+            }).then(function (response) {
+                context.commit('updateSubscription', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        deleteSubscription: function deleteSubscription(context, id) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.delete('/subscriptions/' + id).then(function (response) {
+                context.commit('successAlert', response.data);
+                context.commit('deleteSubscriptions', id);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
+            }).catch(function (error) {
+                context.commit('errorAlert', error.response.data);
+                console.log(error.response.data);
+            });
+        }
+    }
+}));
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(72);
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+var bind = __webpack_require__(12);
+var Axios = __webpack_require__(74);
+var defaults = __webpack_require__(5);
+
+/**
+ * Create an instance of Axios
+ *
+ * @param {Object} defaultConfig The default config for the instance
+ * @return {Axios} A new instance of Axios
+ */
+function createInstance(defaultConfig) {
+  var context = new Axios(defaultConfig);
+  var instance = bind(Axios.prototype.request, context);
+
+  // Copy axios.prototype to instance
+  utils.extend(instance, Axios.prototype, context);
+
+  // Copy context to instance
+  utils.extend(instance, context);
+
+  return instance;
+}
+
+// Create the default instance to be exported
+var axios = createInstance(defaults);
+
+// Expose Axios class to allow class inheritance
+axios.Axios = Axios;
+
+// Factory for creating new instances
+axios.create = function create(instanceConfig) {
+  return createInstance(utils.merge(defaults, instanceConfig));
+};
+
+// Expose Cancel & CancelToken
+axios.Cancel = __webpack_require__(16);
+axios.CancelToken = __webpack_require__(88);
+axios.isCancel = __webpack_require__(15);
+
+// Expose all/spread
+axios.all = function all(promises) {
+  return Promise.all(promises);
+};
+axios.spread = __webpack_require__(89);
+
+module.exports = axios;
+
+// Allow use of default import syntax in TypeScript
+module.exports.default = axios;
+
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var defaults = __webpack_require__(5);
+var utils = __webpack_require__(1);
+var InterceptorManager = __webpack_require__(83);
+var dispatchRequest = __webpack_require__(84);
+
+/**
+ * Create a new instance of Axios
+ *
+ * @param {Object} instanceConfig The default config for the instance
+ */
+function Axios(instanceConfig) {
+  this.defaults = instanceConfig;
+  this.interceptors = {
+    request: new InterceptorManager(),
+    response: new InterceptorManager()
+  };
+}
+
+/**
+ * Dispatch a request
+ *
+ * @param {Object} config The config specific for this request (merged with this.defaults)
+ */
+Axios.prototype.request = function request(config) {
+  /*eslint no-param-reassign:0*/
+  // Allow for axios('example/url'[, config]) a la fetch API
+  if (typeof config === 'string') {
+    config = utils.merge({
+      url: arguments[0]
+    }, arguments[1]);
+  }
+
+  config = utils.merge(defaults, {method: 'get'}, this.defaults, config);
+  config.method = config.method.toLowerCase();
+
+  // Hook up interceptors middleware
+  var chain = [dispatchRequest, undefined];
+  var promise = Promise.resolve(config);
+
+  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+    chain.unshift(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+    chain.push(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  while (chain.length) {
+    promise = promise.then(chain.shift(), chain.shift());
+  }
+
+  return promise;
+};
+
+// Provide aliases for supported request methods
+utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
+  /*eslint func-names:0*/
+  Axios.prototype[method] = function(url, config) {
+    return this.request(utils.merge(config || {}, {
+      method: method,
+      url: url
+    }));
+  };
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  /*eslint func-names:0*/
+  Axios.prototype[method] = function(url, data, config) {
+    return this.request(utils.merge(config || {}, {
+      method: method,
+      url: url,
+      data: data
+    }));
+  };
+});
+
+module.exports = Axios;
+
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+
+module.exports = function normalizeHeaderName(headers, normalizedName) {
+  utils.forEach(headers, function processHeader(value, name) {
+    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
+      headers[normalizedName] = value;
+      delete headers[name];
+    }
+  });
+};
+
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var createError = __webpack_require__(14);
+
+/**
+ * Resolve or reject a Promise based on response status.
+ *
+ * @param {Function} resolve A function that resolves the promise.
+ * @param {Function} reject A function that rejects the promise.
+ * @param {object} response The response.
+ */
+module.exports = function settle(resolve, reject, response) {
+  var validateStatus = response.config.validateStatus;
+  // Note: status is not exposed by XDomainRequest
+  if (!response.status || !validateStatus || validateStatus(response.status)) {
+    resolve(response);
+  } else {
+    reject(createError(
+      'Request failed with status code ' + response.status,
+      response.config,
+      null,
+      response.request,
+      response
+    ));
+  }
+};
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Update an Error with the specified config, error code, and response.
+ *
+ * @param {Error} error The error to update.
+ * @param {Object} config The config.
+ * @param {string} [code] The error code (for example, 'ECONNABORTED').
+ * @param {Object} [request] The request.
+ * @param {Object} [response] The response.
+ * @returns {Error} The error.
+ */
+module.exports = function enhanceError(error, config, code, request, response) {
+  error.config = config;
+  if (code) {
+    error.code = code;
+  }
+  error.request = request;
+  error.response = response;
+  return error;
+};
+
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+
+function encode(val) {
+  return encodeURIComponent(val).
+    replace(/%40/gi, '@').
+    replace(/%3A/gi, ':').
+    replace(/%24/g, '$').
+    replace(/%2C/gi, ',').
+    replace(/%20/g, '+').
+    replace(/%5B/gi, '[').
+    replace(/%5D/gi, ']');
+}
+
+/**
+ * Build a URL by appending params to the end
+ *
+ * @param {string} url The base of the url (e.g., http://www.google.com)
+ * @param {object} [params] The params to be appended
+ * @returns {string} The formatted url
+ */
+module.exports = function buildURL(url, params, paramsSerializer) {
+  /*eslint no-param-reassign:0*/
+  if (!params) {
+    return url;
+  }
+
+  var serializedParams;
+  if (paramsSerializer) {
+    serializedParams = paramsSerializer(params);
+  } else if (utils.isURLSearchParams(params)) {
+    serializedParams = params.toString();
+  } else {
+    var parts = [];
+
+    utils.forEach(params, function serialize(val, key) {
+      if (val === null || typeof val === 'undefined') {
+        return;
+      }
+
+      if (utils.isArray(val)) {
+        key = key + '[]';
+      } else {
+        val = [val];
+      }
+
+      utils.forEach(val, function parseValue(v) {
+        if (utils.isDate(v)) {
+          v = v.toISOString();
+        } else if (utils.isObject(v)) {
+          v = JSON.stringify(v);
+        }
+        parts.push(encode(key) + '=' + encode(v));
+      });
+    });
+
+    serializedParams = parts.join('&');
+  }
+
+  if (serializedParams) {
+    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
+  }
+
+  return url;
+};
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+
+// Headers whose duplicates are ignored by node
+// c.f. https://nodejs.org/api/http.html#http_message_headers
+var ignoreDuplicateOf = [
+  'age', 'authorization', 'content-length', 'content-type', 'etag',
+  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
+  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
+  'referer', 'retry-after', 'user-agent'
+];
+
+/**
+ * Parse headers into an object
+ *
+ * ```
+ * Date: Wed, 27 Aug 2014 08:58:49 GMT
+ * Content-Type: application/json
+ * Connection: keep-alive
+ * Transfer-Encoding: chunked
+ * ```
+ *
+ * @param {String} headers Headers needing to be parsed
+ * @returns {Object} Headers parsed into an object
+ */
+module.exports = function parseHeaders(headers) {
+  var parsed = {};
+  var key;
+  var val;
+  var i;
+
+  if (!headers) { return parsed; }
+
+  utils.forEach(headers.split('\n'), function parser(line) {
+    i = line.indexOf(':');
+    key = utils.trim(line.substr(0, i)).toLowerCase();
+    val = utils.trim(line.substr(i + 1));
+
+    if (key) {
+      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
+        return;
+      }
+      if (key === 'set-cookie') {
+        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
+      } else {
+        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+      }
+    }
+  });
+
+  return parsed;
+};
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+
+module.exports = (
+  utils.isStandardBrowserEnv() ?
+
+  // Standard browser envs have full support of the APIs needed to test
+  // whether the request URL is of the same origin as current location.
+  (function standardBrowserEnv() {
+    var msie = /(msie|trident)/i.test(navigator.userAgent);
+    var urlParsingNode = document.createElement('a');
+    var originURL;
+
+    /**
+    * Parse a URL to discover it's components
+    *
+    * @param {String} url The URL to be parsed
+    * @returns {Object}
+    */
+    function resolveURL(url) {
+      var href = url;
+
+      if (msie) {
+        // IE needs attribute set twice to normalize properties
+        urlParsingNode.setAttribute('href', href);
+        href = urlParsingNode.href;
+      }
+
+      urlParsingNode.setAttribute('href', href);
+
+      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+      return {
+        href: urlParsingNode.href,
+        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+        host: urlParsingNode.host,
+        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+        hostname: urlParsingNode.hostname,
+        port: urlParsingNode.port,
+        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
+                  urlParsingNode.pathname :
+                  '/' + urlParsingNode.pathname
+      };
+    }
+
+    originURL = resolveURL(window.location.href);
+
+    /**
+    * Determine if a URL shares the same origin as the current location
+    *
+    * @param {String} requestURL The URL to test
+    * @returns {boolean} True if URL shares the same origin, otherwise false
+    */
+    return function isURLSameOrigin(requestURL) {
+      var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
+      return (parsed.protocol === originURL.protocol &&
+            parsed.host === originURL.host);
+    };
+  })() :
+
+  // Non standard browser envs (web workers, react-native) lack needed support.
+  (function nonStandardBrowserEnv() {
+    return function isURLSameOrigin() {
+      return true;
+    };
+  })()
+);
+
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
+
+var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+function E() {
+  this.message = 'String contains an invalid character';
+}
+E.prototype = new Error;
+E.prototype.code = 5;
+E.prototype.name = 'InvalidCharacterError';
+
+function btoa(input) {
+  var str = String(input);
+  var output = '';
+  for (
+    // initialize result and counter
+    var block, charCode, idx = 0, map = chars;
+    // if the next str index does not exist:
+    //   change the mapping table to "="
+    //   check if d has no fractional digits
+    str.charAt(idx | 0) || (map = '=', idx % 1);
+    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
+    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
+  ) {
+    charCode = str.charCodeAt(idx += 3 / 4);
+    if (charCode > 0xFF) {
+      throw new E();
+    }
+    block = block << 8 | charCode;
+  }
+  return output;
+}
+
+module.exports = btoa;
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+
+module.exports = (
+  utils.isStandardBrowserEnv() ?
+
+  // Standard browser envs support document.cookie
+  (function standardBrowserEnv() {
+    return {
+      write: function write(name, value, expires, path, domain, secure) {
+        var cookie = [];
+        cookie.push(name + '=' + encodeURIComponent(value));
+
+        if (utils.isNumber(expires)) {
+          cookie.push('expires=' + new Date(expires).toGMTString());
+        }
+
+        if (utils.isString(path)) {
+          cookie.push('path=' + path);
+        }
+
+        if (utils.isString(domain)) {
+          cookie.push('domain=' + domain);
+        }
+
+        if (secure === true) {
+          cookie.push('secure');
+        }
+
+        document.cookie = cookie.join('; ');
+      },
+
+      read: function read(name) {
+        var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+        return (match ? decodeURIComponent(match[3]) : null);
+      },
+
+      remove: function remove(name) {
+        this.write(name, '', Date.now() - 86400000);
+      }
+    };
+  })() :
+
+  // Non standard browser env (web workers, react-native) lack needed support.
+  (function nonStandardBrowserEnv() {
+    return {
+      write: function write() {},
+      read: function read() { return null; },
+      remove: function remove() {}
+    };
+  })()
+);
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+
+function InterceptorManager() {
+  this.handlers = [];
+}
+
+/**
+ * Add a new interceptor to the stack
+ *
+ * @param {Function} fulfilled The function to handle `then` for a `Promise`
+ * @param {Function} rejected The function to handle `reject` for a `Promise`
+ *
+ * @return {Number} An ID used to remove interceptor later
+ */
+InterceptorManager.prototype.use = function use(fulfilled, rejected) {
+  this.handlers.push({
+    fulfilled: fulfilled,
+    rejected: rejected
+  });
+  return this.handlers.length - 1;
+};
+
+/**
+ * Remove an interceptor from the stack
+ *
+ * @param {Number} id The ID that was returned by `use`
+ */
+InterceptorManager.prototype.eject = function eject(id) {
+  if (this.handlers[id]) {
+    this.handlers[id] = null;
+  }
+};
+
+/**
+ * Iterate over all the registered interceptors
+ *
+ * This method is particularly useful for skipping over any
+ * interceptors that may have become `null` calling `eject`.
+ *
+ * @param {Function} fn The function to call for each interceptor
+ */
+InterceptorManager.prototype.forEach = function forEach(fn) {
+  utils.forEach(this.handlers, function forEachHandler(h) {
+    if (h !== null) {
+      fn(h);
+    }
+  });
+};
+
+module.exports = InterceptorManager;
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+var transformData = __webpack_require__(85);
+var isCancel = __webpack_require__(15);
+var defaults = __webpack_require__(5);
+var isAbsoluteURL = __webpack_require__(86);
+var combineURLs = __webpack_require__(87);
+
+/**
+ * Throws a `Cancel` if cancellation has been requested.
+ */
+function throwIfCancellationRequested(config) {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested();
+  }
+}
+
+/**
+ * Dispatch a request to the server using the configured adapter.
+ *
+ * @param {object} config The config that is to be used for the request
+ * @returns {Promise} The Promise to be fulfilled
+ */
+module.exports = function dispatchRequest(config) {
+  throwIfCancellationRequested(config);
+
+  // Support baseURL config
+  if (config.baseURL && !isAbsoluteURL(config.url)) {
+    config.url = combineURLs(config.baseURL, config.url);
+  }
+
+  // Ensure headers exist
+  config.headers = config.headers || {};
+
+  // Transform request data
+  config.data = transformData(
+    config.data,
+    config.headers,
+    config.transformRequest
+  );
+
+  // Flatten headers
+  config.headers = utils.merge(
+    config.headers.common || {},
+    config.headers[config.method] || {},
+    config.headers || {}
+  );
+
+  utils.forEach(
+    ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
+    function cleanHeaderConfig(method) {
+      delete config.headers[method];
+    }
+  );
+
+  var adapter = config.adapter || defaults.adapter;
+
+  return adapter(config).then(function onAdapterResolution(response) {
+    throwIfCancellationRequested(config);
+
+    // Transform response data
+    response.data = transformData(
+      response.data,
+      response.headers,
+      config.transformResponse
+    );
+
+    return response;
+  }, function onAdapterRejection(reason) {
+    if (!isCancel(reason)) {
+      throwIfCancellationRequested(config);
+
+      // Transform response data
+      if (reason && reason.response) {
+        reason.response.data = transformData(
+          reason.response.data,
+          reason.response.headers,
+          config.transformResponse
+        );
+      }
+    }
+
+    return Promise.reject(reason);
+  });
+};
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(1);
+
+/**
+ * Transform the data for a request or a response
+ *
+ * @param {Object|String} data The data to be transformed
+ * @param {Array} headers The headers for the request or response
+ * @param {Array|Function} fns A single function or Array of functions
+ * @returns {*} The resulting transformed data
+ */
+module.exports = function transformData(data, headers, fns) {
+  /*eslint no-param-reassign:0*/
+  utils.forEach(fns, function transform(fn) {
+    data = fn(data, headers);
+  });
+
+  return data;
+};
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Determines whether the specified URL is absolute
+ *
+ * @param {string} url The URL to test
+ * @returns {boolean} True if the specified URL is absolute, otherwise false
+ */
+module.exports = function isAbsoluteURL(url) {
+  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
+  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
+  // by any combination of letters, digits, plus, period, or hyphen.
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
+};
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Creates a new URL by combining the specified URLs
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} relativeURL The relative URL
+ * @returns {string} The combined URL
+ */
+module.exports = function combineURLs(baseURL, relativeURL) {
+  return relativeURL
+    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+    : baseURL;
+};
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Cancel = __webpack_require__(16);
+
+/**
+ * A `CancelToken` is an object that can be used to request cancellation of an operation.
+ *
+ * @class
+ * @param {Function} executor The executor function.
+ */
+function CancelToken(executor) {
+  if (typeof executor !== 'function') {
+    throw new TypeError('executor must be a function.');
+  }
+
+  var resolvePromise;
+  this.promise = new Promise(function promiseExecutor(resolve) {
+    resolvePromise = resolve;
+  });
+
+  var token = this;
+  executor(function cancel(message) {
+    if (token.reason) {
+      // Cancellation has already been requested
+      return;
+    }
+
+    token.reason = new Cancel(message);
+    resolvePromise(token.reason);
+  });
+}
+
+/**
+ * Throws a `Cancel` if cancellation has been requested.
+ */
+CancelToken.prototype.throwIfRequested = function throwIfRequested() {
+  if (this.reason) {
+    throw this.reason;
+  }
+};
+
+/**
+ * Returns an object that contains a new `CancelToken` and a function that, when called,
+ * cancels the `CancelToken`.
+ */
+CancelToken.source = function source() {
+  var cancel;
+  var token = new CancelToken(function executor(c) {
+    cancel = c;
+  });
+  return {
+    token: token,
+    cancel: cancel
+  };
+};
+
+module.exports = CancelToken;
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Syntactic sugar for invoking a function and expanding an array for arguments.
+ *
+ * Common use case would be to use `Function.prototype.apply`.
+ *
+ *  ```js
+ *  function f(x, y, z) {}
+ *  var args = [1, 2, 3];
+ *  f.apply(null, args);
+ *  ```
+ *
+ * With `spread` this example can be re-written.
+ *
+ *  ```js
+ *  spread(function(x, y, z) {})([1, 2, 3]);
+ *  ```
+ *
+ * @param {Function} callback
+ * @returns {Function}
+ */
+module.exports = function spread(callback) {
+  return function wrap(arr) {
+    return callback.apply(null, arr);
+  };
+};
+
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

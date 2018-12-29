@@ -4,7 +4,7 @@ import axios from 'axios'
 import router from './router.js'
 
 Vue.use(Vuex)
-axios.defaults.baseURL = 'https://traxit.pro/web'
+axios.defaults.baseURL = 'http://traxit.test/web'
 const token = document.head.querySelector('meta[name="csrf-token"]');
 axios.defaults.headers.common['header1'] = {
     'X-Requested-With': 'XMLHttpRequest',
@@ -146,6 +146,7 @@ export default new Vuex.Store({
         })
         .catch(error => {
             context.commit('loadingRequest')
+            localStorage.removeItem('access_token')
             context.commit('loggedIn')
             console.log(error.response.data)
         })
