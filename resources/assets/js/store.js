@@ -146,6 +146,7 @@ export default new Vuex.Store({
         })
         .catch(error => {
             context.commit('loadingRequest')
+            localStorage.removeItem('access_token')
             context.commit('loggedIn')
             console.log(error.response.data)
         })
