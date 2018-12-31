@@ -11,6 +11,7 @@ class Client extends Model
     
     protected $fillable = 
     [
+        'active',
         'category',
         'referral_type', 
         'first_name', 
