@@ -39,6 +39,7 @@ class ClientsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'active' => 'required|boolean',
             'category' => 'required|string',
             'referral_type' => 'required|string',
             'first_name' => 'required|string',
@@ -106,6 +107,7 @@ class ClientsController extends Controller
     public function update(Request $request, Client $client)
     {
         $data = $request->validate([
+            'active' => 'required|boolean',
             'category' => 'required|string',
             'referral_type' => 'required|string',
             'first_name' => 'required|string',

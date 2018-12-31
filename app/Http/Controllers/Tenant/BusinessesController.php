@@ -36,31 +36,20 @@ class BusinessesController extends Controller
      */
     public function store(Request $request)
     {
-        $date = $request->validate([
+        $data = $request->validate([
             'client_id' => 'required|integer',
             'business_name' => 'required|string',
-            'business_type' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'postal_code' => 'required|string',
-            'email' => 'required|string',
-            'phone_number' => 'required|string',
-            'fax_number' => 'required|string'
+            'business_type' => 'nullable|string',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'postal_code' => 'nullable|string',
+            'email' => 'nullable|string',
+            'phone_number' => 'nullable|string',
+            'fax_number' => 'nullable|string'
         ]);
 
-        $business = Business::create([
-            'client_id' => $request->client_id,
-            'business_name' => $request->business_name,
-            'business_type' => $request->business_type,
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
-            'postal_code' => $request->postal_code,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'fax_number' => $request->fax_number
-        ]);
+        $business = Business::create($data);
 
         return response()->json([ 'business' => $business, 'message' => 'A new business has been added!'], 200);
     }
@@ -99,14 +88,14 @@ class BusinessesController extends Controller
         $data = $request->validate([
             'client_id' => 'required|integer',
             'business_name' => 'required|string',
-            'business_type' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'postal_code' => 'required|string',
-            'email' => 'required|string',
-            'phone_number' => 'required|string',
-            'fax_number' => 'required|string',
+            'business_type' => 'nullable|string',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'postal_code' => 'nullable|string',
+            'email' => 'nullable|string',
+            'phone_number' => 'nullable|string',
+            'fax_number' => 'nullable|string',
         ]);
 
         $business->update($data);
@@ -124,6 +113,6 @@ class BusinessesController extends Controller
     {
         $business->delete();
 
-        return response('Deleted Business', 200);
+        return response('The Business Has Been Deleted', 200);
     }
 }
