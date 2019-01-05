@@ -14,7 +14,18 @@ class ClientsExport implements FromQuery, WithHeadings
     */
     public function query()
     {
-        return Client::select(
+        // $clients = Client::select('dob')->where('id', 9)->first();
+
+        // $formated = \Carbon\Carbon::parse($client->dob)->format('d/m/y');
+        
+        // foreach($clients as $client) {
+        //     return \Carbon\Carbon::parse($client->dob)->format('d/m/y'); 
+        // };
+
+        // return $clients;
+
+        $clients = Client::select(
+            'active',
             'category',
             'referral_type', 
             'first_name', 
@@ -42,11 +53,18 @@ class ClientsExport implements FromQuery, WithHeadings
             'updated_at'
 
         );
+
+        // foreach($clients as $client) {
+        //     $client->dob = \Carbon\Carbon::parse($client->dob)->format('d/m/y'); 
+        // };
+
+        return $clients;
     }
 
     public function headings(): array
     {
         return [
+            'active',
             'category',
             'referral_type', 
             'first_name', 

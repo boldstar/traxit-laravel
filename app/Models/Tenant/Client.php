@@ -67,7 +67,7 @@ class Client extends Model
 
     public function fullNameWithSpouse()
     {
-        if (!is_null($this->spouse_first_name))
+        if (!is_null($this->spouse_first_name) && $this->has_spouse == true)
         return $this->fullName() . " & " . $this->spouse_first_name;
 
         return $this->fullName();  // if no spouse

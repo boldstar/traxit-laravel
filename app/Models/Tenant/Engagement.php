@@ -12,6 +12,9 @@ class Engagement extends Model
     protected $fillable =
     [
         'category',
+        'title',
+        'type',
+        'description',
         'client_id',
         'name',
         'workflow_id',

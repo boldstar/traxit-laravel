@@ -73,10 +73,13 @@ class EngagementsController extends Controller
         // validate form data
         $data = $request->validate([
             'category' => 'required|string',
+            'title' => 'nullable|string',
+            'type' => 'nullable|string',
+            'description' => 'nullable|string',
             'client_id' => 'required|integer',
             'name' => 'nullable|string',
             'workflow_id' => 'required|integer',
-            'return_type' => 'required|string',
+            'return_type' => 'nullable|string',
             'year' => 'required|string',
             'assigned_to' => 'required|integer',
             'status' => 'required|string',
@@ -87,38 +90,66 @@ class EngagementsController extends Controller
         
         $client = Client::findOrFail($request->client_id);
 
-        if($request->category == 'personal') {
-            $engagement = Engagement::create([
-                'category' => $request->category,
-                'client_id' => $request->client_id,
-                'name' => $client->fullNameWithSpouse(),
-                'workflow_id' => $request->workflow_id,
-                'return_type' => $request->return_type,
-                'year' => $request->year,
-                'assigned_to' => $userName,
-                'status' => $request->status,
-                'done' => $request->done,
-            ]);
+        if($request->type == 'taxreturn') {
+
+            if($request->category == 'Personal') {
+                $engagement = Engagement::create([
+                    'category' => $request->category,
+                    'title' => $request->title,
+                    'type' => $request->type,
+                    'description' => $request->description,
+                    'client_id' => $request->client_id,
+                    'name' => $client->fullNameWithSpouse(),
+                    'workflow_id' => $request->workflow_id,
+                    'return_type' => $request->return_type,
+                    'year' => $request->year,
+                    'assigned_to' => $userName,
+                    'status' => $request->status,
+                    'done' => $request->done,
+                ]);
+            }
+    
+            if($request->category == 'Business') {
+                $engagement = Engagement::create([
+                    'category' => $request->category,
+                    'title' => $request->title,
+                    'type' => $request->type,
+                    'description' => $request->description,
+                    'client_id' => $request->client_id,
+                    'name' => $request->name,
+                    'workflow_id' => $request->workflow_id,
+                    'return_type' => $request->return_type,
+                    'year' => $request->year,
+                    'assigned_to' => $userName,
+                    'status' => $request->status,
+                    'done' => $request->done,
+                ]);
+            }
         }
 
-        if($request->category == 'business') {
-            $engagement = Engagement::create([
-                'category' => $request->category,
-                'client_id' => $request->client_id,
-                'name' => $request->name,
-                'workflow_id' => $request->workflow_id,
-                'return_type' => $request->return_type,
-                'year' => $request->year,
-                'assigned_to' => $userName,
-                'status' => $request->status,
-                'done' => $request->done,
-            ]);
+        if($request->type == 'bookkeeping') {
+            if($request->category == 'Business') {
+                $engagement = Engagement::create([
+                    'category' => $request->category,
+                    'title' => $request->title,
+                    'type' => $request->type,
+                    'description' => $request->description,
+                    'client_id' => $request->client_id,
+                    'name' => $request->name,
+                    'workflow_id' => $request->workflow_id,
+                    'year' => $request->year,
+                    'assigned_to' => $userName,
+                    'status' => $request->status,
+                    'done' => $request->done,
+                ]);
+            }
         }
+
 
         // create task
         $task = Task::create([
             'user_id' => $request->get('assigned_to'),
-            'title' => $request->get('return_type')
+            'title' => $request->get('status')
         ]);
 
         // create record on pivot table
@@ -151,7 +182,11 @@ class EngagementsController extends Controller
     {
         $data = $request->validate([
             'client_id' => 'required|integer',
-            'return_type' => 'required|string',
+            'workflow_id' => 'required|integer',
+            'title' => 'nullable|string',
+            'type' => 'nullable|string',
+            'description' => 'nullable|string',
+            'return_type' => 'nullable|string',
             'year' => 'required|string',
             'status' => 'required|string',
             'assigned_to' => 'required|string',
@@ -160,6 +195,10 @@ class EngagementsController extends Controller
 
         $engagement->update([
             'client_id' => $request->client_id,
+            'workflow_id' => $request->workflow_id,
+            'title' => $request->title,
+            'type' => $request->type,
+            'description' => $request->description,
             'return_type' => $request->return_type,
             'year' => $request->year,
             'status' => $request->status,
