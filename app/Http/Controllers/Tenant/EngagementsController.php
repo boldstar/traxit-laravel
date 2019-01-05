@@ -182,10 +182,11 @@ class EngagementsController extends Controller
     {
         $data = $request->validate([
             'client_id' => 'required|integer',
+            'workflow_id' => 'required|integer',
             'title' => 'nullable|string',
             'type' => 'nullable|string',
             'description' => 'nullable|string',
-            'return_type' => 'required|string',
+            'return_type' => 'nullable|string',
             'year' => 'required|string',
             'status' => 'required|string',
             'assigned_to' => 'required|string',
@@ -194,6 +195,7 @@ class EngagementsController extends Controller
 
         $engagement->update([
             'client_id' => $request->client_id,
+            'workflow_id' => $request->workflow_id,
             'title' => $request->title,
             'type' => $request->type,
             'description' => $request->description,
