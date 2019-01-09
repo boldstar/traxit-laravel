@@ -67,7 +67,7 @@ class ClientsController extends Controller
 
         $client = Client::create($data);
 
-        return response($client, 201);
+        return response()->json([ 'contact' => $client, 'message' => 'Contact Succesfully Added'], 201);
     }
 
     /**
