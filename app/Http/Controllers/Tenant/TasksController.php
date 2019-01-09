@@ -70,7 +70,7 @@ class TasksController extends Controller
         
         $task->engagements()->update($status);
 
-        return response($task, 200);
+        return response()->json(['task' => $task, 'message' => 'Task Was Updated'], 200);
     }
 
     /**

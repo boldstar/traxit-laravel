@@ -24,13 +24,13 @@ class AccountsController extends Controller
     {
         $data = $request->validate([
             'business_name' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'postal_code' => 'required|string',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'postal_code' => 'nullable|string',
             'email' => 'required|string',
-            'phone_number' => 'required|string',
-            'fax_number' => 'required|string',
+            'phone_number' => 'nullable|string',
+            'fax_number' => 'nullable|string',
             'logo' => 'nullable|string',
             'subscription' => 'required|string'
         ]);
