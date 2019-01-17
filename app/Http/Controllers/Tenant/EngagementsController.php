@@ -193,26 +193,52 @@ class EngagementsController extends Controller
             'done' => 'required|boolean'
         ]);
 
-        $engagement->update([
-            'client_id' => $request->client_id,
-            'workflow_id' => $request->workflow_id,
-            'title' => $request->title,
-            'type' => $request->type,
-            'description' => $request->description,
-            'return_type' => $request->return_type,
-            'year' => $request->year,
-            'status' => $request->status,
-            'assigned_to' => $request->assigned_to,
-            'done' => $request->done
-        ]);
+        if($request->done == false) {
+            $engagement->update([
+                'client_id' => $request->client_id,
+                'workflow_id' => $request->workflow_id,
+                'title' => $request->title,
+                'type' => $request->type,
+                'description' => $request->description,
+                'return_type' => $request->return_type,
+                'year' => $request->year,
+                'status' => $request->status,
+                'assigned_to' => $request->assigned_to,
+                'done' => $request->done
+            ]);
+    
+            $user = User::where('name', $request->assigned_to)->value('id');
+    
+            $engagement->tasks()->update([ 
+                'user_id' => $user 
+            ]);
+            
+            return response()->json(['engagement' => $engagement, 'message' => 'Engagement Updated Succesfully'], 200);
+        }
 
-        $user = User::where('name', $request->assigned_to)->value('id');
+        if($request->done == true) {
+            $engagement->update([
+                'client_id' => $request->client_id,
+                'workflow_id' => $request->workflow_id,
+                'title' => $request->title,
+                'type' => $request->type,
+                'description' => $request->description,
+                'return_type' => $request->return_type,
+                'year' => $request->year,
+                'status' => 'Complete',
+                'assigned_to' => 'Complete',
+                'done' => true
+            ]);
+    
+            $task = $engagement->tasks()->first();
 
-        $engagement->tasks()->update([ 
-            'user_id' => $user 
-        ]);
+            $engagement->tasks()->detach();
 
-        return response($engagement, 200);
+            $task->delete();
+
+            return response()->json(['engagement' => $engagement, 'message' => 'Engagement Updated Succesfully'], 200);
+        }
+
     }
 
     /**
@@ -234,21 +260,68 @@ class EngagementsController extends Controller
         // grab name of user by id
         $user = User::where('id', $request->assigned_to)->value('name');
 
-        // for each engagment update the assigned to and status fields
-        Engagement::whereIn('id', $request->engagements)->update([ 
-            'assigned_to' => $user,
-            'status' => $request->status 
-        ]);
-
-        // for each engagement update the associated task through the pivot table function
-        $engagements = Engagement::whereIn('id', $request->engagements)->get();
-        foreach ($engagements as $engagement) {
-            $engagement->tasks()->update([ 
-                'user_id' => $request->assigned_to 
+        if($request->status == 'Complete') {
+            // for each engagment update the assigned to and status fields
+            Engagement::whereIn('id', $request->engagements)->update([ 
+                'assigned_to' => 'Complete',
+                'status' => $request->status,
+                'done' => true
             ]);
-        };
-        
-        return response($engagements, 200);
+
+                  // for each engagement update the associated task through the pivot table function
+            $engagements = Engagement::whereIn('id', $request->engagements)->get();
+            foreach ($engagements as $engagement) {
+
+                if($engagement->done == true)
+                {
+                    $task = $engagement->tasks()->first();
+
+                    $engagement->tasks()->detach();
+
+                    $task->delete();
+                }
+            }; 
+
+            return response($engagements, 200);
+        }
+
+        else {
+            // for each engagment update the assigned to and status fields
+            Engagement::whereIn('id', $request->engagements)->update([ 
+                'assigned_to' => $user,
+                'status' => $request->status, 
+            ]);
+            // for each engagement update the associated task through the pivot table function
+            $engagements = Engagement::whereIn('id', $request->engagements)->get();
+    
+            foreach ($engagements as $engagement) {
+                if($engagement->done == false)
+                {
+                    $engagement->tasks()->update([ 
+                        'user_id' => $request->assigned_to,
+                        'title' => $request->status 
+                    ]);
+                }
+    
+                if($engagement->done == true)
+                {
+                    $engagement->update(['done' => false]);
+                    // create task
+                    $task = Task::create([
+                        'user_id' => $request->assigned_to,
+                        'title' => $request->status
+                    ]);
+    
+                    $engagement->tasks()->detach();
+            
+                    // create record on pivot table
+                    $engagement->tasks()->attach($task->id);
+                }
+            };        
+            
+            return response($engagements, 200);
+        }
+
     }
 
     /**

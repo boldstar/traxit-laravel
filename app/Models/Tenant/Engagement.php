@@ -22,7 +22,9 @@ class Engagement extends Model
         'year',
         'assigned_to',
         'status',
+        'done'
     ];
+
     public function client() 
     {
         return $this->belongsTo('App\Models\Tenant\Client');

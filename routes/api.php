@@ -20,6 +20,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/role', 'Tenant\AuthController@role');
     Route::get('/userProfile/', 'Tenant\AuthController@show');
     Route::patch('/tasks/{task}', 'Tenant\TasksController@update');
+    Route::post('/engagements', 'Tenant\EngagementsController@store');
+    Route::patch('/engagements/{engagement}', 'Tenant\EngagementsController@update');
+    Route::delete('/engagements/{engagement}', 'Tenant\EngagementsController@destroy');
     Route::post('/logout', 'Tenant\AuthController@logout');
 });
 
@@ -54,10 +57,7 @@ Route::group(['middleware' => 'tenancy.enforce'], function () {
     Route::get('/clientengagement/{id}', 'Tenant\EngagementsController@show');
     Route::get('/engagementquestions/{id}', 'Tenant\EngagementsController@questionindex');
     Route::get('/engagementReturnTypes', 'Tenant\EngagementsController@returnType_index');
-    Route::post('/engagements', 'Tenant\EngagementsController@store');
-    Route::patch('/engagements/{engagement}', 'Tenant\EngagementsController@update');
     Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
-    Route::delete('/engagements/{engagement}', 'Tenant\EngagementsController@destroy');
 
     Route::get('/questions/{id}', 'Tenant\QuestionsController@show');
     Route::post('/questions', 'Tenant\QuestionsController@store');
@@ -93,6 +93,8 @@ Route::group(['middleware' => 'tenancy.enforce'], function () {
     Route::get('/downloadclients', function () {
         return Excel::download(new ClientsExport, 'clients.xlsx');
     });
+
+    Route::post('/reports', 'Tenant\ReportsController@excelReport');
 
     Route::post('/importclients', 'Tenant\ClientsController@importExcel');
 
