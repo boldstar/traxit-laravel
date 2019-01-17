@@ -34,12 +34,38 @@ class WorkflowsController extends Controller
             'name' => 'required|string',
         ]);
 
-        // create new workflow
-        $workflow = Workflow::create([
-            'workflow' => $request->name,
-        ]);
 
-        return response($workflow, 201);
+        // create new workflow
+        if($request->copy_workflow === false) {
+            $workflow = Workflow::create([
+                'workflow' => $request->name,
+            ]);
+
+            return response($workflow, 201);
+        }
+
+        if($request->copy_workflow === true) {
+
+            $workflowToCopy = Workflow::where('id', $request->workflow_id)->with('statuses')->get();
+
+            $statusesToCopy = $workflowToCopy->pluck('statuses');
+
+            $statuses = $statusesToCopy[0];
+
+            $newWorkflow = Workflow::create([
+                'workflow' => $request->name,
+            ]);
+
+            foreach($statuses as $status){
+                $newWorkflow->statuses()->create([
+                    'status' => $status['status'],
+                    'order' => $status['order']
+                ]);
+            };
+
+            return response($newWorkflow->load('statuses'), 201);
+        }
+
     }
 
     /**

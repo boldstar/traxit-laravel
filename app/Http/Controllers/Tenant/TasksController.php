@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
+use App\Models\Tenant\Engagement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -54,6 +55,23 @@ class TasksController extends Controller
 
         $this->authorize('update', $task);
 
+        if($request->done === true) {
+
+            $engagement = $task->engagements()->first();
+
+            $engagement->update([ 
+                'assigned_to' => 'Complete',
+                'status' => 'Complete',
+                'done' => true
+            ]);
+
+            $task->engagements()->detach();
+
+            $task->delete();
+
+            return response()->json(['task' => $task, 'message' => 'Task Was Updated'], 200);
+        }
+
         $data = $request->validate([
             'user_id' => 'required|integer',
         ]);
@@ -62,13 +80,16 @@ class TasksController extends Controller
 
         $assigned_to = User::where('id', $request->user_id)->value('name');
 
-        $task->engagements()->update([ 'assigned_to' => $assigned_to ]);
-
         $status = $request->validate([
             'status' => 'required|string'
         ]);
-        
-        $task->engagements()->update($status);
+
+        $engagement = $task->engagements()->first();
+
+        $engagement->update([ 
+            'assigned_to' => $assigned_to,
+            'status' => $status['status'],
+        ]);
 
         return response()->json(['task' => $task, 'message' => 'Task Was Updated'], 200);
     }
