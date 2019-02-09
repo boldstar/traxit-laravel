@@ -21,6 +21,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/userProfile/', 'Tenant\AuthController@show');
     Route::patch('/tasks/{task}', 'Tenant\TasksController@update');
     Route::post('/engagements', 'Tenant\EngagementsController@store');
+    Route::post('/questions', 'Tenant\QuestionsController@store');
+    Route::post('/questionsEmail', 'Tenant\QuestionsController@sendMail');
     Route::patch('/engagements/{engagement}', 'Tenant\EngagementsController@update');
     Route::delete('/engagements/{engagement}', 'Tenant\EngagementsController@destroy');
     Route::post('/logout', 'Tenant\AuthController@logout');
@@ -59,7 +61,6 @@ Route::group(['middleware' => 'tenancy.enforce'], function () {
     Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
 
     Route::get('/questions/{id}', 'Tenant\QuestionsController@show');
-    Route::post('/questions', 'Tenant\QuestionsController@store');
     Route::patch('/questions/{question}', 'Tenant\QuestionsController@update');
     Route::patch('/questionsanswer/{question}', 'Tenant\QuestionsController@updateanswer');
     Route::delete('/questions/{question}', 'Tenant\QuestionsController@destroy');
