@@ -14,6 +14,7 @@ class Question extends Model
         'engagement_id',
         'question',
         'answer',
+        'email_sent',
         'answered',
         'created_at',
     ];

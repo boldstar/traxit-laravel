@@ -135,7 +135,7 @@ class ClientsController extends Controller
 
         $client->update($data);
 
-        return response($client, 200);
+        return response()->json(['client' => $client, 'message' => 'Contact updated succesfully'], 200);
     }
 
     /**
