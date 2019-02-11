@@ -42,8 +42,23 @@ class StartConversation extends Mailable
         $email = $sender->email;
         $name = $sender->name;
 
-        return $this->from($email, $name)
-                    ->replyTo($email, $name)
+        if($sender->has_spouse == true) {
+            $spouse_email = $sender->spouse_email;
+            return $this->replyTo($email, $name)
+                        ->cc($spouse_email)
+                        ->bcc($email, $name)
+                        ->subject('Pending Questions From '. $account->business_name)
+                        ->view('email')
+                        ->with([
+                            'phoneNumber' => $account->phone_number,
+                            'faxNumber' => $account->fax_number,
+                            'accountName' => $account->business_name,
+                            'accountEmail' => $account->email,
+                            'userEmail' => $email
+            ]);
+        };
+
+        return $this->replyTo($email, $name)
                     ->bcc($email, $name)
                     ->subject('Pending Questions From '. $account->business_name)
                     ->view('email')
@@ -53,6 +68,6 @@ class StartConversation extends Mailable
                         'accountName' => $account->business_name,
                         'accountEmail' => $account->email,
                         'userEmail' => $email
-                    ]);
+        ]);
     }
 }
