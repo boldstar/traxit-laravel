@@ -33,6 +33,7 @@ Route::group(['middleware' => 'tenancy.enforce'], function () {
    
     Route::get('/account', 'Tenant\AccountsController@account');
     Route::post('/account', 'Tenant\AccountsController@store');
+    Route::post('/uploadLogo', 'Tenant\AccountsController@uploadLogo');
     Route::patch('/account/{id}', 'Tenant\AccountsController@update');
     Route::post('/login', 'Tenant\AuthController@login');
     Route::post('/register', 'Tenant\AuthController@register');

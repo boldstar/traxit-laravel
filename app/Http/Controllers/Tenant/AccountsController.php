@@ -14,6 +14,23 @@ class AccountsController extends Controller
         return Account::all();
     }
 
+    public function uploadLogo(Request $request) {
+
+        if (empty($request->file('file')->getRealPath())) {
+            return back()->with('success','No file selected');
+        }
+ 
+        else {
+            $account = Account::first();
+            $path = $request->file('file')->getRealPath();
+            $logo = file_get_contents($path);
+            $base64 = base64_encode($logo);
+            $account->logo = $base64;
+            $account->save();
+            return response($account, 200);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
