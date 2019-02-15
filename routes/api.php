@@ -57,6 +57,7 @@ Route::group(['middleware' => 'tenancy.enforce'], function () {
 
     Route::get('/engagements', 'Tenant\EngagementsController@index');
     Route::get('/engagements/{id}', 'Tenant\EngagementsController@clientindex');
+    Route::get('/engagementhistory/{id}', 'Tenant\EngagementsController@historyindex');
     Route::get('/clientengagement/{id}', 'Tenant\EngagementsController@show');
     Route::get('/engagementquestions/{id}', 'Tenant\EngagementsController@questionindex');
     Route::get('/engagementReturnTypes', 'Tenant\EngagementsController@returnType_index');

@@ -8,6 +8,7 @@ use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Question;
 use App\Models\Tenant\ReturnType;
+use App\Models\Tenant\EngagementActions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -37,6 +38,20 @@ class EngagementsController extends Controller
         $return_types = ReturnType::all();
 
         return response($return_types);
+
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function historyindex($id)
+    { 
+        
+        $history = EngagementActions::where('engagement_id', $id)->get();
+
+        return response($history);
 
     }
 
