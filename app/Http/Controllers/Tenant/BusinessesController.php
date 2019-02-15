@@ -39,7 +39,6 @@ class BusinessesController extends Controller
         $data = $request->validate([
             'client_id' => 'required|integer',
             'business_name' => 'required|string',
-            'business_type' => 'nullable|string',
             'address' => 'nullable|string',
             'city' => 'nullable|string',
             'state' => 'nullable|string',
@@ -88,7 +87,6 @@ class BusinessesController extends Controller
         $data = $request->validate([
             'client_id' => 'required|integer',
             'business_name' => 'required|string',
-            'business_type' => 'nullable|string',
             'address' => 'nullable|string',
             'city' => 'nullable|string',
             'state' => 'nullable|string',
