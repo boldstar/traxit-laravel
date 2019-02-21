@@ -17,12 +17,12 @@ Hello <i>{{ $client['client']->last_name }}, {{ $client['client']->first_name }}
 
 <h3>For questions and concerns</h3>
 <div style="display: flex;">
-    <p style="margin: 0 5px; align-self: center">please feel free to call us at: </p>
-    <h6 style="margin: 0; align-self: center">{{ $phoneNumber }}</h6>
+    <p style="margin: 0 5px; align-self: center">Please feel free to call us at: </p>
+    <h5 style="margin: 0; align-self: center;">{{ $phoneNumber }}</h5>
 </div>
 <div style="display: flex;">
     <p style="margin: 0 5px; align-self: center">Or reply to: </p>
-    <h6 style="margin: 0; align-self: center">{{ $userEmail }}</h6>
+    <h5 style="margin: 0; align-self: center;">{{ $userEmail }}</h5>
 </div>
 <p>Please reply to this email to verify you received it and let me know when you will be able to get me this information.</p>
 <h3>Looking forward to hearing from you, Thanks!</h3>

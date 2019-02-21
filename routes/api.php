@@ -20,6 +20,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/role', 'Tenant\AuthController@role');
     Route::get('/userProfile/', 'Tenant\AuthController@show');
     Route::patch('/tasks/{task}', 'Tenant\TasksController@update');
+    Route::patch('/batchUpdateTasks', 'Tenant\TasksController@batchUpdateTasks');
     Route::post('/engagements', 'Tenant\EngagementsController@store');
     Route::post('/questions', 'Tenant\QuestionsController@store');
     Route::post('/questionsEmail', 'Tenant\QuestionsController@sendMail');
