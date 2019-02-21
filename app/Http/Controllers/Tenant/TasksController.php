@@ -94,6 +94,36 @@ class TasksController extends Controller
         return response()->json(['task' => $task, 'message' => 'Task Was Updated'], 200);
     }
 
+    public function batchUpdateTasks(Request $request)
+    {
+        $data = $request->validate([
+            'tasksToUpdate' => 'required|array',
+            'user_id' => 'required|integer',
+            'status' => 'required|string'
+        ]);
+
+        Task::whereIn('id', $request->tasksToUpdate)->update([ 
+            'user_id' => $request->user_id,
+            'title' => $request->status,
+        ]);
+
+        $assigned_to = User::where('id', $request->user_id)->value('name');
+
+        
+        foreach($request->tasksToUpdate as $taskToUpdate) {
+            $task = Task::where('id', $taskToUpdate)->first();
+            $engagement = $task->engagements()->first();
+
+            $engagement->update([ 
+                'assigned_to' => $assigned_to,
+                'status' => $request->status,
+            ]);
+        };
+
+        return response()->json(['tasks' => $request->tasksToUpdate, 'message' => 'Tasks Were Succesfully Updated'], 200);
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *
