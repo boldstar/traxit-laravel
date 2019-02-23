@@ -17,7 +17,7 @@
                         <input type="text" v-model="company.company_number" class="form-control mb-3" placeholder="Company Number">
                         <div class="d-flex">
                         <input type="text" v-model="company.fqdn" class="form-control mb-3 col-8" placeholder="FQDN">
-                        <span class="col-4 align-self-center">.multitenant-diy.test</span>
+                        <span class="col-4 align-self-center">.traxit.pro</span>
                         </div>
                         <div class="p-2">
                             <span class="font-weight-bold">Admin User</span>
