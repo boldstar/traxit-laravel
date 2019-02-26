@@ -297,10 +297,7 @@ export default new Vuex.Store({
     addSubscription(context, subscripion) {
         context.commit('loadingRequest')
         axios.post('/subscriptions', {
-            title: subscripion.title,
-            amount: subscripion.amount,
-            basis: subscripion.basis,
-            description: subscripion.description
+            //add proper fields here
         })
         .then(response => {
             context.commit('loadingRequest')
@@ -314,10 +311,7 @@ export default new Vuex.Store({
     }, 
     updateSubscription(context, subscripion) {
         axios.patch('/subscriptions/' + subscripion.id, {
-            title: subscripion.title,
-            amount: subscripion.amount,
-            basis: subscripion.basis,
-            description: subscripion.description
+            //add proper fields here
         })
         .then(response => {
             context.commit('updateSubscription', response.data)
