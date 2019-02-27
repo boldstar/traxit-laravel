@@ -297,14 +297,8 @@ export default new Vuex.Store({
     addSubscription(context, subscription) {
         context.commit('loadingRequest')
         axios.post('/subscriptions', {
-            uuid: subscription.uuid,
-            postalcode: subscription.postalcode,
-            address: subscription.address,
-            country: subscription.country,
-            province: subscription.province,
+            fqdn: subscription.fqdn,
             stripeToken: subscription.stripeToken,
-            phone: subscription.phone,
-            city: subscription.city,
             email: subscription.email
         })
         .then(response => {

@@ -30,11 +30,13 @@ class SubscriptionsController extends Controller
     {
         // $request->validate($request->all());
 
-        $host = Hostname::first();
+        $host = Hostname::where('fqdn', $request->fqdn)->first();
 
-        $host->newSubscription('Pro', 'plan_EbORtk0B5aMtNg')->create($request->stripeToken);
+        $host->newSubscription('Pro', 'plan_EbORtk0B5aMtNg')->create($request->stripeToken, [
+            'email' => $request->email,
+        ]);
 
-        return response('Success');
+        return response()->json(['host' => $host, 'message' => 'A new subscription has been added!']);
     }
 
     /**

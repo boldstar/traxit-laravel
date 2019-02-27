@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 //tenancy.enforce is a middleware for making routes aware of tenancy
 Route::group(['middleware' => 'tenancy.enforce'], function () {
-    Route::get('/account', 'Tenant\AccountsController@account');
+    Route::get('/account', 'Tenant\AccountsController@account')->middleware('subscribed');
     Route::post('/account', 'Tenant\AccountsController@store');
     Route::post('/uploadLogo', 'Tenant\AccountsController@uploadLogo');
     Route::patch('/account/{id}', 'Tenant\AccountsController@update');
