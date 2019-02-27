@@ -5,6 +5,8 @@ namespace App\Http\Controllers\System;
 use App\Models\System\Subscription;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\System\Hostname;
+
 
 class SubscriptionsController extends Controller
 {
@@ -15,17 +17,7 @@ class SubscriptionsController extends Controller
      */
     public function index()
     {
-        return Subscription::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Hostname::all();
     }
 
     /**
@@ -34,23 +26,15 @@ class SubscriptionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function subscribe(Request $request)
     {
-        $data = $request->validate([
-            'title' => 'required|string',
-            'amount' => 'required|decimal',
-            'basis' => 'required|string',
-            'description' => 'nullable|string'
-        ]);
+        // $request->validate($request->all());
 
-        $subscription = Subscription::create([
-            'title' => $request->title,
-            'amount' => $request->amount,
-            'basis' => $request->basis,
-            'description' => $request->description,
-        ]);
+        $host = Hostname::first();
 
-        return response($subscription, 200);
+        $host->newSubscription('Pro', 'plan_EbORtk0B5aMtNg')->create($request->stripeToken);
+
+        return response('Success');
     }
 
     /**

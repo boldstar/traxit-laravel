@@ -28,7 +28,7 @@ Route::domain('traxit.test')->group(function () {
         
         Route::get('/subscriptions', 'System\SubscriptionsController@index');
         Route::get('/subscriptions/{id}', 'System\SubscriptionsController@show');
-        Route::post('/subscriptions', 'System\SubscriptionsController@store');
+        Route::post('/subscriptions', 'System\SubscriptionsController@subscribe');
         Route::patch('/subscriptions/{id}', 'System\SubscriptionsController@update');
         Route::delete('/subscriptions/{subscription}', 'System\Subscriptions@destroy');
     });

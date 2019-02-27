@@ -180,7 +180,7 @@ module.exports = function normalizeComponent (
 
 
 var bind = __webpack_require__(12);
-var isBuffer = __webpack_require__(73);
+var isBuffer = __webpack_require__(74);
 
 /*global toString:true*/
 
@@ -12559,7 +12559,7 @@ module.exports = g;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(1);
-var normalizeHeaderName = __webpack_require__(75);
+var normalizeHeaderName = __webpack_require__(76);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -13325,12 +13325,12 @@ module.exports = function bind(fn, thisArg) {
 
 
 var utils = __webpack_require__(1);
-var settle = __webpack_require__(76);
-var buildURL = __webpack_require__(78);
-var parseHeaders = __webpack_require__(79);
-var isURLSameOrigin = __webpack_require__(80);
+var settle = __webpack_require__(77);
+var buildURL = __webpack_require__(79);
+var parseHeaders = __webpack_require__(80);
+var isURLSameOrigin = __webpack_require__(81);
 var createError = __webpack_require__(14);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(81);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(82);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -13427,7 +13427,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(82);
+      var cookies = __webpack_require__(83);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -13511,7 +13511,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(77);
+var enhanceError = __webpack_require__(78);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -13572,7 +13572,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(18);
-module.exports = __webpack_require__(90);
+module.exports = __webpack_require__(91);
 
 
 /***/ }),
@@ -13586,7 +13586,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__App__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router_js__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store_js__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store_js__ = __webpack_require__(71);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -13958,7 +13958,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\nli {\r\n    list-style: none;\n}\n.subscription-card {\r\n    height: 275px;\n}\r\n", ""]);
+exports.push([module.i, "\nli {\n    list-style: none;\n}\n.subscription-card {\n    height: 275px;\n}\n.spacer {\n    margin-bottom: 24px;\n}\n/**\n    * The CSS shown here will not be introduced in the Quickstart guide, but shows\n    * how you can use CSS to style your Element's container.\n    */\n.StripeElement {\n    background-color: white;\n    padding: 10px 12px;\n    border-radius: 4px;\n    border: 1px solid #ccd0d2;\n    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);\n            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);\n    -webkit-transition: box-shadow 150ms ease;\n    -webkit-transition: -webkit-box-shadow 150ms ease;\n    transition: -webkit-box-shadow 150ms ease;\n    transition: box-shadow 150ms ease;\n    transition: box-shadow 150ms ease, -webkit-box-shadow 150ms ease;\n}\n.StripeElement--focus {\n    -webkit-box-shadow: 0 1px 3px 0 #cfd7df;\n            box-shadow: 0 1px 3px 0 #cfd7df;\n}\n.StripeElement--invalid {\n    border-color: #fa755a;\n}\n.StripeElement--webkit-autofill {\n    background-color: #fefde5 !important;\n}\n#card-errors {\n    color: #fa755a;\n}\n", ""]);
 
 // exports
 
@@ -17745,7 +17745,7 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("span", { staticClass: "col-4 align-self-center" }, [
-                    _vm._v(".multitenant-diy.test")
+                    _vm._v(".traxit.pro")
                   ])
                 ]),
                 _vm._v(" "),
@@ -20212,114 +20212,76 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container" },
-    [
-      _vm.successAlert
-        ? _c("Alert", { attrs: { message: _vm.successAlert } })
-        : _vm._e(),
+  return _c("div", { staticClass: "container" }, [
+    _c(
+      "div",
+      {
+        staticClass:
+          "card-body bg-white py-2 d-flex justify-content-between shadow"
+      },
+      [
+        _c("h3", { staticClass: "mb-0" }, [_vm._v("Subscriptions")]),
+        _vm._v(" "),
+        _c(
+          "router-link",
+          {
+            staticClass: "btn btn-sm btn-primary pt-2 font-weight-bold",
+            attrs: { to: "/add-subscription" }
+          },
+          [_vm._v("Add Subscription")]
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("table", { staticClass: "table " }, [
+      _vm._m(0),
       _vm._v(" "),
       _c(
-        "div",
-        {
-          staticClass:
-            "card-header border-primary d-flex justify-content-between mb-3"
-        },
-        [
-          _c("span", { staticClass: "align-self-center" }, [
-            _vm._v("Subscriptions")
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "btn btn-sm btn-primary",
-              attrs: { to: "/add-subscription" }
-            },
-            [_vm._v("Add Subscription")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "d-flex flex-row justify-content-around flex-wrap p-0 col-md-12"
-        },
-        _vm._l(_vm.subscriptions, function(subscription) {
+        "tbody",
+        { staticClass: "table-sm" },
+        _vm._l(_vm.subscriptions, function(subscription, index) {
           return _c(
-            "div",
-            {
-              key: subscription.id,
-              staticClass: "card col-3 p-0 d-flex flex-colum subscription-card"
-            },
+            "tr",
+            { key: index, staticClass: "text-center table-bordered bg-white" },
             [
               _c(
-                "div",
-                { staticClass: "flex-column d-flex align-items-center" },
-                [
-                  _c("span", { staticClass: "p-4 h3" }, [
-                    _vm._v(_vm._s(subscription.title))
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "p-2 h3" }, [
-                    _vm._v(
-                      "$" +
-                        _vm._s(subscription.amount) +
-                        "/" +
-                        _vm._s(subscription.basis)
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "p-4 h6" }, [
-                    _vm._v(_vm._s(subscription.description))
-                  ])
-                ]
+                "th",
+                { staticClass: "text-capitalize", attrs: { scope: "row" } },
+                [_vm._v(_vm._s(subscription.subdomain))]
               ),
               _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "card-footer d-flex justify-content-between p-3"
-                },
-                [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-light",
-                      on: {
-                        click: function($event) {
-                          _vm.deleteSubscription(subscription.id)
-                        }
-                      }
-                    },
-                    [_vm._v("Delete")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "btn btn-sm btn-primary",
-                      attrs: { to: "#" }
-                    },
-                    [_vm._v("Edit")]
-                  )
-                ],
-                1
-              )
+              _c("td", [_vm._v(_vm._s(subscription.card_brand))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(subscription.card_last_four))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(subscription.stripe_id))])
             ]
           )
         }),
         0
       )
-    ],
-    1
-  )
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "border" }, [
+      _c("tr", { staticClass: "text-center " }, [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Card Brand")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Last Four")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Stripe Id")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -20338,7 +20300,7 @@ var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(68)
 /* template */
-var __vue_template__ = __webpack_require__(69)
+var __vue_template__ = __webpack_require__(70)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -20382,6 +20344,10 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue__);
 //
 //
 //
@@ -20410,226 +20376,393 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'subscription-form',
-    data: function data() {
-        return {
-            subscription: {
-                title: '',
-                amount: '',
-                basis: '',
-                description: ''
-            },
-            basises: ['yr', 'mth'],
-            option: 'Choose...'
-        };
-    },
+  data: function data() {
+    return {
+      csrf: document.head.querySelector('meta[name="csrf-token"]').content,
+      name_on_card: '',
+      postalcode: '',
+      address: '',
+      country: '',
+      province: '',
+      stripeToken: '',
+      phone: '',
+      city: '',
+      email: ''
+    };
+  },
 
-    methods: {
-        addSubscription: function addSubscription() {
-            this.$store.dispatch('addSubscription', {
-                title: this.subscription.title,
-                amount: this.subscription.amount,
-                basis: this.subscription.basis,
-                description: this.subscription.description
-            });
-        }
-    },
-    created: function created() {
-        this.subscription.basis = this.option;
+  components: {
+    CardElement: __WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue___default.a
+  },
+  methods: {
+    pay: function pay() {
+      var _this = this;
+
+      // createToken returns a Promise which resolves in a result object with
+      // either a token or an error key.
+      // See https://stripe.com/docs/api#tokens for the token object.
+      // See https://stripe.com/docs/api#errors for the error object.
+      // More general https://stripe.com/docs/stripe.js#stripe-create-token.
+      var options = {
+        name: this.name_on_card
+      };
+      Object(__WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__["createToken"])(options).then(function (result) {
+        console.log(result.token);
+        _this.stripeToken = result.token.id;
+        _this.$store.dispatch('addSubscription', {
+          uuid: '63519b1c3c754bdab569f8d787fb1341',
+          postalcode: _this.postalcode,
+          address: _this.address,
+          country: _this.country,
+          province: _this.province,
+          stripeToken: _this.stripeToken,
+          phone: _this.phone,
+          city: _this.city,
+          email: _this.email
+        });
+      });
     }
+  }
 });
 
 /***/ }),
 /* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
+!function(e,t){ true?module.exports=t():"function"==typeof define&&define.amd?define("vue-stripe-elements",[],t):"object"==typeof exports?exports["vue-stripe-elements"]=t():e["vue-stripe-elements"]=t()}(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=16)}([function(e,t,n){var r=n(2)(n(15),n(18),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/StripeElement.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] StripeElement.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={stripe:{type:[String,Object],required:!0},value:{type:String,required:!1},options:{type:Object,required:!1}}},function(e,t){e.exports=function(e,t,n,r){var o,u=e=e||{},s=typeof e.default;"object"!==s&&"function"!==s||(o=e,u=e.default);var i="function"==typeof u?u.options:u;if(t&&(i.render=t.render,i.staticRenderFns=t.staticRenderFns),n&&(i._scopeId=n),r){var l=i.computed||(i.computed={});Object.keys(r).forEach(function(e){var t=r[e];l[e]=function(){return t}})}return{esModule:o,exports:u,options:i}}},function(e,t,n){"use strict";function r(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};"object"===(void 0===e?"undefined":s(e))&&"function"==typeof e.elements&&(i.instance=e),void 0===window.Stripe&&null===i.instance?console.error("Stripe V3 library not loaded!"):null===i.instance&&(i.instance=window.Stripe(e)),i.instance.elements?null===i.elements&&(i.elements=i.instance.elements(t)):console.error("Stripe V3 library not loaded!")}function o(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};r(t,n.elements||{}),n.style=Object.assign(l,n.style||{});var o=i.elements.create(e,n);return i.createToken=function(e){return i.instance.createToken(o,e)},i.createSource=function(e){return i.instance.createSource(o,e)},i.retrieveSource=function(e){return i.instance.retrieveSource(e)},o}function u(){i.instance=null,i.elements=null,i.createToken=null,i.createSource=null,i.retrieveSource=null}Object.defineProperty(t,"__esModule",{value:!0});var s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};t.create=o,t.destroy=u;var i=t.Stripe={instance:null,createToken:null,createSource:null,retrieveSource:null,elements:null},l=t.baseStyle={base:{color:"#32325d",lineHeight:"24px",fontFamily:"Helvetica Neue",fontSmoothing:"antialiased",fontSize:"16px","::placeholder":{color:"#aab7c4"}},invalid:{color:"#fa755a",iconColor:"#fa755a"}}},function(e,t,n){"use strict";"function"!=typeof Object.assign&&(Object.assign=function(e,t){if(null==e)throw new TypeError("Cannot convert undefined or null to object");for(var n=Object(e),r=1;r<arguments.length;r++){var o=arguments[r];if(null!=o)for(var u in o)Object.prototype.hasOwnProperty.call(o,u)&&(n[u]=o[u])}return n}),e.exports=Object.assign},function(e,t,n){var r=n(2)(n(10),n(22),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/Card.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] Card.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(11),n(19),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/CardCvc.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] CardCvc.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(12),n(21),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/CardExpiry.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] CardExpiry.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(13),n(20),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/CardNumber.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] CardNumber.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(14),n(17),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/PostalCode.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] PostalCode.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),o=function(e){return e&&e.__esModule?e:{default:e}}(r),u=n(3);t.default={props:Object.assign({type:{type:String,required:!0}},o.default),beforeMount:function(){var e=this;this._element=(0,u.create)(this.type,this.stripe,this.options),this._element.on("blur",function(t){return e.$emit("blur")}),this._element.on("focus",function(t){return e.$emit("focus")}),this._element.on("change",function(t){return e.$emit("change",t)})},mounted:function(){var e=document.createElement("div");this._element.mount(e),this.$el.appendChild(e)},beforeDestroy:function(){this._element.unmount(),this._element.destroy(),(0,u.destroy)()},methods:{blur:function(){this._element.blur()},clear:function(){this._element.clear()},focus:function(){this._element.focus()},update:function(){this._element.update()}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}n(4);var o=n(3),u=n(0),s=r(u),i=n(5),l=r(i),c=n(7),f=r(c),a=n(6),p=r(a),d=n(8),m=r(d),v=n(9),h=r(v);e.exports={Card:l.default,CardNumber:m.default,CardExpiry:f.default,CardCvc:p.default,PostalCode:h.default,StripeElement:s.default,baseStyle:o.baseStyle,get instance(){return o.Stripe.instance},get createToken(){return o.Stripe.createToken},get createSource(){return o.Stripe.createSource},get retrieveSource(){return o.Stripe.retrieveSource}}},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"postalCode",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},empty:function(t){e.$emit("empty")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("div")},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"cardCvc",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"cardNumber",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"cardExpiry",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"card",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0}])});
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "subscription container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c(
-        "div",
-        { staticClass: "col-md-6" },
-        [
-          _c(
-            "router-link",
-            { staticClass: "nav-link", attrs: { to: "/subscriptions" } },
-            [_c("i", { staticClass: "fas fa-arrow-left mr-2" }), _vm._v("Back")]
-          ),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "align-self-center col-md-12 p-0",
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.addSubscription($event)
-                }
-              }
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.title,
-                    expression: "subscription.title"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "text", placeholder: "Title" },
-                domProps: { value: _vm.subscription.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "title", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.amount,
-                    expression: "subscription.amount"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "decimal", placeholder: "000.00" },
-                domProps: { value: _vm.subscription.amount },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "amount", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.subscription.basis,
-                      expression: "subscription.basis"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { name: "basis", id: "basis" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.subscription,
-                        "basis",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { disabled: "" } }, [
-                    _vm._v(_vm._s(_vm.option))
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.basises, function(basis, index) {
-                    return _c(
-                      "option",
-                      { key: index, attrs: { value: "basis" } },
-                      [_vm._v(_vm._s(basis))]
-                    )
-                  })
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.title,
-                    expression: "subscription.title"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "textarea", placeholder: "Title" },
-                domProps: { value: _vm.subscription.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "title", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm._m(1)
-            ]
-          )
-        ],
-        1
-      )
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
+  return _c("div", { staticClass: "container" }, [
+    _c(
+      "form",
       {
-        staticClass:
-          "card-header p-0 font-weight-bold mb-3 p-3 border-primary d-flex justify-content-between h4"
+        ref: "form",
+        attrs: { action: "/subscriptions", method: "POST", id: "payment-form" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.pay()
+          }
+        }
       },
       [
-        _c("span", [_vm._v("New Subscription")]),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "email" } }, [_vm._v("Email Address")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.email,
+                expression: "email"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "email", id: "email" },
+            domProps: { value: _vm.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.email = $event.target.value
+              }
+            }
+          })
+        ]),
         _vm._v(" "),
-        _c("div", [_c("i", { staticClass: "fas fa-file-invoice-dollar" })])
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "name_on_card" } }, [
+            _vm._v("Name on Card")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.name_on_card,
+                expression: "name_on_card"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", id: "name_on_card", name: "name_on_card" },
+            domProps: { value: _vm.name_on_card },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name_on_card = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "address" } }, [_vm._v("Address")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.address,
+                    expression: "address"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "address", name: "address" },
+                domProps: { value: _vm.address },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.address = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-3" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "city" } }, [_vm._v("City")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.city,
+                    expression: "city"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "city", name: "city" },
+                domProps: { value: _vm.city },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.city = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-3" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "province" } }, [_vm._v("Province")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.province,
+                    expression: "province"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "province", name: "province" },
+                domProps: { value: _vm.province },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.province = $event.target.value
+                  }
+                }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-4" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "postalcode" } }, [
+                _vm._v("Postal Code")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.postalcode,
+                    expression: "postalcode"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "postalcode", name: "postalcode" },
+                domProps: { value: _vm.postalcode },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.postalcode = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-4" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "country" } }, [_vm._v("Country")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.country,
+                    expression: "country"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "country", name: "country" },
+                domProps: { value: _vm.country },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.country = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-4" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "phone" } }, [_vm._v("Phone")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.phone,
+                    expression: "phone"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "phone", name: "phone" },
+                domProps: { value: _vm.phone },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.phone = $event.target.value
+                  }
+                }
+              })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "form-group" },
+          [
+            _c("label", { attrs: { for: "card-element" } }, [
+              _vm._v("Credit Card")
+            ]),
+            _vm._v(" "),
+            _c("card-element")
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("input", {
+          attrs: { type: "hidden", name: "_token" },
+          domProps: { value: _vm.csrf }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "spacer" }),
+        _vm._v(" "),
+        _c(
+          "button",
+          { staticClass: "btn btn-success", attrs: { type: "submit" } },
+          [_vm._v("Submit Payment")]
+        )
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary btn-block", attrs: { type: "submit" } },
-        [_vm._v("Submit")]
-      )
-    ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -20640,14 +20773,14 @@ if (false) {
 }
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__router_js__ = __webpack_require__(10);
 
@@ -20928,14 +21061,20 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
                 console.log(error.response.data);
             });
         },
-        addSubscription: function addSubscription(context, subscripion) {
+        addSubscription: function addSubscription(context, subscription) {
             context.commit('loadingRequest');
             __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/subscriptions', {
-                title: subscripion.title,
-                amount: subscripion.amount,
-                basis: subscripion.basis,
-                description: subscripion.description
+                uuid: subscription.uuid,
+                postalcode: subscription.postalcode,
+                address: subscription.address,
+                country: subscription.country,
+                province: subscription.province,
+                stripeToken: subscription.stripeToken,
+                phone: subscription.phone,
+                city: subscription.city,
+                email: subscription.email
             }).then(function (response) {
+                console.log(response.data);
                 context.commit('loadingRequest');
                 context.commit('successAlert', response.data);
                 __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
@@ -20946,10 +21085,7 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         updateSubscription: function updateSubscription(context, subscripion) {
             __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/subscriptions/' + subscripion.id, {
-                title: subscripion.title,
-                amount: subscripion.amount,
-                basis: subscripion.basis,
-                description: subscripion.description
+                //add proper fields here
             }).then(function (response) {
                 context.commit('updateSubscription', response.data);
             }).catch(function (error) {
@@ -20970,13 +21106,13 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
 }));
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(72);
+module.exports = __webpack_require__(73);
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20984,7 +21120,7 @@ module.exports = __webpack_require__(72);
 
 var utils = __webpack_require__(1);
 var bind = __webpack_require__(12);
-var Axios = __webpack_require__(74);
+var Axios = __webpack_require__(75);
 var defaults = __webpack_require__(5);
 
 /**
@@ -21019,14 +21155,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(16);
-axios.CancelToken = __webpack_require__(88);
+axios.CancelToken = __webpack_require__(89);
 axios.isCancel = __webpack_require__(15);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(89);
+axios.spread = __webpack_require__(90);
 
 module.exports = axios;
 
@@ -21035,7 +21171,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports) {
 
 /*!
@@ -21062,7 +21198,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21070,8 +21206,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(5);
 var utils = __webpack_require__(1);
-var InterceptorManager = __webpack_require__(83);
-var dispatchRequest = __webpack_require__(84);
+var InterceptorManager = __webpack_require__(84);
+var dispatchRequest = __webpack_require__(85);
 
 /**
  * Create a new instance of Axios
@@ -21148,7 +21284,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21167,7 +21303,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21200,7 +21336,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21228,7 +21364,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21301,7 +21437,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21361,7 +21497,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21436,7 +21572,7 @@ module.exports = (
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21479,7 +21615,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21539,7 +21675,7 @@ module.exports = (
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21598,18 +21734,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var transformData = __webpack_require__(85);
+var transformData = __webpack_require__(86);
 var isCancel = __webpack_require__(15);
 var defaults = __webpack_require__(5);
-var isAbsoluteURL = __webpack_require__(86);
-var combineURLs = __webpack_require__(87);
+var isAbsoluteURL = __webpack_require__(87);
+var combineURLs = __webpack_require__(88);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -21691,7 +21827,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21718,7 +21854,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21739,7 +21875,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21760,7 +21896,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21824,7 +21960,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21858,10 +21994,176 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(96)
+/* template */
+var __vue_template__ = __webpack_require__(97)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/CardElement.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b68d5136", Component.options)
+  } else {
+    hotAPI.reload("data-v-b68d5136", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 96 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: { Card: __WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__["Card"] },
+  data: function data() {
+    return {
+      complete: false,
+      errorMessage: '',
+      stripeOptions: {
+        // see https://stripe.com/docs/stripe.js#element-options for details
+        style: {
+          base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Raleway", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+              color: '#aab7c4'
+            }
+          },
+          invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a'
+          }
+        },
+        hidePostalCode: true
+      }
+    };
+  },
+
+  methods: {
+    pay: function pay() {
+      // createToken returns a Promise which resolves in a result object with
+      // either a token or an error key.
+      // See https://stripe.com/docs/api#tokens for the token object.
+      // See https://stripe.com/docs/api#errors for the error object.
+      // More general https://stripe.com/docs/stripe.js#stripe-create-token.
+      Object(__WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__["createToken"])().then(function (data) {
+        return console.log(data.token);
+      });
+    },
+    change: function change(event) {
+      // if (event.error) {
+      //   this.errorMessage = event.error.message;
+      // } else {
+      //   this.errorMessage = ''
+      // }
+      this.errorMessage = event.error ? event.error.message : '';
+    }
+  }
+});
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("card", {
+        staticClass: "stripe-card",
+        class: { complete: _vm.complete },
+        attrs: {
+          stripe: "pk_test_KYFZxHTonLt3CcLZGG802H7i",
+          options: _vm.stripeOptions
+        },
+        on: {
+          change: function($event) {
+            _vm.change($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("div", {
+        attrs: { id: "card-errors", role: "alert" },
+        domProps: { textContent: _vm._s(_vm.errorMessage) }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-b68d5136", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

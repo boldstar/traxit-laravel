@@ -294,12 +294,21 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
-    addSubscription(context, subscripion) {
+    addSubscription(context, subscription) {
         context.commit('loadingRequest')
         axios.post('/subscriptions', {
-            //add proper fields here
+            uuid: subscription.uuid,
+            postalcode: subscription.postalcode,
+            address: subscription.address,
+            country: subscription.country,
+            province: subscription.province,
+            stripeToken: subscription.stripeToken,
+            phone: subscription.phone,
+            city: subscription.city,
+            email: subscription.email
         })
         .then(response => {
+            console.log(response.data)
             context.commit('loadingRequest')
             context.commit('successAlert', response.data)
             router.push('/subscriptions')
