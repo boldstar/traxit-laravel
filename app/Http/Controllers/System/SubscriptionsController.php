@@ -45,9 +45,25 @@ class SubscriptionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function invoices()
     {
-        //
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+
+        if($hostname->hasStripeId()) {
+            $invoices = $hostname->invoices()->map(function($invoice) {
+                return [
+                    'date' => $invoice->date()->toFormattedDateString(),
+                    'subscription' => $invoice->subscription,
+                    'total' => '$' . number_format($invoice->total/100, 2),
+                    'interval' => $invoice->interval,
+                    'pdf' => $invoice->hosted_invoice_url,
+                ];
+            });
+        } else {
+            $invoices = [];
+        }
+
+        return [ 'invoices' => $invoices ];
     }
 
     /**
