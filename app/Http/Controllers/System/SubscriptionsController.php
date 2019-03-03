@@ -6,6 +6,8 @@ use App\Models\System\Subscription;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\System\Hostname;
+use \Stripe\Plan;
+use \Stripe\Stripe;
 
 
 class SubscriptionsController extends Controller
@@ -72,9 +74,39 @@ class SubscriptionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function plans()
     {
-        //
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+
+        $stripe = $hostname->subscription('Pro');
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $plan = Plan::retrieve($stripe->stripe_plan);
+        $plan->amount = '$' . number_format($plan->amount/100, 2);
+        $plans = Plan::all();
+
+        return response()->json(['plan' => $plan, 'plans' => $plans]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $hostname  = Hostname::where('stripe_id', $id)->first();
+
+        $stripe = $hostname->subscription('Pro');
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $plan = Plan::retrieve($stripe->stripe_plan);
+        $plan->amount = '$' . number_format($plan->amount/100, 2);
+
+        return response()->json(['plan' => $plan]);
     }
 
     /**
@@ -84,7 +116,17 @@ class SubscriptionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function upgrade(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resume()
     {
         //
     }
@@ -95,8 +137,33 @@ class SubscriptionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function cancel()
     {
-        //
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+        
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        // $stripe = $hostname->subscription('Pro')->cancel();
+
+        return response()->view('subscribe');
+        
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelByAdmin($id)
+    {
+        $hostname  = Hostname::where('stripe_id', $id)->first();
+        
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        // $stripe = $hostname->subscription('Pro')->cancel();
+
+        return response()->json(['message', 'Subscription Was Canceled']);
+        
     }
 }

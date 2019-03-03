@@ -32,6 +32,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/account', 'Tenant\AccountsController@store');
 Route::get('/subscription', 'System\SubscriptionsController@invoices');
+Route::get('/plans', 'System\SubscriptionsController@plans');
+Route::post('/upgrade-subscription', 'System\SubscriptionsController@upgrade');
+Route::post('/resume-subscription', 'System\SubscriptionsController@resume');
+Route::post('/cancel-subscription', 'System\SubscriptionsController@cancel');
 Route::post('/uploadLogo', 'Tenant\AccountsController@uploadLogo');
 Route::patch('/account/{id}', 'Tenant\AccountsController@update');
 Route::post('/login', 'Tenant\AuthController@login');

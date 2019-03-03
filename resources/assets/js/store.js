@@ -87,14 +87,14 @@ export default new Vuex.Store({
     getSubscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
     },
-    getSubscription(state, subscription) {
+    getCompanySubscription(state, subscription) {
         state.subscription = subscription
     },
     addSubscription(state, subscripion) {
         state.subscriptions.push(subscripion)
     },
     deleteSubscription(state, id) {
-        const index = state.subscriptions.findIndex(subscripion => subscription.id == id)
+        const index = state.subscriptions.findIndex(subscription => subscription.id == id)
         state.subscriptions.splice(index, 1)
     },
     updateSubscription(state, subscription) {
@@ -285,10 +285,10 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
-    getSubscription(context, id) {
+    getCompanySubscription(context, id) {
         axios.get('/subscriptions/' + id)
         .then(response => {
-            context.commit('getSubscription', response.data)
+            context.commit('getCompanySubscription', response.data)
         })
         .catch(error => {
             console.log(error.response.data)
@@ -323,12 +323,14 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
-    deleteSubscription(context, id) {
-        axios.delete('/subscriptions/' + id)
+    cancelSubscription(context, id) {
+        console.log(id)
+        axios.delete('/cancel-subscription/' + id)
         .then(response => {
-            context.commit('successAlert', response.data)
-            context.commit('deleteSubscriptions', id)
-            router.push('/')
+            console.log(response.data)
+            // context.commit('successAlert', response.data)
+            // context.commit('cancelSubscriptions', id)
+            router.push('/subscriptions')
         })
         .catch(error => {
             context.commit('errorAlert', error.response.data)
