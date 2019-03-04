@@ -13,7 +13,7 @@
                 </ul>
             </div>
             <div class="card-footer">
-                <button class="btn btn-primary btn-sm" v-if="subplan.active">Resume</button>
+                <button class="btn btn-primary btn-sm" v-if="subplan.active" @click="resumeSubscription()">Resume</button>
                 <button class="btn btn-primary btn-sm" @click="requestToCancel">Cancel</button>
                 <button class="btn btn-primary btn-sm">Upgrade</button>
             </div>
@@ -52,7 +52,7 @@ import Modal from '@/components/Modal.vue'
 
             },
             resumeSubscription() {
-
+                this.$store.dispatch('resumeSubscription', this.$route.params.subscription_id)
             } 
         },
         created() {

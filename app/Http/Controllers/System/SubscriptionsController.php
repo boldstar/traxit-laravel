@@ -161,9 +161,27 @@ class SubscriptionsController extends Controller
         
         Stripe::setApiKey(config('services.stripe.secret'));
         
-        // $stripe = $hostname->subscription('Pro')->cancel();
+        $stripe = $hostname->subscription('Pro')->cancel();
 
-        return response()->json(['message', 'Subscription Was Canceled']);
+        return response()->json(['message' => 'Subscription Was Canceled']);
+        
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function resumeByAdmin($id)
+    {
+        $hostname  = Hostname::where('stripe_id', $id)->first();
+        
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        $stripe = $hostname->subscription('Pro')->resume();
+
+        return response()->json(['message' => 'Subscription Was Resumed']);
         
     }
 }

@@ -7,7 +7,18 @@
 <script>
 export default {
     name: 'alert',
-    props: ['message']
+    props: ['message'],
+    methods: {
+        removeAlert() {
+            this.$store.commit('clearAlert')
+        }
+    },
+    mounted() {
+        var self = this
+        setTimeout(() => {
+            self.removeAlert()
+        }, 10000)
+    }
 }
 </script>
 

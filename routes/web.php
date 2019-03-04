@@ -29,7 +29,7 @@ Route::domain('traxit.test')->group(function () {
         Route::get('/subscriptions', 'System\SubscriptionsController@index');
         Route::get('/subscriptions/{id}', 'System\SubscriptionsController@show');
         Route::post('/upgrade-subscription', 'System\SubscriptionsController@upgrade');
-        Route::post('/resume-subscription', 'System\SubscriptionsController@resume');
+        Route::post('/resume-subscription/{id}', 'System\SubscriptionsController@resumeByAdmin');
         Route::post('/subscriptions', 'System\SubscriptionsController@subscribe');
         Route::patch('/subscriptions/{id}', 'System\SubscriptionsController@update');
         Route::delete('/subscriptions/{subscription}', 'System\SubscriptionsController@destroy');

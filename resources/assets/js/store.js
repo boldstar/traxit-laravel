@@ -115,6 +115,10 @@ export default new Vuex.Store({
     },
     showModal(state) {
         state.modal = !state.modal
+    },
+    clearAlert(state) {
+        state.successalert = ''
+        state.erroralert = ''
     }
   },
   actions: {
@@ -324,12 +328,22 @@ export default new Vuex.Store({
         })
     },
     cancelSubscription(context, id) {
-        console.log(id)
         axios.delete('/cancel-subscription/' + id)
         .then(response => {
             console.log(response.data)
-            // context.commit('successAlert', response.data)
-            // context.commit('cancelSubscriptions', id)
+            context.commit('successAlert', response.data.message)
+            router.push('/subscriptions')
+        })
+        .catch(error => {
+            context.commit('errorAlert', error.response.data)
+            console.log(error.response.data)
+        })
+    },
+    resumeSubscription(context, id) {
+        axios.post('/resume-subscription/' + id)
+        .then(response => {
+            console.log(response.data)
+            context.commit('successAlert', response.data.message)
             router.push('/subscriptions')
         })
         .catch(error => {

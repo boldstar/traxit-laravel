@@ -17419,7 +17419,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'alert',
-    props: ['message']
+    props: ['message'],
+    methods: {
+        removeAlert: function removeAlert() {
+            this.$store.commit('clearAlert');
+        }
+    },
+    mounted: function mounted() {
+        var self = this;
+        setTimeout(function () {
+            self.removeAlert();
+        }, 10000);
+    }
 });
 
 /***/ }),
@@ -20253,6 +20264,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
@@ -20286,84 +20298,93 @@ var render = function() {
     { staticClass: "container" },
     [
       _vm.$route.name == "subscriptions"
-        ? _c("div", [
-            _c(
-              "div",
-              {
-                staticClass:
-                  "card-body bg-white py-2 d-flex justify-content-between shadow"
-              },
-              [
-                _c("h3", { staticClass: "mb-0" }, [_vm._v("Subscriptions")]),
-                _vm._v(" "),
-                _c(
-                  "router-link",
-                  {
-                    staticClass: "btn btn-sm btn-primary pt-2 font-weight-bold",
-                    attrs: { to: "/add-subscription" }
-                  },
-                  [_vm._v("Add Subscription")]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("table", { staticClass: "table table-hover" }, [
-              _vm._m(0),
+        ? _c(
+            "div",
+            [
+              _vm.successAlert
+                ? _c("Alert", { attrs: { message: _vm.successAlert } })
+                : _vm._e(),
               _vm._v(" "),
               _c(
-                "tbody",
-                { staticClass: "table-sm " },
-                _vm._l(_vm.subscriptions, function(subscription, index) {
-                  return _c(
-                    "tr",
+                "div",
+                {
+                  staticClass:
+                    "card-body bg-white py-2 d-flex justify-content-between shadow"
+                },
+                [
+                  _c("h3", { staticClass: "mb-0" }, [_vm._v("Subscriptions")]),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
                     {
-                      key: index,
-                      staticClass: "text-center table-bordered bg-white"
+                      staticClass:
+                        "btn btn-sm btn-primary pt-2 font-weight-bold",
+                      attrs: { to: "/add-subscription" }
                     },
-                    [
-                      _c(
-                        "th",
-                        {
-                          staticClass: "text-capitalize",
-                          attrs: { scope: "row" }
-                        },
-                        [_vm._v(_vm._s(subscription.subdomain))]
-                      ),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(subscription.card_brand))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(subscription.card_last_four))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(subscription.stripe_id))]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          _c(
-                            "router-link",
-                            {
-                              staticClass: "btn btn-primary btn-sm",
-                              attrs: {
-                                to: {
-                                  path:
-                                    "/subscriptions/company/" +
-                                    subscription.stripe_id
-                                }
-                              }
-                            },
-                            [_vm._v("View")]
-                          )
-                        ],
-                        1
-                      )
-                    ]
+                    [_vm._v("Add Subscription")]
                   )
-                }),
-                0
-              )
-            ])
-          ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("table", { staticClass: "table table-hover" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  { staticClass: "table-sm " },
+                  _vm._l(_vm.subscriptions, function(subscription, index) {
+                    return _c(
+                      "tr",
+                      {
+                        key: index,
+                        staticClass: "text-center table-bordered bg-white"
+                      },
+                      [
+                        _c(
+                          "th",
+                          {
+                            staticClass: "text-capitalize",
+                            attrs: { scope: "row" }
+                          },
+                          [_vm._v(_vm._s(subscription.subdomain))]
+                        ),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(subscription.card_brand))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(subscription.card_last_four))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(subscription.stripe_id))]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "btn btn-primary btn-sm",
+                                attrs: {
+                                  to: {
+                                    path:
+                                      "/subscriptions/company/" +
+                                      subscription.stripe_id
+                                  }
+                                }
+                              },
+                              [_vm._v("View")]
+                            )
+                          ],
+                          1
+                        )
+                      ]
+                    )
+                  }),
+                  0
+                )
+              ])
+            ],
+            1
+          )
         : _vm._e(),
       _vm._v(" "),
       _vm.$route.name == "company-subscription" ? _c("router-view") : _vm._e()
@@ -21054,6 +21075,10 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         showModal: function showModal(state) {
             state.modal = !state.modal;
+        },
+        clearAlert: function clearAlert(state) {
+            state.successalert = '';
+            state.erroralert = '';
         }
     },
     actions: {
@@ -21233,11 +21258,19 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
             });
         },
         cancelSubscription: function cancelSubscription(context, id) {
-            console.log(id);
             __WEBPACK_IMPORTED_MODULE_2_axios___default.a.delete('/cancel-subscription/' + id).then(function (response) {
                 console.log(response.data);
-                // context.commit('successAlert', response.data)
-                // context.commit('cancelSubscriptions', id)
+                context.commit('successAlert', response.data.message);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
+            }).catch(function (error) {
+                context.commit('errorAlert', error.response.data);
+                console.log(error.response.data);
+            });
+        },
+        resumeSubscription: function resumeSubscription(context, id) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/resume-subscription/' + id).then(function (response) {
+                console.log(response.data);
+                context.commit('successAlert', response.data.message);
                 __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
             }).catch(function (error) {
                 context.commit('errorAlert', error.response.data);
@@ -22253,7 +22286,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             this.title = 'Cancel Subscription';
         },
         cancelSubscription: function cancelSubscription() {},
-        resumeSubscription: function resumeSubscription() {}
+        resumeSubscription: function resumeSubscription() {
+            this.$store.dispatch('resumeSubscription', this.$route.params.subscription_id);
+        }
     },
     created: function created() {
         this.$store.dispatch('getCompanySubscription', this.$route.params.subscription_id);
@@ -22357,9 +22392,18 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "card-footer" }, [
               _vm.subplan.active
-                ? _c("button", { staticClass: "btn btn-primary btn-sm" }, [
-                    _vm._v("Resume")
-                  ])
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-sm",
+                      on: {
+                        click: function($event) {
+                          _vm.resumeSubscription()
+                        }
+                      }
+                    },
+                    [_vm._v("Resume")]
+                  )
                 : _vm._e(),
               _vm._v(" "),
               _c(
