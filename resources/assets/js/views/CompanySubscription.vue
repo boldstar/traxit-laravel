@@ -13,9 +13,8 @@
                 </ul>
             </div>
             <div class="card-footer">
-                <button class="btn btn-primary btn-sm" v-if="subplan.active" @click="resumeSubscription()">Resume</button>
-                <button class="btn btn-primary btn-sm" @click="requestToCancel">Cancel</button>
-                <button class="btn btn-primary btn-sm">Upgrade</button>
+                <button class="btn btn-primary btn-sm" v-if="subsub.canceled_at != null" @click="resumeSubscription()">Resume</button>
+                <button class="btn btn-primary btn-sm" @click="requestToCancel" v-if="subsub.canceled_at === null">Cancel Subscription</button>
             </div>
         </div>
     </div>
@@ -40,6 +39,9 @@ import Modal from '@/components/Modal.vue'
           ...mapGetters(['subscription', 'modalState']),
           subplan() {
             return this.subscription.plan
+          },
+          subsub() {
+              return this.subscription.subscription
           }  
         },
         methods: {

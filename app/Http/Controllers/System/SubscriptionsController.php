@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\System\Hostname;
 use \Stripe\Plan;
+use \Stripe\Subscription as StripeSubscription;
 use \Stripe\Stripe;
 
 
@@ -23,7 +24,7 @@ class SubscriptionsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a new subscription for a company.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -34,7 +35,11 @@ class SubscriptionsController extends Controller
 
         $host = Hostname::where('fqdn', $request->fqdn)->first();
 
-        $host->newSubscription('Pro', 'plan_EbORtk0B5aMtNg')->create($request->stripeToken, [
+        if ($host->subscribed('main')) {
+            return response(['message' => 'The Company Has Already Been Subscribed To A Plan']);
+        };
+
+        $host->newSubscription('main', $request->plan)->create($request->stripeToken, [
             'email' => $request->email,
         ]);
 
@@ -42,7 +47,7 @@ class SubscriptionsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * The invoices for the customer.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -69,7 +74,7 @@ class SubscriptionsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the current subsription of the customer on the frontend.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -78,19 +83,42 @@ class SubscriptionsController extends Controller
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
 
-        $stripe = $hostname->subscription('Pro');
+        $stripe = $hostname->subscription('main');
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
+        $plans = Plan::all();
+        foreach($plans as $plan) {
+            $plan->amount = '$' . number_format($plan->amount/100, 2);
+        };
+
         $plan = Plan::retrieve($stripe->stripe_plan);
         $plan->amount = '$' . number_format($plan->amount/100, 2);
-        $plans = Plan::all();
 
         return response()->json(['plan' => $plan, 'plans' => $plans]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the current subsription of the customer on the frontend.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function subscriptionPlans()
+    {
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        $plans = Plan::all();
+        foreach($plans as $plan) {
+            $plan->amount = '$' . number_format($plan->amount/100, 2);
+        };
+
+        return response($plans);
+    }
+
+    /**
+     * Show the current subscription of the customer on the backend.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -99,30 +127,35 @@ class SubscriptionsController extends Controller
     {
         $hostname  = Hostname::where('stripe_id', $id)->first();
 
-        $stripe = $hostname->subscription('Pro');
+        $stripe = $hostname->subscription('main');
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
         $plan = Plan::retrieve($stripe->stripe_plan);
+        $subscription = StripeSubscription::retrieve($stripe->stripe_id);
         $plan->amount = '$' . number_format($plan->amount/100, 2);
 
-        return response()->json(['plan' => $plan]);
+        return response()->json(['plan' => $plan, 'subscription' => $subscription]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Upgrade subscription.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function upgrade(Request $request, $id)
+    public function upgrade(Request $request)
     {
-        //
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+        
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        $stripe = $hostname->subscription('main')->swap($request->product);
+
+        return response()->json(['message' => 'The Plan Has Been Upgraded, Please Refresh!']);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Resume subscription from front end.
      *
      * @return \Illuminate\Http\Response
      */
@@ -132,7 +165,7 @@ class SubscriptionsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Cancel subscription from frontend.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -143,14 +176,14 @@ class SubscriptionsController extends Controller
         
         Stripe::setApiKey(config('services.stripe.secret'));
         
-        // $stripe = $hostname->subscription('Pro')->cancel();
+        $stripe = $hostname->subscription('main')->cancel();
 
         return response()->view('subscribe');
         
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Cancel subscription from backend.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -161,14 +194,14 @@ class SubscriptionsController extends Controller
         
         Stripe::setApiKey(config('services.stripe.secret'));
         
-        $stripe = $hostname->subscription('Pro')->cancel();
+        $stripe = $hostname->subscription('main')->cancel();
 
         return response()->json(['message' => 'Subscription Was Canceled']);
         
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Resume subscription from backend.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -179,9 +212,25 @@ class SubscriptionsController extends Controller
         
         Stripe::setApiKey(config('services.stripe.secret'));
         
-        $stripe = $hostname->subscription('Pro')->resume();
+        $stripe = $hostname->subscription('main')->resume();
 
         return response()->json(['message' => 'Subscription Was Resumed']);
         
+    }
+
+    /**
+     * Upgrade card
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCard(Request $request) {
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+        
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        $stripe = $hostname->subscription('main')->updateCard($stripeToken);
+
+        return response()->json(['message' => 'Your card was updated, Please refresh the page!']);
     }
 }

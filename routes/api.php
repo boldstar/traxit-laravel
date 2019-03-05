@@ -33,6 +33,7 @@ Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/account', 'Tenant\AccountsController@store');
 Route::get('/subscription', 'System\SubscriptionsController@invoices');
 Route::get('/plans', 'System\SubscriptionsController@plans');
+Route::post('/update-card', 'System\SubscriptionsController@updateCard');
 Route::post('/upgrade-subscription', 'System\SubscriptionsController@upgrade');
 Route::post('/resume-subscription', 'System\SubscriptionsController@resume');
 Route::post('/cancel-subscription', 'System\SubscriptionsController@cancel');

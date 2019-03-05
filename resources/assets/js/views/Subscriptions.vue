@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div v-if="$route.name == 'subscriptions'">
-            <Alert v-if="successAlert" :message="successAlert" />
+            <Alert v-if="successAlert" :message="successAlert.message" />
             <div class="card-body bg-white py-2 d-flex justify-content-between shadow">
                 <h3 class="mb-0">Subscriptions</h3>
                 <router-link to="/add-subscription" class="btn btn-sm btn-primary pt-2 font-weight-bold">Add Subscription</router-link>

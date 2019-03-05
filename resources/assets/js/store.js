@@ -22,6 +22,7 @@ export default new Vuex.Store({
     companyAccount: '',
     subscriptions: [],
     subscription: '',
+    plans: '',
     modal: false,
     loading: false
   },
@@ -58,6 +59,9 @@ export default new Vuex.Store({
     },
     modalState(state) {
         return state.modal
+    },
+    plans(state) {
+        return state.plans
     }
   },
   mutations: {
@@ -100,6 +104,9 @@ export default new Vuex.Store({
     updateSubscription(state, subscription) {
         const index = state.subscriptions.findIndex(item => item.id == subscription.id)
         state.subscriptions.splice(index, 1, subscription)
+    },
+    subscriptionPlans(state, data) {
+        state.plans = data
     },
     successAlert(state, alert) {
         state.successalert = alert
@@ -289,9 +296,19 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
+    getPlans(context) {
+        axios.get('/plans')
+        .then(response => {
+            context.commit('subscriptionPlans', response.data)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+        })
+    },
     getCompanySubscription(context, id) {
         axios.get('/subscriptions/' + id)
         .then(response => {
+            console.log(response.data)
             context.commit('getCompanySubscription', response.data)
         })
         .catch(error => {
@@ -302,6 +319,7 @@ export default new Vuex.Store({
         context.commit('loadingRequest')
         axios.post('/subscriptions', {
             fqdn: subscription.fqdn,
+            plan: subscription.plan,
             stripeToken: subscription.stripeToken,
             email: subscription.email
         })

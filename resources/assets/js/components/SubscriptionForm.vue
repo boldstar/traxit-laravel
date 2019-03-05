@@ -9,6 +9,14 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label for="hostname">Select Plan</label>
+            <select class="form-control" v-model="plan">
+                <option disabled>{{option}}</option>
+                <option :value="plan.id" v-for="(plan, index) in computedPlans" :key="index" class="text-capitalize">{{ plan.nickname}}</option>
+            </select>
+        </div>
+
       <div class="form-group">
           <label for="email">Email Address</label>
           <input type="email" class="form-control" id="email" v-model="email">
@@ -43,6 +51,7 @@
         data () {
             return {
               csrf: document.head.querySelector('meta[name="csrf-token"]').content,
+              plan: '',
               name_on_card: '',
               stripeToken: '',
               email: '',
@@ -54,7 +63,10 @@
             CardElement
         },
         computed: {
-            ...mapGetters(['subscriptions', 'successAlert'])
+            ...mapGetters(['subscriptions', 'plans', 'successAlert']),
+            computedPlans() {
+                return this.plans.data
+            }
         },
         methods: {
             pay () {
@@ -66,6 +78,7 @@
                 this.stripeToken = result.token.id
                 this.$store.dispatch('addSubscription', {
                     fqdn: this.hostname,
+                    plan: this.plan,
                     stripeToken: this.stripeToken,
                     email: this.email
                 })
@@ -74,7 +87,9 @@
       },
       created() {
             this.$store.dispatch('getSubscriptions')
+            this.$store.dispatch('getPlans')
             this.hostname = this.option 
+            this.plan = this.option 
       }
     }
 </script>

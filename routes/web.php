@@ -34,6 +34,7 @@ Route::domain('traxit.test')->group(function () {
         Route::patch('/subscriptions/{id}', 'System\SubscriptionsController@update');
         Route::delete('/subscriptions/{subscription}', 'System\SubscriptionsController@destroy');
         Route::delete('/cancel-subscription/{id}', 'System\SubscriptionsController@cancelByAdmin');
+        Route::get('/plans', 'System\SubscriptionsController@subscriptionPlans');
     });
     Route::get('/{any}', 'System\SystemController@index')->where('any', '.*');
 });

@@ -20302,7 +20302,7 @@ var render = function() {
             "div",
             [
               _vm.successAlert
-                ? _c("Alert", { attrs: { message: _vm.successAlert } })
+                ? _c("Alert", { attrs: { message: _vm.successAlert.message } })
                 : _vm._e(),
               _vm._v(" "),
               _c(
@@ -20561,6 +20561,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -20570,6 +20578,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     data: function data() {
         return {
             csrf: document.head.querySelector('meta[name="csrf-token"]').content,
+            plan: '',
             name_on_card: '',
             stripeToken: '',
             email: '',
@@ -20581,7 +20590,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     components: {
         CardElement: __WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue___default.a
     },
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["b" /* mapGetters */])(['subscriptions', 'successAlert'])),
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["b" /* mapGetters */])(['subscriptions', 'plans', 'successAlert']), {
+        computedPlans: function computedPlans() {
+            return this.plans.data;
+        }
+    }),
     methods: {
         pay: function pay() {
             var _this = this;
@@ -20594,6 +20607,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 _this.stripeToken = result.token.id;
                 _this.$store.dispatch('addSubscription', {
                     fqdn: _this.hostname,
+                    plan: _this.plan,
                     stripeToken: _this.stripeToken,
                     email: _this.email
                 });
@@ -20602,7 +20616,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     },
     created: function created() {
         this.$store.dispatch('getSubscriptions');
+        this.$store.dispatch('getPlans');
         this.hostname = this.option;
+        this.plan = this.option;
     }
 });
 
@@ -20847,6 +20863,58 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "hostname" } }, [_vm._v("Select Plan")]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.plan,
+                  expression: "plan"
+                }
+              ],
+              staticClass: "form-control",
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.plan = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { disabled: "" } }, [
+                _vm._v(_vm._s(_vm.option))
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.computedPlans, function(plan, index) {
+                return _c(
+                  "option",
+                  {
+                    key: index,
+                    staticClass: "text-capitalize",
+                    domProps: { value: plan.id }
+                  },
+                  [_vm._v(_vm._s(plan.nickname))]
+                )
+              })
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
           _c("label", { attrs: { for: "email" } }, [_vm._v("Email Address")]),
           _vm._v(" "),
           _c("input", {
@@ -20974,6 +21042,7 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         companyAccount: '',
         subscriptions: [],
         subscription: '',
+        plans: '',
         modal: false,
         loading: false
     },
@@ -21010,6 +21079,9 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         modalState: function modalState(state) {
             return state.modal;
+        },
+        plans: function plans(state) {
+            return state.plans;
         }
     },
     mutations: {
@@ -21060,6 +21132,9 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
                 return item.id == subscription.id;
             });
             state.subscriptions.splice(index, 1, subscription);
+        },
+        subscriptionPlans: function subscriptionPlans(state, data) {
+            state.plans = data;
         },
         successAlert: function successAlert(state, alert) {
             state.successalert = alert;
@@ -21225,8 +21300,16 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
                 console.log(error.response.data);
             });
         },
+        getPlans: function getPlans(context) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/plans').then(function (response) {
+                context.commit('subscriptionPlans', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
         getCompanySubscription: function getCompanySubscription(context, id) {
             __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptions/' + id).then(function (response) {
+                console.log(response.data);
                 context.commit('getCompanySubscription', response.data);
             }).catch(function (error) {
                 console.log(error.response.data);
@@ -21236,6 +21319,7 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
             context.commit('loadingRequest');
             __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/subscriptions', {
                 fqdn: subscription.fqdn,
+                plan: subscription.plan,
                 stripeToken: subscription.stripeToken,
                 email: subscription.email
             }).then(function (response) {
@@ -22257,7 +22341,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
 
 
 
@@ -22277,6 +22360,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['subscription', 'modalState']), {
         subplan: function subplan() {
             return this.subscription.plan;
+        },
+        subsub: function subsub() {
+            return this.subscription.subscription;
         }
     }),
     methods: {
@@ -22391,7 +22477,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-footer" }, [
-              _vm.subplan.active
+              _vm.subsub.canceled_at != null
                 ? _c(
                     "button",
                     {
@@ -22406,18 +22492,16 @@ var render = function() {
                   )
                 : _vm._e(),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-sm",
-                  on: { click: _vm.requestToCancel }
-                },
-                [_vm._v("Cancel")]
-              ),
-              _vm._v(" "),
-              _c("button", { staticClass: "btn btn-primary btn-sm" }, [
-                _vm._v("Upgrade")
-              ])
+              _vm.subsub.canceled_at === null
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-sm",
+                      on: { click: _vm.requestToCancel }
+                    },
+                    [_vm._v("Cancel Subscription")]
+                  )
+                : _vm._e()
             ])
           ])
         : _vm._e()

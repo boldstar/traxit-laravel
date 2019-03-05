@@ -17,7 +17,7 @@ class Subscribed
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
 
-        if ($hostname && !$hostname->subscribed('Pro')) {
+        if ($hostname && !$hostname->subscribed('main')) {
             // This user is not a paying customer...
             return response()->view('subscribe');
         }
