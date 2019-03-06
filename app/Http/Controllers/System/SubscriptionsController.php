@@ -9,6 +9,7 @@ use App\Models\System\Hostname;
 use \Stripe\Plan;
 use \Stripe\Subscription as StripeSubscription;
 use \Stripe\Stripe;
+use \Carbon\Carbon;
 
 
 class SubscriptionsController extends Controller
@@ -95,7 +96,9 @@ class SubscriptionsController extends Controller
         $plan = Plan::retrieve($stripe->stripe_plan);
         $plan->amount = '$' . number_format($plan->amount/100, 2);
 
-        return response()->json(['plan' => $plan, 'plans' => $plans]);
+        $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+
+        return response()->json(['plan' => $plan, 'plans' => $plans, 'subscription' => $subscription]);
     }
 
     /**
@@ -161,7 +164,14 @@ class SubscriptionsController extends Controller
      */
     public function resume()
     {
-        //
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+        
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        $stripe = $hostname->subscription('main')->resume();
+        $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+
+        return response()->json(['message' => 'Your account has been resumed!', 'subscription' => $subscription]);
     }
 
     /**
@@ -178,7 +188,11 @@ class SubscriptionsController extends Controller
         
         $stripe = $hostname->subscription('main')->cancel();
 
-        return response()->view('subscribe');
+        $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+        $date = Carbon::createFromTimeStamp($subscription->cancel_at)->toDateTimeString();
+        $subscription->cancel_at = Carbon::parse($date)->format('m/d/Y');
+
+        return response()->view('grace',['subscription' => $subscription]);
         
     }
 
@@ -232,5 +246,13 @@ class SubscriptionsController extends Controller
         $stripe = $hostname->subscription('main')->updateCard($stripeToken);
 
         return response()->json(['message' => 'Your card was updated, Please refresh the page!']);
+    }
+
+    /**
+     * this is a dummy call for the grace period middleware
+     */
+    public function gracePeriod() {
+        $bool = 'false';
+        return response($bool);
     }
 }

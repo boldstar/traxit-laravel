@@ -16,7 +16,7 @@ class Subscribed
     public function handle($request, Closure $next)
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
-
+        
         if ($hostname && !$hostname->subscribed('main')) {
             // This user is not a paying customer...
             return response()->view('subscribe');
