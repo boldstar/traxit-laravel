@@ -243,9 +243,9 @@ class SubscriptionsController extends Controller
         
         Stripe::setApiKey(config('services.stripe.secret'));
         
-        $stripe = $hostname->subscription('main')->updateCard($stripeToken);
+        $hostname->updateCard($request->stripeToken);
 
-        return response()->json(['message' => 'Your card was updated, Please refresh the page!']);
+        return response()->json(['message' => 'Your card was updated!']);
     }
 
     /**
