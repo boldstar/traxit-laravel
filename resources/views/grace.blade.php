@@ -15,7 +15,7 @@
     </div>
     <div class="card-body">
         <h4 class="mx-3">During this grace period you may resume the subscription at anytime!</h4>
-        <p class="p-3">If the account is not resumed after the provided date you must contact support to resume your subscription.</p>
+        <p class="p-3">If the account is not resumed before the provided date you must contact support to resume your subscription.</p>
         <a href="/" class="btn btn-primary font-weight-bold">I understand</a>
     </div>
 </div>

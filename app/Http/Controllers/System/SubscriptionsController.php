@@ -40,11 +40,16 @@ class SubscriptionsController extends Controller
             return response(['message' => 'The Company Has Already Been Subscribed To A Plan']);
         };
 
-        $host->newSubscription('main', $request->plan)->create($request->stripeToken, [
-            'email' => $request->email,
-        ]);
+        try {
+            $host->newSubscription('main', $request->plan)->create($request->stripeToken, [
+                'email' => $request->email,
+            ]);
+    
+            return response()->json(['host' => $host, 'message' => 'A new subscription has been added!']);
+        } catch (\Exception $ex) {
+            return $ex->getMessage();
+        }
 
-        return response()->json(['host' => $host, 'message' => 'A new subscription has been added!']);
     }
 
     /**
@@ -151,10 +156,15 @@ class SubscriptionsController extends Controller
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
         
         Stripe::setApiKey(config('services.stripe.secret'));
-        
-        $stripe = $hostname->subscription('main')->swap($request->product);
 
-        return response()->json(['message' => 'The Plan Has Been Upgraded, Please Refresh!']);
+        try {
+            $stripe = $hostname->subscription('main')->swap($request->product);
+    
+            return response()->json(['message' => 'Your Plan Has Changed, Please Refresh!']);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+        
     }
 
     /**
@@ -167,11 +177,16 @@ class SubscriptionsController extends Controller
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
         
         Stripe::setApiKey(config('services.stripe.secret'));
-        
-        $stripe = $hostname->subscription('main')->resume();
-        $subscription = StripeSubscription::retrieve($stripe->stripe_id);
 
-        return response()->json(['message' => 'Your account has been resumed!', 'subscription' => $subscription]);
+        try {
+            $stripe = $hostname->subscription('main')->resume();
+            $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+    
+            return response()->json(['message' => 'Your account has been resumed!', 'subscription' => $subscription]);
+        } catch(\Exception $e) {
+            return $d->getMessage();
+        }
+        
     }
 
     /**
@@ -185,14 +200,19 @@ class SubscriptionsController extends Controller
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
         
         Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+            $stripe = $hostname->subscription('main')->cancel();
+    
+            $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+            $date = Carbon::createFromTimeStamp($subscription->cancel_at)->toDateTimeString();
+            $subscription->cancel_at = Carbon::parse($date)->format('m/d/Y');
+    
+            return response()->view('grace',['subscription' => $subscription]);
+        } catch(\Exception $e) {
+            $e->getMessage();
+        }
         
-        $stripe = $hostname->subscription('main')->cancel();
-
-        $subscription = StripeSubscription::retrieve($stripe->stripe_id);
-        $date = Carbon::createFromTimeStamp($subscription->cancel_at)->toDateTimeString();
-        $subscription->cancel_at = Carbon::parse($date)->format('m/d/Y');
-
-        return response()->view('grace',['subscription' => $subscription]);
         
     }
 
@@ -207,10 +227,15 @@ class SubscriptionsController extends Controller
         $hostname  = Hostname::where('stripe_id', $id)->first();
         
         Stripe::setApiKey(config('services.stripe.secret'));
-        
-        $stripe = $hostname->subscription('main')->cancel();
 
-        return response()->json(['message' => 'Subscription Was Canceled']);
+        try {
+            $stripe = $hostname->subscription('main')->cancel();
+    
+            return response()->json(['message' => 'Subscription Was Canceled']);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+        
         
     }
 
@@ -225,10 +250,15 @@ class SubscriptionsController extends Controller
         $hostname  = Hostname::where('stripe_id', $id)->first();
         
         Stripe::setApiKey(config('services.stripe.secret'));
-        
-        $stripe = $hostname->subscription('main')->resume();
 
-        return response()->json(['message' => 'Subscription Was Resumed']);
+        try {
+            $stripe = $hostname->subscription('main')->resume();
+    
+            return response()->json(['message' => 'Subscription Was Resumed']);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+        
         
     }
 
@@ -242,10 +272,15 @@ class SubscriptionsController extends Controller
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
         
         Stripe::setApiKey(config('services.stripe.secret'));
-        
-        $hostname->updateCard($request->stripeToken);
 
-        return response()->json(['message' => 'Your card was updated!']);
+        try {
+            $hostname->updateCard($request->stripeToken);
+    
+            return response()->json(['message' => 'Your card was updated!']);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+        
     }
 
     /**
