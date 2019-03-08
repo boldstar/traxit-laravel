@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Register from '@/views/Register.vue'
 import Company from '@/views/Company.vue'
+import CompanySubscription from '@/views/CompanySubscription.vue'
 import EditCompany from '@/views/EditCompany.vue'
 import CompanyAccount from '@/views/CompanyAccount.vue'
 import AccountForm from '@/components/AccountForm.vue'
@@ -26,7 +27,11 @@ export default new Router({
       ]
     },
     {path: '/edit-company/:uuid', component: EditCompany},
-    {path: '/subscriptions', component: Subscriptions},
+    {path: '/subscriptions', name: 'subscriptions', component: Subscriptions,
+    children: [
+      {path: 'company/:subscription_id', name: 'company-subscription', component: CompanySubscription}
+    ]
+  },
     {path: '/add-subscription', component: SubscriptionForm},
   ],
   mode: 'history'

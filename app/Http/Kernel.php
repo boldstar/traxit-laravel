@@ -19,7 +19,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-        \Spatie\Cors\Cors::class
+        \Spatie\Cors\Cors::class,
     ];
 
     /**
@@ -42,7 +42,10 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
+            'tenancy.enforce',
+            'subscribed'
         ],
+
     ];
 
     /**
@@ -64,5 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'roles' => \App\Http\Middleware\CheckRole::class,
         'tenancy.enforce' => \App\Http\Middleware\EnforceTenancy::class,
+        'subscribed' => \App\Http\Middleware\Subscribed::class,
+        'grace.period' => \App\Http\Middleware\GracePeriod::class,
     ];
 }

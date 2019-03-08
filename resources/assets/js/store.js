@@ -22,6 +22,7 @@ export default new Vuex.Store({
     companyAccount: '',
     subscriptions: [],
     subscription: '',
+    plans: '',
     modal: false,
     loading: false
   },
@@ -58,6 +59,9 @@ export default new Vuex.Store({
     },
     modalState(state) {
         return state.modal
+    },
+    plans(state) {
+        return state.plans
     }
   },
   mutations: {
@@ -87,19 +91,22 @@ export default new Vuex.Store({
     getSubscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
     },
-    getSubscription(state, subscription) {
+    getCompanySubscription(state, subscription) {
         state.subscription = subscription
     },
     addSubscription(state, subscripion) {
         state.subscriptions.push(subscripion)
     },
     deleteSubscription(state, id) {
-        const index = state.subscriptions.findIndex(subscripion => subscription.id == id)
+        const index = state.subscriptions.findIndex(subscription => subscription.id == id)
         state.subscriptions.splice(index, 1)
     },
     updateSubscription(state, subscription) {
         const index = state.subscriptions.findIndex(item => item.id == subscription.id)
         state.subscriptions.splice(index, 1, subscription)
+    },
+    subscriptionPlans(state, data) {
+        state.plans = data
     },
     successAlert(state, alert) {
         state.successalert = alert
@@ -115,6 +122,10 @@ export default new Vuex.Store({
     },
     showModal(state) {
         state.modal = !state.modal
+    },
+    clearAlert(state) {
+        state.successalert = ''
+        state.erroralert = ''
     }
   },
   actions: {
@@ -285,24 +296,35 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
-    getSubscription(context, id) {
-        axios.get('/subscriptions/' + id)
+    getPlans(context) {
+        axios.get('/plans')
         .then(response => {
-            context.commit('getSubscription', response.data)
+            context.commit('subscriptionPlans', response.data)
         })
         .catch(error => {
             console.log(error.response.data)
         })
     },
-    addSubscription(context, subscripion) {
+    getCompanySubscription(context, id) {
+        axios.get('/subscriptions/' + id)
+        .then(response => {
+            console.log(response.data)
+            context.commit('getCompanySubscription', response.data)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+        })
+    },
+    addSubscription(context, subscription) {
         context.commit('loadingRequest')
         axios.post('/subscriptions', {
-            title: subscripion.title,
-            amount: subscripion.amount,
-            basis: subscripion.basis,
-            description: subscripion.description
+            fqdn: subscription.fqdn,
+            plan: subscription.plan,
+            stripeToken: subscription.stripeToken,
+            email: subscription.email
         })
         .then(response => {
+            console.log(response.data)
             context.commit('loadingRequest')
             context.commit('successAlert', response.data)
             router.push('/subscriptions')
@@ -314,10 +336,7 @@ export default new Vuex.Store({
     }, 
     updateSubscription(context, subscripion) {
         axios.patch('/subscriptions/' + subscripion.id, {
-            title: subscripion.title,
-            amount: subscripion.amount,
-            basis: subscripion.basis,
-            description: subscripion.description
+            //add proper fields here
         })
         .then(response => {
             context.commit('updateSubscription', response.data)
@@ -326,12 +345,24 @@ export default new Vuex.Store({
             console.log(error.response.data)
         })
     },
-    deleteSubscription(context, id) {
-        axios.delete('/subscriptions/' + id)
+    cancelSubscription(context, id) {
+        axios.delete('/cancel-subscription/' + id)
         .then(response => {
-            context.commit('successAlert', response.data)
-            context.commit('deleteSubscriptions', id)
-            router.push('/')
+            console.log(response.data)
+            context.commit('successAlert', response.data.message)
+            router.push('/subscriptions')
+        })
+        .catch(error => {
+            context.commit('errorAlert', error.response.data)
+            console.log(error.response.data)
+        })
+    },
+    resumeSubscription(context, id) {
+        axios.post('/resume-subscription/' + id)
+        .then(response => {
+            console.log(response.data)
+            context.commit('successAlert', response.data.message)
+            router.push('/subscriptions')
         })
         .catch(error => {
             context.commit('errorAlert', error.response.data)

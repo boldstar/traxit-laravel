@@ -21,8 +21,11 @@
                 <button type="button" class="btn btn-sm btn-secondary" @click="close">
                     Cancel
                 </button>
-                <button type="button" class="btn btn-sm btn-primary" @click="confirmRequest(id)">
+                <button type="button" class="btn btn-sm btn-primary" @click="cancelSubscription(id)" v-if="subscription">
                     Confirm
+                </button>
+                <button type="button" class="btn btn-sm btn-primary" @click="confirmRequest(id)" v-else>
+                    Delete Company
                 </button>
             </slot>
             </footer>
@@ -33,7 +36,7 @@
 <script>
 export default {
     name: 'modal',
-    props: ['name', 'alert', 'id'],
+    props: ['name', 'alert', 'id', 'subscription'],
     computed: {
         
     },
@@ -45,6 +48,10 @@ export default {
           this.$store.dispatch('deleteCompany', id)
           this.$store.commit('closeModal')
           this.$router.push('/')
+      },
+      cancelSubscription(id) {
+          this.$store.dispatch('cancelSubscription', id)
+          this.$store.commit('closeModal')
       }
     },
 }
