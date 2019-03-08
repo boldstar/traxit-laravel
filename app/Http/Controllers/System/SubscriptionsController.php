@@ -290,4 +290,12 @@ class SubscriptionsController extends Controller
         $bool = 'false';
         return response($bool);
     }
+
+    /**
+     * return the stripe key to front end
+     */
+    public function stripeKey() {
+        $key = config('services.stripe.key');
+        return response($key);
+    }
 }
