@@ -37,6 +37,10 @@
                                 <span class="mb-2  font-weight-bold">Domain</span>
                                 <span class="mb-2" v-if="website[0].hostnames"> {{website[0].hostnames[0].fqdn}}</span>
                             </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="mb-2  font-weight-bold">Stripe ID</span>
+                                <span class="mb-2" v-if="website[0].hostnames"> {{website[0].hostnames[0].stripe_id}}</span>
+                            </div>
                         </div>
                         <hr>
                         <div class="col-12">
