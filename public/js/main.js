@@ -13218,18 +13218,21 @@ module.exports = Component.exports
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_Register_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__views_Register_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_Company_vue__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_Company_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__views_Company_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue__ = __webpack_require__(59);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_CompanySubscription_vue__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_CompanySubscription_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__views_CompanySubscription_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_EditCompany_vue__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__views_EditCompany_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__views_EditCompany_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__views_CompanyAccount_vue__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__views_CompanyAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__views_CompanyAccount_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_AccountForm_vue__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_AccountForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__components_AccountForm_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_EditAccount_vue__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__views_EditAccount_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__views_EditAccount_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__views_Subscriptions_vue__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__views_Subscriptions_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__views_Subscriptions_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_SubscriptionForm_vue__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_SubscriptionForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12__components_SubscriptionForm_vue__);
+
 
 
 
@@ -13247,8 +13250,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
   routes: [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_3__views_Dashboard_vue___default.a }, { path: '/login', component: __WEBPACK_IMPORTED_MODULE_2__views_Login_vue___default.a }, { path: '/register', component: __WEBPACK_IMPORTED_MODULE_4__views_Register_vue___default.a }, { path: '/company/:uuid', name: 'company', component: __WEBPACK_IMPORTED_MODULE_5__views_Company_vue___default.a,
-    children: [{ path: 'account', component: __WEBPACK_IMPORTED_MODULE_7__views_CompanyAccount_vue___default.a }, { path: 'add-account', component: __WEBPACK_IMPORTED_MODULE_8__components_AccountForm_vue___default.a }, { path: 'edit-account', component: __WEBPACK_IMPORTED_MODULE_9__views_EditAccount_vue___default.a }]
-  }, { path: '/edit-company/:uuid', component: __WEBPACK_IMPORTED_MODULE_6__views_EditCompany_vue___default.a }, { path: '/subscriptions', component: __WEBPACK_IMPORTED_MODULE_10__views_Subscriptions_vue___default.a }, { path: '/add-subscription', component: __WEBPACK_IMPORTED_MODULE_11__components_SubscriptionForm_vue___default.a }],
+    children: [{ path: 'account', component: __WEBPACK_IMPORTED_MODULE_8__views_CompanyAccount_vue___default.a }, { path: 'add-account', component: __WEBPACK_IMPORTED_MODULE_9__components_AccountForm_vue___default.a }, { path: 'edit-account', component: __WEBPACK_IMPORTED_MODULE_10__views_EditAccount_vue___default.a }]
+  }, { path: '/edit-company/:uuid', component: __WEBPACK_IMPORTED_MODULE_7__views_EditCompany_vue___default.a }, { path: '/subscriptions', name: 'subscriptions', component: __WEBPACK_IMPORTED_MODULE_11__views_Subscriptions_vue___default.a,
+    children: [{ path: 'company/:subscription_id', name: 'company-subscription', component: __WEBPACK_IMPORTED_MODULE_6__views_CompanySubscription_vue__["default"] }]
+  }, { path: '/add-subscription', component: __WEBPACK_IMPORTED_MODULE_12__components_SubscriptionForm_vue___default.a }],
   mode: 'history'
 }));
 
@@ -13300,7 +13305,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 12 */,
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,t){ true?module.exports=t():"function"==typeof define&&define.amd?define("vue-stripe-elements",[],t):"object"==typeof exports?exports["vue-stripe-elements"]=t():e["vue-stripe-elements"]=t()}(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=16)}([function(e,t,n){var r=n(2)(n(15),n(18),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/StripeElement.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] StripeElement.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={stripe:{type:[String,Object],required:!0},value:{type:String,required:!1},options:{type:Object,required:!1}}},function(e,t){e.exports=function(e,t,n,r){var o,u=e=e||{},s=typeof e.default;"object"!==s&&"function"!==s||(o=e,u=e.default);var i="function"==typeof u?u.options:u;if(t&&(i.render=t.render,i.staticRenderFns=t.staticRenderFns),n&&(i._scopeId=n),r){var l=i.computed||(i.computed={});Object.keys(r).forEach(function(e){var t=r[e];l[e]=function(){return t}})}return{esModule:o,exports:u,options:i}}},function(e,t,n){"use strict";function r(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};"object"===(void 0===e?"undefined":s(e))&&"function"==typeof e.elements&&(i.instance=e),void 0===window.Stripe&&null===i.instance?console.error("Stripe V3 library not loaded!"):null===i.instance&&(i.instance=window.Stripe(e)),i.instance.elements?null===i.elements&&(i.elements=i.instance.elements(t)):console.error("Stripe V3 library not loaded!")}function o(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};r(t,n.elements||{}),n.style=Object.assign(l,n.style||{});var o=i.elements.create(e,n);return i.createToken=function(e){return i.instance.createToken(o,e)},i.createSource=function(e){return i.instance.createSource(o,e)},i.retrieveSource=function(e){return i.instance.retrieveSource(e)},o}function u(){i.instance=null,i.elements=null,i.createToken=null,i.createSource=null,i.retrieveSource=null}Object.defineProperty(t,"__esModule",{value:!0});var s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};t.create=o,t.destroy=u;var i=t.Stripe={instance:null,createToken:null,createSource:null,retrieveSource:null,elements:null},l=t.baseStyle={base:{color:"#32325d",lineHeight:"24px",fontFamily:"Helvetica Neue",fontSmoothing:"antialiased",fontSize:"16px","::placeholder":{color:"#aab7c4"}},invalid:{color:"#fa755a",iconColor:"#fa755a"}}},function(e,t,n){"use strict";"function"!=typeof Object.assign&&(Object.assign=function(e,t){if(null==e)throw new TypeError("Cannot convert undefined or null to object");for(var n=Object(e),r=1;r<arguments.length;r++){var o=arguments[r];if(null!=o)for(var u in o)Object.prototype.hasOwnProperty.call(o,u)&&(n[u]=o[u])}return n}),e.exports=Object.assign},function(e,t,n){var r=n(2)(n(10),n(22),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/Card.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] Card.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(11),n(19),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/CardCvc.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] CardCvc.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(12),n(21),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/CardExpiry.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] CardExpiry.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(13),n(20),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/CardNumber.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] CardNumber.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){var r=n(2)(n(14),n(17),null,null);r.options.__file="/Users/fromatob/Projects/vue-stripe-elements/src/PostalCode.vue",r.esModule&&Object.keys(r.esModule).some(function(e){return"default"!==e&&"__esModule"!==e})&&console.error("named exports are not supported in *.vue files."),r.options.functional&&console.error("[vue-loader] PostalCode.vue: functional components are not supported with templates, they should use render functions."),e.exports=r.exports},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var o=n(1),u=r(o),s=n(0),i=r(s);t.default={props:u.default,components:{StripeElement:i.default},methods:{blur:function(){this.$refs.element.blur()},clear:function(){this.$refs.element.clear()},focus:function(){this.$refs.element.focus()},update:function(e){this.$refs.element.update(e)}}}},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),o=function(e){return e&&e.__esModule?e:{default:e}}(r),u=n(3);t.default={props:Object.assign({type:{type:String,required:!0}},o.default),beforeMount:function(){var e=this;this._element=(0,u.create)(this.type,this.stripe,this.options),this._element.on("blur",function(t){return e.$emit("blur")}),this._element.on("focus",function(t){return e.$emit("focus")}),this._element.on("change",function(t){return e.$emit("change",t)})},mounted:function(){var e=document.createElement("div");this._element.mount(e),this.$el.appendChild(e)},beforeDestroy:function(){this._element.unmount(),this._element.destroy(),(0,u.destroy)()},methods:{blur:function(){this._element.blur()},clear:function(){this._element.clear()},focus:function(){this._element.focus()},update:function(){this._element.update()}}}},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}n(4);var o=n(3),u=n(0),s=r(u),i=n(5),l=r(i),c=n(7),f=r(c),a=n(6),p=r(a),d=n(8),m=r(d),v=n(9),h=r(v);e.exports={Card:l.default,CardNumber:m.default,CardExpiry:f.default,CardCvc:p.default,PostalCode:h.default,StripeElement:s.default,baseStyle:o.baseStyle,get instance(){return o.Stripe.instance},get createToken(){return o.Stripe.createToken},get createSource(){return o.Stripe.createSource},get retrieveSource(){return o.Stripe.retrieveSource}}},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"postalCode",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},empty:function(t){e.$emit("empty")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("div")},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"cardCvc",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"cardNumber",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"cardExpiry",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0},function(e,t,n){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("stripe-element",{ref:"element",attrs:{type:"card",stripe:e.stripe,value:e.value,options:e.options},on:{blur:function(t){e.$emit("blur")},focus:function(t){e.$emit("focus")},change:function(t){e.$emit("change",t)}}})},staticRenderFns:[]},e.exports.render._withStripped=!0}])});
+
+/***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13959,7 +13969,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\nli {\r\n    list-style: none;\n}\n.subscription-card {\r\n    height: 275px;\n}\r\n", ""]);
+exports.push([module.i, "\nli {\n    list-style: none;\n}\n.subscription-card {\n    height: 275px;\n}\n.spacer {\n    margin-bottom: 24px;\n}\n/**\n    * The CSS shown here will not be introduced in the Quickstart guide, but shows\n    * how you can use CSS to style your Element's container.\n    */\n.StripeElement {\n    background-color: white;\n    padding: 10px 12px;\n    border-radius: 4px;\n    border: 1px solid #ccd0d2;\n    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);\n            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);\n    -webkit-transition: box-shadow 150ms ease;\n    -webkit-transition: -webkit-box-shadow 150ms ease;\n    transition: -webkit-box-shadow 150ms ease;\n    transition: box-shadow 150ms ease;\n    transition: box-shadow 150ms ease, -webkit-box-shadow 150ms ease;\n}\n.StripeElement--focus {\n    -webkit-box-shadow: 0 1px 3px 0 #cfd7df;\n            box-shadow: 0 1px 3px 0 #cfd7df;\n}\n.StripeElement--invalid {\n    border-color: #fa755a;\n}\n.StripeElement--webkit-autofill {\n    background-color: #fefde5 !important;\n}\n#card-errors {\n    color: #fa755a;\n}\n", ""]);
 
 // exports
 
@@ -17409,7 +17419,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'alert',
-    props: ['message']
+    props: ['message'],
+    methods: {
+        removeAlert: function removeAlert() {
+            this.$store.commit('clearAlert');
+        }
+    },
+    mounted: function mounted() {
+        var self = this;
+        setTimeout(function () {
+            self.removeAlert();
+        }, 10000);
+    }
 });
 
 /***/ }),
@@ -18021,6 +18042,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -18190,10 +18215,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'modal',
-    props: ['name', 'alert', 'id'],
+    props: ['name', 'alert', 'id', 'subscription'],
     computed: {},
     methods: {
         close: function close() {
@@ -18203,6 +18231,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$store.dispatch('deleteCompany', id);
             this.$store.commit('closeModal');
             this.$router.push('/');
+        },
+        cancelSubscription: function cancelSubscription(id) {
+            this.$store.dispatch('cancelSubscription', id);
+            this.$store.commit('closeModal');
         }
     }
 });
@@ -18266,19 +18298,33 @@ var render = function() {
               [_vm._v("\n                Cancel\n            ")]
             ),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-sm btn-primary",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    _vm.confirmRequest(_vm.id)
-                  }
-                }
-              },
-              [_vm._v("\n                Confirm\n            ")]
-            )
+            _vm.subscription
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        _vm.cancelSubscription(_vm.id)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Confirm\n            ")]
+                )
+              : _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        _vm.confirmRequest(_vm.id)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Delete Company\n            ")]
+                )
           ])
         ],
         2
@@ -18496,6 +18542,33 @@ var render = function() {
                                             " " +
                                               _vm._s(
                                                 _vm.website[0].hostnames[0].fqdn
+                                              )
+                                          )
+                                        ])
+                                      : _vm._e()
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "d-flex justify-content-between"
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      { staticClass: "mb-2  font-weight-bold" },
+                                      [_vm._v("Stripe ID")]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm.website[0].hostnames
+                                      ? _c("span", { staticClass: "mb-2" }, [
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(
+                                                _vm.website[0].hostnames[0]
+                                                  .stripe_id
                                               )
                                           )
                                         ])
@@ -20185,6 +20258,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -20217,110 +20297,121 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
-      _vm.successAlert
-        ? _c("Alert", { attrs: { message: _vm.successAlert } })
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "card-header border-primary d-flex justify-content-between mb-3"
-        },
-        [
-          _c("span", { staticClass: "align-self-center" }, [
-            _vm._v("Subscriptions")
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "btn btn-sm btn-primary",
-              attrs: { to: "/add-subscription" }
-            },
-            [_vm._v("Add Subscription")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "d-flex flex-row justify-content-around flex-wrap p-0 col-md-12"
-        },
-        _vm._l(_vm.subscriptions, function(subscription) {
-          return _c(
+      _vm.$route.name == "subscriptions"
+        ? _c(
             "div",
-            {
-              key: subscription.id,
-              staticClass: "card col-3 p-0 d-flex flex-colum subscription-card"
-            },
             [
-              _c(
-                "div",
-                { staticClass: "flex-column d-flex align-items-center" },
-                [
-                  _c("span", { staticClass: "p-4 h3" }, [
-                    _vm._v(_vm._s(subscription.title))
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "p-2 h3" }, [
-                    _vm._v(
-                      "$" +
-                        _vm._s(subscription.amount) +
-                        "/" +
-                        _vm._s(subscription.basis)
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "p-4 h6" }, [
-                    _vm._v(_vm._s(subscription.description))
-                  ])
-                ]
-              ),
+              _vm.successAlert
+                ? _c("Alert", { attrs: { message: _vm.successAlert.message } })
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "div",
                 {
-                  staticClass: "card-footer d-flex justify-content-between p-3"
+                  staticClass:
+                    "card-body bg-white py-2 d-flex justify-content-between shadow"
                 },
                 [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-light",
-                      on: {
-                        click: function($event) {
-                          _vm.deleteSubscription(subscription.id)
-                        }
-                      }
-                    },
-                    [_vm._v("Delete")]
-                  ),
+                  _c("h3", { staticClass: "mb-0" }, [_vm._v("Subscriptions")]),
                   _vm._v(" "),
                   _c(
                     "router-link",
                     {
-                      staticClass: "btn btn-sm btn-primary",
-                      attrs: { to: "#" }
+                      staticClass:
+                        "btn btn-sm btn-primary pt-2 font-weight-bold",
+                      attrs: { to: "/add-subscription" }
                     },
-                    [_vm._v("Edit")]
+                    [_vm._v("Add Subscription")]
                   )
                 ],
                 1
-              )
-            ]
+              ),
+              _vm._v(" "),
+              _c("table", { staticClass: "table table-hover" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  { staticClass: "table-sm " },
+                  _vm._l(_vm.subscriptions, function(subscription, index) {
+                    return _c(
+                      "tr",
+                      {
+                        key: index,
+                        staticClass: "text-center table-bordered bg-white"
+                      },
+                      [
+                        _c(
+                          "th",
+                          {
+                            staticClass: "text-capitalize",
+                            attrs: { scope: "row" }
+                          },
+                          [_vm._v(_vm._s(subscription.subdomain))]
+                        ),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(subscription.card_brand))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(subscription.card_last_four))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(subscription.stripe_id))]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "btn btn-primary btn-sm",
+                                attrs: {
+                                  to: {
+                                    path:
+                                      "/subscriptions/company/" +
+                                      subscription.stripe_id
+                                  }
+                                }
+                              },
+                              [_vm._v("View")]
+                            )
+                          ],
+                          1
+                        )
+                      ]
+                    )
+                  }),
+                  0
+                )
+              ])
+            ],
+            1
           )
-        }),
-        0
-      )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.$route.name == "company-subscription" ? _c("router-view") : _vm._e()
     ],
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "border" }, [
+      _c("tr", { staticClass: "text-center " }, [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Company")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Card Brand")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Last Four")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Stripe Id")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Subscription")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -20335,17 +20426,21 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(69)
+}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(71)
 /* template */
-var __vue_template__ = __webpack_require__(103)
+var __vue_template__ = __webpack_require__(75)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-c4b87590"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -20378,13 +20473,74 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 69 */,
-/* 70 */,
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(70);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(6)("0db3c732", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-c4b87590\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./SubscriptionForm.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-c4b87590\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./SubscriptionForm.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(5)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.form[data-v-c4b87590] {\r\n    width: 500px;\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(1);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -20414,41 +20570,289 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'subscription-form',
     data: function data() {
         return {
-            subscription: {
-                title: '',
-                amount: '',
-                basis: '',
-                description: ''
-            },
-            basises: ['yr', 'mth'],
-            option: 'Choose...'
+            csrf: document.head.querySelector('meta[name="csrf-token"]').content,
+            plan: '',
+            name_on_card: '',
+            stripeToken: '',
+            email: '',
+            hostname: '',
+            option: 'Choose..'
         };
     },
 
+    components: {
+        CardElement: __WEBPACK_IMPORTED_MODULE_1__components_CardElement_vue__["default"]
+    },
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["b" /* mapGetters */])(['subscriptions', 'plans', 'successAlert']), {
+        computedPlans: function computedPlans() {
+            return this.plans.data;
+        }
+    }),
     methods: {
-        addSubscription: function addSubscription() {
-            this.$store.dispatch('addSubscription', {
-                title: this.subscription.title,
-                amount: this.subscription.amount,
-                basis: this.subscription.basis,
-                description: this.subscription.description
+        pay: function pay() {
+            var _this = this;
+
+            var options = {
+                name: this.name_on_card
+            };
+            Object(__WEBPACK_IMPORTED_MODULE_0_vue_stripe_elements_plus__["createToken"])(options).then(function (result) {
+                console.log(result.token);
+                _this.stripeToken = result.token.id;
+                _this.$store.dispatch('addSubscription', {
+                    fqdn: _this.hostname,
+                    plan: _this.plan,
+                    stripeToken: _this.stripeToken,
+                    email: _this.email
+                });
             });
         }
     },
     created: function created() {
-        this.subscription.basis = this.option;
+        this.$store.dispatch('getSubscriptions');
+        this.$store.dispatch('getPlans');
+        this.hostname = this.option;
+        this.plan = this.option;
     }
 });
 
 /***/ }),
-/* 72 */,
+/* 72 */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\laragon\\www\\traxit\\resources\\assets\\js\\components\\CardElement.vue'");
+
+/***/ }),
 /* 73 */,
 /* 74 */,
-/* 75 */,
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container d-flex justify-content-center" }, [
+    _c(
+      "form",
+      {
+        ref: "form",
+        staticClass: "form",
+        attrs: { action: "/subscriptions", method: "POST", id: "payment-form" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.pay()
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "hostname" } }, [
+            _vm._v("Select Company Host Name")
+          ]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.hostname,
+                  expression: "hostname"
+                }
+              ],
+              staticClass: "form-control",
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.hostname = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { disabled: "" } }, [
+                _vm._v(_vm._s(_vm.option))
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.subscriptions, function(host, index) {
+                return _c(
+                  "option",
+                  {
+                    key: index,
+                    staticClass: "text-capitalize",
+                    domProps: { value: host.fqdn }
+                  },
+                  [_vm._v(_vm._s(host.subdomain))]
+                )
+              })
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "hostname" } }, [_vm._v("Select Plan")]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.plan,
+                  expression: "plan"
+                }
+              ],
+              staticClass: "form-control",
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.plan = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { disabled: "" } }, [
+                _vm._v(_vm._s(_vm.option))
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.computedPlans, function(plan, index) {
+                return _c(
+                  "option",
+                  {
+                    key: index,
+                    staticClass: "text-capitalize",
+                    domProps: { value: plan.id }
+                  },
+                  [_vm._v(_vm._s(plan.nickname))]
+                )
+              })
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "email" } }, [_vm._v("Email Address")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.email,
+                expression: "email"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "email", id: "email" },
+            domProps: { value: _vm.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.email = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "name_on_card" } }, [
+            _vm._v("Name on Card")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.name_on_card,
+                expression: "name_on_card"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", id: "name_on_card", name: "name_on_card" },
+            domProps: { value: _vm.name_on_card },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name_on_card = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "form-group" },
+          [
+            _c("label", { attrs: { for: "card-element" } }, [
+              _vm._v("Credit Card")
+            ]),
+            _vm._v(" "),
+            _c("card-element")
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("input", {
+          attrs: { type: "hidden", name: "_token" },
+          domProps: { value: _vm.csrf }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "spacer" }),
+        _vm._v(" "),
+        _c(
+          "button",
+          { staticClass: "btn btn-success", attrs: { type: "submit" } },
+          [_vm._v("Submit Payment")]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c4b87590", module.exports)
+  }
+}
+
+/***/ }),
 /* 76 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20483,6 +20887,7 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         companyAccount: '',
         subscriptions: [],
         subscription: '',
+        plans: '',
         modal: false,
         loading: false
     },
@@ -20519,6 +20924,9 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         modalState: function modalState(state) {
             return state.modal;
+        },
+        plans: function plans(state) {
+            return state.plans;
         }
     },
     mutations: {
@@ -20552,14 +20960,14 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         getSubscriptions: function getSubscriptions(state, subscriptions) {
             state.subscriptions = subscriptions;
         },
-        getSubscription: function getSubscription(state, subscription) {
+        getCompanySubscription: function getCompanySubscription(state, subscription) {
             state.subscription = subscription;
         },
         addSubscription: function addSubscription(state, subscripion) {
             state.subscriptions.push(subscripion);
         },
         deleteSubscription: function deleteSubscription(state, id) {
-            var index = state.subscriptions.findIndex(function (subscripion) {
+            var index = state.subscriptions.findIndex(function (subscription) {
                 return subscription.id == id;
             });
             state.subscriptions.splice(index, 1);
@@ -20569,6 +20977,9 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
                 return item.id == subscription.id;
             });
             state.subscriptions.splice(index, 1, subscription);
+        },
+        subscriptionPlans: function subscriptionPlans(state, data) {
+            state.plans = data;
         },
         successAlert: function successAlert(state, alert) {
             state.successalert = alert;
@@ -20584,6 +20995,10 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         showModal: function showModal(state) {
             state.modal = !state.modal;
+        },
+        clearAlert: function clearAlert(state) {
+            state.successalert = '';
+            state.erroralert = '';
         }
     },
     actions: {
@@ -20730,21 +21145,30 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
                 console.log(error.response.data);
             });
         },
-        getSubscription: function getSubscription(context, id) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptions/' + id).then(function (response) {
-                context.commit('getSubscription', response.data);
+        getPlans: function getPlans(context) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/plans').then(function (response) {
+                context.commit('subscriptionPlans', response.data);
             }).catch(function (error) {
                 console.log(error.response.data);
             });
         },
-        addSubscription: function addSubscription(context, subscripion) {
+        getCompanySubscription: function getCompanySubscription(context, id) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/subscriptions/' + id).then(function (response) {
+                console.log(response.data);
+                context.commit('getCompanySubscription', response.data);
+            }).catch(function (error) {
+                console.log(error.response.data);
+            });
+        },
+        addSubscription: function addSubscription(context, subscription) {
             context.commit('loadingRequest');
             __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/subscriptions', {
-                title: subscripion.title,
-                amount: subscripion.amount,
-                basis: subscripion.basis,
-                description: subscripion.description
+                fqdn: subscription.fqdn,
+                plan: subscription.plan,
+                stripeToken: subscription.stripeToken,
+                email: subscription.email
             }).then(function (response) {
+                console.log(response.data);
                 context.commit('loadingRequest');
                 context.commit('successAlert', response.data);
                 __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
@@ -20755,21 +21179,28 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.defaults.headers.common['header1']
         },
         updateSubscription: function updateSubscription(context, subscripion) {
             __WEBPACK_IMPORTED_MODULE_2_axios___default.a.patch('/subscriptions/' + subscripion.id, {
-                title: subscripion.title,
-                amount: subscripion.amount,
-                basis: subscripion.basis,
-                description: subscripion.description
+                //add proper fields here
             }).then(function (response) {
                 context.commit('updateSubscription', response.data);
             }).catch(function (error) {
                 console.log(error.response.data);
             });
         },
-        deleteSubscription: function deleteSubscription(context, id) {
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.delete('/subscriptions/' + id).then(function (response) {
-                context.commit('successAlert', response.data);
-                context.commit('deleteSubscriptions', id);
-                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/');
+        cancelSubscription: function cancelSubscription(context, id) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.delete('/cancel-subscription/' + id).then(function (response) {
+                console.log(response.data);
+                context.commit('successAlert', response.data.message);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
+            }).catch(function (error) {
+                context.commit('errorAlert', error.response.data);
+                console.log(error.response.data);
+            });
+        },
+        resumeSubscription: function resumeSubscription(context, id) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/resume-subscription/' + id).then(function (response) {
+                console.log(response.data);
+                context.commit('successAlert', response.data.message);
+                __WEBPACK_IMPORTED_MODULE_3__router_js__["a" /* default */].push('/subscriptions');
             }).catch(function (error) {
                 context.commit('errorAlert', error.response.data);
                 console.log(error.response.data);
@@ -21676,205 +22107,10 @@ module.exports = function spread(callback) {
 /* 97 */,
 /* 98 */,
 /* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 100 */
+/***/ (function(module, exports) {
 
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "subscription container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c(
-        "div",
-        { staticClass: "col-md-6" },
-        [
-          _c(
-            "router-link",
-            { staticClass: "nav-link", attrs: { to: "/subscriptions" } },
-            [_c("i", { staticClass: "fas fa-arrow-left mr-2" }), _vm._v("Back")]
-          ),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "align-self-center col-md-12 p-0",
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.addSubscription($event)
-                }
-              }
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.title,
-                    expression: "subscription.title"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "text", placeholder: "Title" },
-                domProps: { value: _vm.subscription.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "title", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.amount,
-                    expression: "subscription.amount"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "decimal", placeholder: "000.00" },
-                domProps: { value: _vm.subscription.amount },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "amount", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.subscription.basis,
-                      expression: "subscription.basis"
-                    }
-                  ],
-                  staticClass: "form-control mb-3",
-                  attrs: { name: "basis", id: "basis" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.subscription,
-                        "basis",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { disabled: "" } }, [
-                    _vm._v(_vm._s(_vm.option))
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.basises, function(basis, index) {
-                    return _c(
-                      "option",
-                      { key: index, attrs: { value: "basis" } },
-                      [_vm._v(_vm._s(basis))]
-                    )
-                  })
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.subscription.title,
-                    expression: "subscription.title"
-                  }
-                ],
-                staticClass: "form-control mb-3",
-                attrs: { type: "textarea", placeholder: "Title" },
-                domProps: { value: _vm.subscription.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.subscription, "title", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm._m(1)
-            ]
-          )
-        ],
-        1
-      )
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "card-header p-0 font-weight-bold mb-3 p-3 border-primary d-flex justify-content-between h4"
-      },
-      [
-        _c("span", [_vm._v("New Subscription")]),
-        _vm._v(" "),
-        _c("div", [_c("i", { staticClass: "fas fa-file-invoice-dollar" })])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary btn-block", attrs: { type: "submit" } },
-        [_vm._v("Submit")]
-      )
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-c4b87590", module.exports)
-  }
-}
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\laragon\\www\\traxit\\resources\\assets\\js\\views\\CompanySubscription.vue'");
 
 /***/ })
 /******/ ]);
