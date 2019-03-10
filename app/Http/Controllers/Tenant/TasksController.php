@@ -153,9 +153,14 @@ class TasksController extends Controller
         $engagement = $task->engagements()->first();
         $client = Client::where('id', $engagement->client_id)->first();
 
-        Mail::to($client->email)->send(new StatusUpdate(['engagement' => $engagement, 'client' => $client]));
+        try {
+            Mail::to($client->email)->send(new StatusUpdate(['engagement' => $engagement, 'client' => $client]));
+    
+            return response()->json(['message' => 'The Contact Has Been Notified']);
+        } catch(\Exception $e) {
+            $e->getMessage();
+        }
 
-        return response()->json(['message' => 'The Contact Has Been Notified']);
         
     }
 
