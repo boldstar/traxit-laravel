@@ -8,6 +8,7 @@ use App\Models\Tenant\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Hyn\Tenancy\Environment;
+use Hyn\Tenancy\Models\Website;
 use Illuminate\Support\Facades\DB;
 use Hyn\Tenancy\Database\Connection;
 use App\Http\Controllers\Controller;
@@ -76,9 +77,12 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $passport = DB::table('oauth_clients')->where('id', 2)->first(); 
 
-        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+        $passport = DB::table('oauth_clients')->where('id', 2)->first();
+        
+        $website  = app(\Hyn\Tenancy\Environment::class)->website();
+
+        $hostname = $website->hostnames()->first();
 
         $http = new \GuzzleHttp\Client;
 
@@ -103,7 +107,7 @@ class AuthController extends Controller
 
                     $rules->put('access_token', $data['access_token']);
 
-                    return response()->json($rules);
+                    return response()->json(['rules' => $rules, 'fqdn' => $hostname->fqdn]);
                 } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                     if ($e->getCode() === 400) {
                         return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());

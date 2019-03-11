@@ -15,7 +15,7 @@ use App\Exports\ClientsExport;
 */
 
 Route::get('/account', 'Tenant\AccountsController@account');
-Route::post('/login', 'Tenant\AuthController@login');
+Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
 Route::group([    
     'namespace' => 'Auth',    
     'middleware' => 'api',    

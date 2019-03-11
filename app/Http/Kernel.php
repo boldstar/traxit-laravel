@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'tenancy.enforce' => \App\Http\Middleware\EnforceTenancy::class,
         'subscribed' => \App\Http\Middleware\Subscribed::class,
         'grace.period' => \App\Http\Middleware\GracePeriod::class,
+        'api.login' => \App\Http\Middleware\ApiLogin::class
     ];
 }

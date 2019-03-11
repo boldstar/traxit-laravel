@@ -19,15 +19,16 @@ class GracePeriod
     public function handle($request, Closure $next)
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
-
-        if ($hostname && $hostname->subscription('main')->onGracePeriod()) {
-            Stripe::setApiKey(config('services.stripe.secret'));
-            $stripe = $hostname->subscription('main');
-            $subscription = StripeSubscription::retrieve($stripe->stripe_id);
-            $date = Carbon::createFromTimeStamp($subscription->cancel_at)->toDateTimeString();
-            $subscription->cancel_at = Carbon::parse($date)->format('m/d/Y');
-            // This user is not a paying customer...
-            return response()->json(['data' => $subscription]);
+        if($hostname && $hostname->subscribed('main')) {
+            if ($hostname && $hostname->subscription('main')->onGracePeriod()) {
+                Stripe::setApiKey(config('services.stripe.secret'));
+                $stripe = $hostname->subscription('main');
+                $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+                $date = Carbon::createFromTimeStamp($subscription->cancel_at)->toDateTimeString();
+                $subscription->cancel_at = Carbon::parse($date)->format('m/d/Y');
+                // This user is not a paying customer...
+                return response()->json(['data' => $subscription]);
+            }
         }
         
         return $next($request);
