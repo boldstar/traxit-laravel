@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
+use App\Models\Tenant\Client;
 use App\Models\Tenant\Engagement;
+use App\Models\Tenant\Workflow;
 use Illuminate\Http\Request;
+use App\Mail\StatusUpdate;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 
 class TasksController extends Controller
@@ -19,9 +23,9 @@ class TasksController extends Controller
     {
 
         return Task::where('user_id', auth()->user()->id)
-                    ->with(['engagements', 'engagements.client'])
-                    ->has('engagements')
-                    ->get();
+            ->with(['engagements', 'engagements.client'])
+            ->has('engagements')
+            ->get();
 
     }
 
@@ -79,9 +83,13 @@ class TasksController extends Controller
 
         $data = $request->validate([
             'user_id' => 'required|integer',
+            'status' => 'required|string'
         ]);
 
-        $task->update($data);
+        $task->update([
+            'user_id' => $request->user_id,
+            'title' => $request->status
+        ]);
 
         $assigned_to = User::where('id', $request->user_id)->value('name');
 
@@ -96,7 +104,15 @@ class TasksController extends Controller
             'status' => $status['status'],
         ]);
 
-        return response()->json(['task' => $task, 'message' => 'Task Was Updated'], 200);
+        $workflow = Workflow::where('id', $engagement->workflow_id)->with('statuses')->get();
+
+        $statuses = $workflow->pluck('statuses')->collapse();
+
+        $notifyClient = $statuses->contains(function ($val, $key) use ($engagement) {
+            return $val->status == $engagement->status && $val->notify_client == true;
+        });
+
+        return response()->json(['task' => $task, 'message' => 'Task Was Updated', 'notify' => $notifyClient], 200);
     }
 
     public function batchUpdateTasks(Request $request)
@@ -127,6 +143,25 @@ class TasksController extends Controller
 
         return response()->json(['tasks' => $request->tasksToUpdate, 'message' => 'Tasks Were Succesfully Updated'], 200);
 
+    }
+
+    /**
+     * notify client of status
+     */
+    public function notifyClient(Request $request) {
+        $task = Task::find($request->id);
+        $engagement = $task->engagements()->first();
+        $client = Client::where('id', $engagement->client_id)->first();
+
+        try {
+            Mail::to($client->email)->send(new StatusUpdate(['engagement' => $engagement, 'client' => $client]));
+    
+            return response()->json(['message' => 'The Contact Has Been Notified']);
+        } catch(\Exception $e) {
+            $e->getMessage();
+        }
+
+        
     }
 
     /**
