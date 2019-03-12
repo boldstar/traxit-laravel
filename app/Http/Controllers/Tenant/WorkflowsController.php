@@ -106,12 +106,19 @@ class WorkflowsController extends Controller
         foreach($newStatuses as $newStatus){
             $workflow->statuses()->create([
                 'status' => $newStatus['value'],
+                'notify_client' => $newStatus['notify_client'],
                 'order' => $newStatus['order']
             ]);
         };
         
         $engagements = Engagement::where('workflow_id', $workflow->id)->get();
         $engagementsExist = $engagements->containsStrict('workflow_id', $workflow->id);
+
+        foreach($statuses as $status){
+            $workflow->statuses()->where('id', $status['id'])->update([
+                'notify_client' => $status['notify_client']
+            ]);
+        };
         
         if($engagementsExist === true) {
             return response()->json([
@@ -122,11 +129,12 @@ class WorkflowsController extends Controller
         
         foreach($statuses as $status){
             $workflow->statuses()->where('id', $status['id'])->update([
-                'status' =>  $status['status']
+                'status' =>  $status['status'],
+                'notify_client' => $status['notify_client']
             ]);
         };
 
-        return response($workflow->load('statuses'), 200);
+        return response()->json([ 'workflow' => $workflow->load('statuses'), 'message' => 'The Workflow Has Been Updated!'], 200);
 
     }
 
@@ -153,6 +161,7 @@ class WorkflowsController extends Controller
         foreach($statuses as $status){
             $workflow->statuses()->create([
                 'status' => $status['status'],
+                'notify_client' => $status['notify_client'],
                 'order' => $status['order']
             ]);
         };
