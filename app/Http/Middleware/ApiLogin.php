@@ -19,6 +19,10 @@ class ApiLogin
      */
     public function handle($request, Closure $next)
     {
+        if($request->fqdn != null) {
+            return $next($request);
+        }
+
         $environment = app(\Hyn\Tenancy\Environment::class);
         $websites = Website::all();
         foreach($websites as $website) {
