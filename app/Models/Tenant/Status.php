@@ -13,6 +13,7 @@ class Status extends Model
         'workflow_id',
         'status',
         'order',
+        'notify_client',
         'created_at',
         'updated_at'
     ];
