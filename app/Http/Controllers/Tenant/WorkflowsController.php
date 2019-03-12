@@ -59,7 +59,7 @@ class WorkflowsController extends Controller
             foreach($statuses as $status){
                 $newWorkflow->statuses()->create([
                     'status' => $status['status'],
-                    'order' => $status['order']
+                    'order' => $status['order'],
                 ]);
             };
 
@@ -120,10 +120,31 @@ class WorkflowsController extends Controller
             ]);
         };
         
+        $statusIds = array();
+        $matchedIds = array();
+        $statusesToCheck = $workflow->statuses()->get();
         if($engagementsExist === true) {
+            foreach($statusesToCheck as $statusCheck) {
+                $containsStatus = $engagements->containsStrict('status', $statusCheck->status);
+                if($containsStatus) {
+                    array_push($statusIds, $statusCheck->id);
+                }
+            }
+            foreach($statuses as $status){
+                $matched = in_array($status['id'], $statusIds);
+                if(!$matched) {
+                    $workflow->statuses()->where('id', $status['id'])->update([
+                        'status' =>  $status['status'],
+                        'notify_client' => $status['notify_client']
+                    ]);
+                } else if($matched) {
+                    array_push($matchedIds, $status['id']);
+                }
+            };
             return response()->json([
                 'workflow' => $workflow->load('statuses'),
-                'message' => 'New Statuses Added! But Engagements Containing Old Statuses Exist, Please Update Enagagements First',
+                'message' => 'Statuses Applied To Existing Engagements Were Not Updated, Please Update Enagagements First',
+                'statuses' => $matchedIds
             ], 403);
         };
         
