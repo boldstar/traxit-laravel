@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\Tenant\User;
 use App\Models\Tenant\Account;
+use App\Models\Tenant\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -37,18 +38,21 @@ class StatusUpdate extends Mailable
      */
     public function build()
     {
+        $template = EmailTemplate::where('title', 'Status Update')->first();
         $account = Account::first();
         $sender = User::where('id', auth()->user()->id)->first();
         $email = $sender->email;
         $name = $sender->name;
+
+        file_put_contents('../resources/views/email.blade.php', $template->html_template);
 
         if($sender->has_spouse == true) {
             $spouse_email = $sender->spouse_email;
             return $this->replyTo($email, $name)
                         ->cc($spouse_email)
                         ->bcc($email, $name)
-                        ->subject('Status Update From '. $account->business_name)
-                        ->view('status')
+                        ->subject($template->subject . $account->business_name)
+                        ->view('email')
                         ->with([
                             'phoneNumber' => $account->phone_number,
                             'faxNumber' => $account->fax_number,
@@ -60,8 +64,8 @@ class StatusUpdate extends Mailable
 
         return $this->replyTo($email, $name)
                     ->bcc($email, $name)
-                    ->subject('Status Update From '. $account->business_name)
-                    ->view('status')
+                    ->subject($template->subject . $account->business_name)
+                    ->view('email')
                     ->with([
                         'phoneNumber' => $account->phone_number,
                         'faxNumber' => $account->fax_number,

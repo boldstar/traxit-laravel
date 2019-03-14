@@ -17,5 +17,6 @@ class TenantDatabaseSeeder extends Seeder
         $this->call(RuleTableSeeder::class);
         $this->call(ReturnTypeTableSeeder::class);
         $this->call(UserTableSeeder::class);
+        $this->call(EmailTemplateTableSeeder::class);
     }
 }
