@@ -32,7 +32,11 @@ class QuestionsController extends Controller
         $question = Question::create($data);
         
         if($request->email === true) {
-            $this->send($question);
+            $request->validate([
+                'send_to' => 'required|string',
+            ]);
+
+            $this->send($question, $request->send_to);
             
             return response([ 'question' => $question, 'message' => 'Email Sent To Client'], 201);
         }
@@ -40,12 +44,20 @@ class QuestionsController extends Controller
         return response([ 'question' => $question, 'message' => 'A new question has been added!'], 201);
     }
 
-    public function send($question)
+    public function send($question, $send_to)
     {
         $engagement = Engagement::where('id', $question->engagement_id)->first();
         $client = CLient::where('id', $engagement->client_id)->first();
 
-        Mail::to($client->email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client]));
+        if($send_to == 'both') {
+            Mail::to($client->email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client, 'test' => false, 'send_to' => $send_to]));
+        }
+        if($send_to == 'taxpayer' && $client->email != null) {
+            Mail::to($client->email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client, 'test' => false, 'send_to' => $send_to]));
+        }
+        if($send_to == 'spouse' && $client->spouse_email != null) {
+            Mail::to($client->spouse_email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client, 'test' => false, 'send_to' => $send_to]));
+        }
 
         return response('Email Was Sent');
     }
@@ -60,7 +72,7 @@ class QuestionsController extends Controller
         $engagement = Engagement::where('id', $question->engagement_id)->first();
         $client = CLient::where('id', $engagement->client_id)->first();
 
-        Mail::to($client->email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client]));
+        Mail::to($client->email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client, 'test' => false]));
 
         $question->email_sent = true;
         $question->save();

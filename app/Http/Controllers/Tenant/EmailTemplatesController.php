@@ -4,8 +4,15 @@ namespace App\Http\Controllers\Tenant;
 
 use Illuminate\Http\Request;
 use App\Models\Tenant\EmailTemplate;
+use App\Models\Tenant\Client;
+use App\Models\Tenant\Question;
+use App\Models\Tenant\Engagement;
+use App\Models\Tenant\Account;
 use Sunra\PhpSimple\HtmlDomParser;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StartConversation;
+use App\Mail\StatusUpdate;
 
 class EmailTemplatesController extends Controller
 {
@@ -52,13 +59,44 @@ class EmailTemplatesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
+     * Send test email
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function sendTest(Request $request)
     {
-        //
+        $template = EmailTemplate::where('id', $request->id)->first();
+        $account = Account::first();
+        $email = $account->email;
+        if($template->title == 'Status Update') {
+            $engagement = Engagement::first();
+            $client = Client::first();
+
+
+            try {
+                Mail::to($email)->send(new StatusUpdate(['engagement' => $engagement, 'client' => $client, 'test' => true]));
+    
+                return response()->json(['message' => 'A Test Email Has Been Sent To ' . $email]);
+            } catch (\Exception $e) {
+                return response($e->getMessage());
+            }
+        } 
+
+        if($template->title == 'Pending Questions') {
+            $engagement = Engagement::first();
+            $client = Client::first();
+            $question = Question::first();
+
+            try {
+                Mail::to($email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client, 'test' => true]));
+
+                return response()->json(['message' => 'A Test Email Has Been Sent To ' . $email]);
+            } catch (\Exception $e) {
+                return response($e->getMessage());
+            }
+        }
+
+        return response('fail');
     }
 
     /**
