@@ -103,6 +103,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/workflowstatuses/{status}', 'Tenant\WorkflowsController@destroy');
     Route::delete('/workflow/{workflow}', 'Tenant\WorkflowsController@destroyWorkflow');
 
+    Route::get('/templates', 'Tenant\EmailTemplatesController@index');
+    Route::post('/send-test-mail', 'Tenant\EmailTemplatesController@sendTest');
+
     Route::post('/search', 'Tenant\SearchController@search');
     Route::post('/reports', 'Tenant\ReportsController@excelReport');
     Route::post('/importclients', 'Tenant\ClientsController@importExcel');

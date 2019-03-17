@@ -5,10 +5,13 @@ Hello <i>{{ $client["client"]->first_name }}
         {{ $client["client"]->last_name }}, 
         </i>
         
-        <p>We are currently working on your <span class="year">{{ $client["engagement"]->year }}</span>, <span class="return"{{ $client["engagement"]->return_type }}</span> tax return for the name of <span class="name">"{{ $client["engagement"]->name }}"</span> and would like to inform you on the<strong> change in status</strong></p>
-
+        <p>We are currently working on your <span class="year">{{ $client["engagement"]->year }}</span>, <span class="return"{{ $client["engagement"]->return_type }}</span> tax return for the name of <span class="name"{{ $client["engagement"]->name }}"</span>. The following questions and issues were raised during the performance of our work. Please provide responses to the following items so that we can continue.</p>
+        
         <div style="border: 1px solid blue; border-radius: 10px; text-align: left; padding: 5px">
-            <h3 class="current">Current Status:  <span class="status">{{ $client["engagement"]->status }}</span></h3>
+            <h3 class="pending">Pending Questions:</h3>
+            <p class="question">
+                {!! $client["question"]->question !!}
+            </p>
         </div>
         
         <h3>For questions and concerns</h3>

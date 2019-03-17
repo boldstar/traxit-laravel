@@ -115,6 +115,9 @@ class TasksController extends Controller
         return response()->json(['task' => $task, 'message' => 'Task Was Updated', 'notify' => $notifyClient], 200);
     }
 
+    /**
+     * update multiple tasks at one time
+     */
     public function batchUpdateTasks(Request $request)
     {
         $data = $request->validate([
@@ -152,16 +155,28 @@ class TasksController extends Controller
         $task = Task::find($request->id);
         $engagement = $task->engagements()->first();
         $client = Client::where('id', $engagement->client_id)->first();
-
+        if($request->send_to == 'both') {
+            $email = $client->email;
+        }
+        if($request->send_to == 'taxpayer') {
+            $email = $client->email;
+        }
+        if($request->send_to == 'spouse') {
+            $email = $client->spouse_email;
+        }
+        
         try {
-            Mail::to($client->email)->send(new StatusUpdate(['engagement' => $engagement, 'client' => $client]));
+            Mail::to($email)->send(new StatusUpdate([
+                'engagement' => $engagement, 
+                'client' => $client, 
+                'test' =>  false,
+                'send_to' =>  $request->send_to
+            ]));
     
             return response()->json(['message' => 'The Contact Has Been Notified']);
         } catch(\Exception $e) {
             $e->getMessage();
-        }
-
-        
+        }    
     }
 
     /**
