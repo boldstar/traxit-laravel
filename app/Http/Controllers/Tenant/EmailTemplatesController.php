@@ -24,7 +24,6 @@ class EmailTemplatesController extends Controller
     public function index()
     {
         $templates = EmailTemplate::all();
-        return response('Good', 401);
         foreach($templates as $template) {
             $document = HtmlDomParser::str_get_html($template->html_template);
             $document->find('i', 0)->innertext = '<strong>Contacts Name</strong>,<br><br>';
