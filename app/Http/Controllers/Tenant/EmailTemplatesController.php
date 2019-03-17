@@ -8,7 +8,7 @@ use App\Models\Tenant\Client;
 use App\Models\Tenant\Question;
 use App\Models\Tenant\Engagement;
 use App\Models\Tenant\Account;
-use Sunra\PhpSimple\HtmlDomParser;
+use KubAT\PhpSimple\HtmlDomParser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StartConversation;
@@ -49,7 +49,7 @@ class EmailTemplatesController extends Controller
                 }
                 $document->find('span[class=phone]', 0)->innertext = '<strong>Phone Number</strong><br>';
                 $document->find('span[class=email]', 0)->innertext = '<strong>Users Email</strong><br><br>';
-                $document->find('p[class=thanks]', 0)->innertext = '<p>Looking forward to hearing from you, Thanks!</p><br>';
+                $document->find('p[class=looking]', 0)->innertext = '<p>Looking forward to hearing from you, Thanks!</p><br>';
                 $document->find('h3[class=account]', 0)->innertext = '<strong>Company Name</strong><br>';
                 $document->find('h3[class=account-email]', 0)->innertext = '<strong>Account Email</strong><br>';
                 $document->find('h3[class=phone]', 0)->innertext = '<strong>Company Phone Number</strong><br>';
