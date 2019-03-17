@@ -78,7 +78,12 @@ class EmailTemplatesController extends Controller
 
 
             try {
-                Mail::to($email)->send(new StatusUpdate(['engagement' => $engagement, 'client' => $client, 'test' => true]));
+                Mail::to($email)->send(new StatusUpdate([
+                    'engagement' => $engagement, 
+                    'client' => $client, 
+                    'test' => true,
+                    'send_to' => null
+                ]));
     
                 return response()->json(['message' => 'A Test Email Has Been Sent To ' . $email]);
             } catch (\Exception $e) {
@@ -92,7 +97,13 @@ class EmailTemplatesController extends Controller
             $question = Question::first();
 
             try {
-                Mail::to($email)->send(new StartConversation(['question' => $question, 'engagement' => $engagement, 'client' => $client, 'test' => true]));
+                Mail::to($email)->send(new StartConversation([
+                    'question' => $question, 
+                    'engagement' => $engagement, 
+                    'client' => $client, 
+                    'test' => true,
+                    'send_to' => null
+                ]));
 
                 return response()->json(['message' => 'A Test Email Has Been Sent To ' . $email]);
             } catch (\Exception $e) {
