@@ -40,7 +40,8 @@ class StatusUpdate extends Mailable
     {
         $template = EmailTemplate::where('title', 'Status Update')->first();
         $account = Account::first();
-        $send_to = $this->client['client'];
+        $send_to = $this->client['send_to'];
+        $clients = $this->client['client'];
         $sender = User::where('id', auth()->user()->id)->first();
         $email = $sender->email;
         $name = $sender->name;
@@ -63,8 +64,37 @@ class StatusUpdate extends Mailable
             ]);
         }
 
-        if($send_to->has_spouse == true && $send_to->spouse_email != null) {
-            $spouse_email = $send_to->spouse_email;
+        if($send_to == 'taxpayer') {
+            return $this->replyTo($email, $name)
+                        ->bcc($email, $name)
+                        ->subject($template->subject . $account->business_name)
+                        ->view('status')
+                        ->with([
+                            'phoneNumber' => $account->phone_number,
+                            'faxNumber' => $account->fax_number,
+                            'accountName' => $account->business_name,
+                            'accountEmail' => $account->email,
+                            'userEmail' => $email
+            ]);
+        }
+
+        if($send_to == 'spouse') {
+            return $this->replyTo($email, $name)
+                        ->bcc($email, $name)
+                        ->subject($template->subject . $account->business_name)
+                        ->view('status')
+                        ->with([
+                            'phoneNumber' => $account->phone_number,
+                            'faxNumber' => $account->fax_number,
+                            'accountName' => $account->business_name,
+                            'accountEmail' => $account->email,
+                            'userEmail' => $email
+            ]);
+        }
+
+            
+        if($clients->has_spouse == true && $clients->spouse_email != null) {
+            $spouse_email = $clients->spouse_email;
             return $this->replyTo($email, $name)
                         ->cc($spouse_email)
                         ->bcc($email, $name)
@@ -78,17 +108,5 @@ class StatusUpdate extends Mailable
                             'userEmail' => $email
             ]);
         };
-
-        return $this->replyTo($email, $name)
-                    ->bcc($email, $name)
-                    ->subject($template->subject . $account->business_name)
-                    ->view('status')
-                    ->with([
-                        'phoneNumber' => $account->phone_number,
-                        'faxNumber' => $account->fax_number,
-                        'accountName' => $account->business_name,
-                        'accountEmail' => $account->email,
-                        'userEmail' => $email
-        ]);
     }
 }
