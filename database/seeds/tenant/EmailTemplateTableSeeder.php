@@ -71,7 +71,7 @@ class EmailTemplateTableSeeder extends Seeder
         <div>
             <p style="margin: 0; align-self: center">Or reply to: <span class="email">{{ $userEmail }}</span></p>
         </div>
-        <p>Please reply to this email to verify you received it and let me know when you will be able to get me this information.</p>
+        <p>Please reply to this email to verify you received it.</p>
         <p class="looking">Looking forward to hearing from you, Thanks!</p>
         <br>
         
