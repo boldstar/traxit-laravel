@@ -98,6 +98,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/workflowstatuses', 'Tenant\WorkflowsController@index');
     Route::get('/workflowstatuses/{id}', 'Tenant\WorkflowsController@show');
     Route::post('/workflowstatuses', 'Tenant\WorkflowsController@store');
+    Route::post('/message', 'Tenant\WorkflowsController@message');
     Route::put('/workflowstatuses', 'Tenant\WorkflowsController@updateWorkflowStatuses');
     Route::patch('/workflowstatuses/{workflow}', 'Tenant\WorkflowsController@workflowStatuses');
     Route::delete('/workflowstatuses/{status}', 'Tenant\WorkflowsController@destroy');
