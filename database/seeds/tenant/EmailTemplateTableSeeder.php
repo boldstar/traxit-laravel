@@ -63,6 +63,14 @@ class EmailTemplateTableSeeder extends Seeder
         <div style="border: 1px solid blue; border-radius: 10px; text-align: left; padding: 5px">
             <h3 class="current">Current Status:  <span class="status">{{ $client["engagement"]->status }}</span></h3>
         </div>
+
+        <div class="message-body" style="margin-top: 10px;>
+            @if($client["message"]->message != null || $client["message"]->message != "")
+            <div style="border: 1px solid blue; border-radius: 10px; text-align: left; padding: 5px">
+                <h3 class="current"><span class="message">{{ $client["message"]->message }}</span></h3>
+            </div>
+            @endif
+        </div>
         
         <h3>For questions and concerns</h3>
         <div>
@@ -71,7 +79,7 @@ class EmailTemplateTableSeeder extends Seeder
         <div>
             <p style="margin: 0; align-self: center">Or reply to: <span class="email">{{ $userEmail }}</span></p>
         </div>
-        <p>Please reply to this email to verify you received it and let me know when you will be able to get me this information.</p>
+        <p>Please reply to this email to verify you received it.</p>
         <p class="looking">Looking forward to hearing from you, Thanks!</p>
         <br>
         

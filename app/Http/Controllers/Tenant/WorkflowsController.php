@@ -187,8 +187,23 @@ class WorkflowsController extends Controller
             ]);
         };
 
-        return response('Update Succesful', 200);
+        return response($statuses, 200);
 
+    }
+
+    /**
+     * add status message
+     */
+    public function message(Request $request) {
+
+        $request->validate([
+            'message' => 'required|string' 
+        ]);
+        $status = Status::where('id', $request->id)->first();
+        $status->message = $request->message;
+        $status->save();
+        $workflow = Workflow::where('id', $status->workflow_id)->with('statuses')->first();
+        return response()->json(['workflow' => $workflow, 'message' => 'Message added to status']);
     }
 
     /**
