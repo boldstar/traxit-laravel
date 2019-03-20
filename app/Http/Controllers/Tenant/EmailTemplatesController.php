@@ -78,6 +78,7 @@ class EmailTemplatesController extends Controller
         $account = Account::first();
         $email = $account->email;
         $message = Status::where('notify_client', true)->first();
+        $message->message = 'This is where a test message would go, you can modify this in the workflows section';
         if($template->title == 'Status Update') {
             $engagement = Engagement::first();
             $client = Client::first();
