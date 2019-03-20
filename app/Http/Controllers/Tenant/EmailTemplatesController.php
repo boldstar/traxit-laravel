@@ -8,6 +8,7 @@ use App\Models\Tenant\Client;
 use App\Models\Tenant\Question;
 use App\Models\Tenant\Engagement;
 use App\Models\Tenant\Account;
+use App\Models\Tenant\Status;
 use KubAT\PhpSimple\HtmlDomParser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
@@ -47,6 +48,10 @@ class EmailTemplatesController extends Controller
                 if($current != null) {
                     $current->innertext = '<br><br><div style="border: 1px solid blue; border-radius: 5px; padding: 10px;">Current Status: <strong>Current Status</strong></div><br>';
                 }
+                $current = $document->find('div[class=message-body]', 0);
+                if($current != null) {
+                    $current->innertext = '<div style="border: 1px solid blue; border-radius: 5px; padding: 10px;"><strong>This is where a custom message would go. To add a mesage find the status on your workflow that has a check mark.</strong></div><br>';
+                }
                 $document->find('span[class=phone]', 0)->innertext = '<strong>Phone Number</strong><br>';
                 $document->find('span[class=email]', 0)->innertext = '<strong>Users Email</strong><br><br>';
                 $document->find('p[class=looking]', 0)->innertext = '<p>Looking forward to hearing from you, Thanks!</p><br>';
@@ -72,6 +77,7 @@ class EmailTemplatesController extends Controller
         $template = EmailTemplate::where('id', $request->id)->first();
         $account = Account::first();
         $email = $account->email;
+        $message = Status::where('notify_client', true)->first();
         if($template->title == 'Status Update') {
             $engagement = Engagement::first();
             $client = Client::first();
@@ -82,12 +88,13 @@ class EmailTemplatesController extends Controller
                     'engagement' => $engagement, 
                     'client' => $client, 
                     'test' => true,
-                    'send_to' => null
+                    'send_to' => null,
+                    'message' => $message
                 ]));
     
                 return response()->json(['message' => 'A Test Email Has Been Sent To ' . $email]);
             } catch (\Exception $e) {
-                return response($e->getMessage());
+                return response()->json(['message' => $e->getMessage()], 422);
             }
         } 
 

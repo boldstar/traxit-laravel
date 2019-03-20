@@ -7,6 +7,7 @@ use App\Models\Tenant\User;
 use App\Models\Tenant\Client;
 use App\Models\Tenant\Engagement;
 use App\Models\Tenant\Workflow;
+use App\Models\Tenant\Status;
 use Illuminate\Http\Request;
 use App\Mail\StatusUpdate;
 use Illuminate\Support\Facades\Mail;
@@ -112,7 +113,11 @@ class TasksController extends Controller
             return $val->status == $engagement->status && $val->notify_client == true;
         });
 
-        return response()->json(['task' => $task, 'message' => 'Task Was Updated', 'notify' => $notifyClient], 200);
+        $matches = ['workflow_id' => $workflow[0]->id, 'status' => $task->title];
+
+        $status = Status::where($matches)->first();
+
+        return response()->json(['task' => $task, 'message' => 'Task Was Updated', 'notify' => $notifyClient, 'status' => $status], 200);
     }
 
     /**
@@ -154,6 +159,9 @@ class TasksController extends Controller
     public function notifyClient(Request $request) {
         $task = Task::find($request->id);
         $engagement = $task->engagements()->first();
+        $workflow = Workflow::where('id', $engagement->workflow_id)->first();
+        $status = $workflow->statuses()->get();
+        $message = $status->where('status', $engagement->status)->first();
         $client = Client::where('id', $engagement->client_id)->first();
         if($request->send_to == 'both') {
             $email = $client->email;
@@ -170,7 +178,8 @@ class TasksController extends Controller
                 'engagement' => $engagement, 
                 'client' => $client, 
                 'test' =>  false,
-                'send_to' =>  $request->send_to
+                'send_to' =>  $request->send_to,
+                'message' => $message
             ]));
     
             return response()->json(['message' => 'The Contact Has Been Notified']);

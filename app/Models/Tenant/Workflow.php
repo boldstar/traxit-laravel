@@ -10,6 +10,7 @@ class Workflow extends Model
     use UsesTenantConnection;
 
     protected $fillable = [
+        'id',
         'workflow'
     ];
 

@@ -14,6 +14,7 @@ class Status extends Model
         'status',
         'order',
         'notify_client',
+        'message',
         'created_at',
         'updated_at'
     ];
