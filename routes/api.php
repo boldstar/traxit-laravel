@@ -78,6 +78,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/engagementquestions/{id}', 'Tenant\EngagementsController@questionindex');
     Route::get('/engagementReturnTypes', 'Tenant\EngagementsController@returnType_index');
     Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
+    Route::post('/archive', 'Tenant\EngagementsController@archiveEngagement');
 
     Route::get('/questions/{id}', 'Tenant\QuestionsController@show');
     Route::patch('/questions/{question}', 'Tenant\QuestionsController@update');
