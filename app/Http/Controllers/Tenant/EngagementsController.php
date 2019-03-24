@@ -8,6 +8,7 @@ use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Question;
 use App\Models\Tenant\ReturnType;
+use App\Models\Tenant\Workflow;
 use App\Models\Tenant\EngagementActions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -98,14 +99,20 @@ class EngagementsController extends Controller
             'year' => 'required|string',
             'assigned_to' => 'required|integer',
             'status' => 'required|string',
+            'difficulty' => 'nullable|integer',
             'done' => 'required|boolean'
         ]);
+
+       
         
         $userName = User::where('id', $request->assigned_to)->value('name');
         
         $client = Client::findOrFail($request->client_id);
 
         if($request->type == 'taxreturn') {
+            $days = (int)7 * $request->difficulty;
+            $date = \Carbon\Carbon::now();
+            $estimated = $date->addDays($days);
 
             if($request->category == 'Personal') {
                 $engagement = Engagement::create([
@@ -120,6 +127,8 @@ class EngagementsController extends Controller
                     'year' => $request->year,
                     'assigned_to' => $userName,
                     'status' => $request->status,
+                    'difficulty' => $request->difficulty,
+                    'estimated_date' => $estimated,
                     'done' => $request->done,
                 ]);
             }
@@ -137,6 +146,8 @@ class EngagementsController extends Controller
                     'year' => $request->year,
                     'assigned_to' => $userName,
                     'status' => $request->status,
+                    'difficulty' => $request->difficulty,
+                    'estimated_date' => $estimated,
                     'done' => $request->done,
                 ]);
             }
@@ -182,8 +193,9 @@ class EngagementsController extends Controller
     public function show($id)
     {
         $engagement = Engagement::with(['client', 'questions'])->find($id);
+        $workflow = Workflow::where('id', $engagement->workflow_id)->with('statuses')->first();
 
-        return response($engagement);
+        return response()->json(['engagement' => $engagement, 'workflow' => $workflow]);
     }
 
     /**
@@ -205,10 +217,14 @@ class EngagementsController extends Controller
             'year' => 'required|string',
             'status' => 'required|string',
             'assigned_to' => 'required|string',
+            'difficulty' => 'nullable|integer',
+            'fee' => 'nullable|string',
+            'balance' => 'nullable|string',
             'done' => 'required|boolean'
         ]);
 
         if($request->done == false) {
+
             $engagement->update([
                 'client_id' => $request->client_id,
                 'workflow_id' => $request->workflow_id,
@@ -219,6 +235,10 @@ class EngagementsController extends Controller
                 'year' => $request->year,
                 'status' => $request->status,
                 'assigned_to' => $request->assigned_to,
+                'difficulty' => $request->difficulty,
+                'fee' => $request->fee,
+                'owed' => $request->owed,
+                'balance' => $request->balance,
                 'done' => $request->done
             ]);
     
@@ -227,8 +247,10 @@ class EngagementsController extends Controller
             $engagement->tasks()->update([ 
                 'user_id' => $user 
             ]);
+
+            $updatedEngagement = Engagement::where('id', $engagement->id)->with(['client', 'questions'])->first();
             
-            return response()->json(['engagement' => $engagement, 'message' => 'Engagement Updated Succesfully'], 200);
+            return response()->json(['engagement' => $updatedEngagement, 'message' => 'Engagement Updated Succesfully'], 200);
         }
 
         if($request->done == true) {
@@ -242,6 +264,10 @@ class EngagementsController extends Controller
                 'year' => $request->year,
                 'status' => 'Complete',
                 'assigned_to' => 'Complete',
+                'difficulty' => $request->difficulty,
+                'fee' => $request->fee,
+                'owed' => $request->owed,
+                'balance' => $request->balance,
                 'done' => true
             ]);
     
@@ -250,6 +276,8 @@ class EngagementsController extends Controller
             $engagement->tasks()->detach();
 
             $task->delete();
+
+            $updatedEngagement = Engagement::where('id', $engagement->id)->with(['client', 'questions'])->first();
 
             return response()->json(['engagement' => $engagement, 'message' => 'Engagement Updated Succesfully'], 200);
         }
@@ -338,6 +366,16 @@ class EngagementsController extends Controller
         }
 
     }
+    /**
+     * archive an engagement
+     */
+    public function archiveEngagement(Request $request) {
+        $engagement = Engagement::where('id', $request->id)->with(['client', 'questions'])->first();
+        $engagement->archive = !$engagement->archive;
+        $engagement->save();
+        return response()->json(['message' =>  'Done', 'engagement' => $engagement]);
+    }
+
 
     /**
      * Remove the specified resource from storage.
