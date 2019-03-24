@@ -22,6 +22,12 @@ class Engagement extends Model
         'year',
         'assigned_to',
         'status',
+        'difficulty',
+        'fee',
+        'owed',
+        'balance',
+        'archive',
+        'estimated_date',
         'done'
     ];
 
