@@ -304,17 +304,14 @@ class EngagementsController extends Controller
         $user = User::where('id', $request->assigned_to)->value('name');
 
         if($request->status == 'Complete') {
-            // for each engagment update the assigned to and status fields
-            Engagement::whereIn('id', $request->engagements)->update([ 
-                'assigned_to' => 'Complete',
-                'status' => $request->status,
-                'done' => true
-            ]);
-
-                  // for each engagement update the associated task through the pivot table function
+            // for each engagement update the associated task through the pivot table function
             $engagements = Engagement::whereIn('id', $request->engagements)->get();
             foreach ($engagements as $engagement) {
-
+                $engagement->update([
+                    'assigned_to' => 'Complete',
+                    'status' => $request->status,
+                    'done' => true
+                ]);
                 if($engagement->done == true)
                 {
                     $task = $engagement->tasks()->first();
@@ -329,15 +326,15 @@ class EngagementsController extends Controller
         }
 
         else {
-            // for each engagment update the assigned to and status fields
-            Engagement::whereIn('id', $request->engagements)->update([ 
-                'assigned_to' => $user,
-                'status' => $request->status, 
-            ]);
             // for each engagement update the associated task through the pivot table function
             $engagements = Engagement::whereIn('id', $request->engagements)->get();
     
             foreach ($engagements as $engagement) {
+                $engagement->update([
+                    'assigned_to' => $user,
+                    'status' => $request->status, 
+                ]);
+
                 if($engagement->done == false)
                 {
                     $engagement->tasks()->update([ 
