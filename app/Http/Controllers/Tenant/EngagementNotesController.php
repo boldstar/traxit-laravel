@@ -15,7 +15,11 @@ class EngagementNotesController extends Controller
      */
     public function index($id)
     {
-        return Enote::where('engagement_id', $id)->get();
+        try{
+            return Enote::where('engagement_id', $id)->get();
+        } catch(\Exception $e) {
+            return response()->json(['message' => $e->getMessage]);
+        }
     }
 
     /**
