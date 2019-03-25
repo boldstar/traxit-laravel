@@ -53,7 +53,7 @@ class Engagement extends Model
 
     public function notes()
     {
-        return $this->hasMany('App\Models\Tenant\Enote');
+        return $this->hasMany('App\Models\Tenant\ENote');
     }
 
 }
