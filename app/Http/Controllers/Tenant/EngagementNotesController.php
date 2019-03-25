@@ -18,7 +18,7 @@ class EngagementNotesController extends Controller
         try{
             return Enote::where('engagement_id', $id)->get();
         } catch(\Exception $e) {
-            return response()->json(['message' => $e->getMessage]);
+            return response()->json(['message' => $e->getMessage()]);
         }
     }
 
