@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
-use App\Models\Tenant\Enote;
+use App\Models\Tenant\ENote;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -16,7 +16,7 @@ class EngagementNotesController extends Controller
     public function index($id)
     {
         try{
-            return Enote::where('engagement_id', $id)->get();
+            return ENote::where('engagement_id', $id)->get();
         } catch(\Exception $e) {
             return response()->json(['message' => $e->getMessage()]);
         }
@@ -35,12 +35,12 @@ class EngagementNotesController extends Controller
             'note' => 'required|string'
         ]);
 
-        $note = Enote::create([
+        $note = ENote::create([
             'engagement_id' => $request->engagement_id,
             'note' => $request->note
         ]);
 
-        $notes = Enote::where('engagement_id', $request->engagement_id)->get();
+        $notes = ENote::where('engagement_id', $request->engagement_id)->get();
 
         return response()->json(['notes' => $notes, 'message' => 'Engagement note has been added']);
     }
@@ -74,16 +74,16 @@ class EngagementNotesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Enote $enote)
+    public function update(Request $request, ENote $ENote)
     {
         $data = $request->validate([
             'engagement_id' => 'required|integer',
             'note' => 'required|string'
         ]);
 
-        $enote->update($data);
+        $ENote->update($data);
 
-        return response()->json(['message' => 'Note updated', 'note' => $enote]);
+        return response()->json(['message' => 'Note updated', 'note' => $ENote]);
     }
 
     /**
@@ -94,7 +94,7 @@ class EngagementNotesController extends Controller
      */
     public function destroy($id)
     {
-        $note = Enote::find($id);
+        $note = ENote::find($id);
 
         $note->delete();
 
