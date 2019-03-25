@@ -10,12 +10,12 @@ class EngagementNotesController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function index($id)
     {
-        dd($id);
+        return response($id);
         try{
             return Enote::where('engagement_id', $id)->get();
         } catch(\Exception $e) {
