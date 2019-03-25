@@ -80,6 +80,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
     Route::post('/archive', 'Tenant\EngagementsController@archiveEngagement');
 
+    Route::get('/e-notes/{id}', 'Tenant\EngagementNotesController@index');
+    Route::post('/add-e-note', 'Tenant\EngagementNotesController@store');
+    Route::patch('/edit-e-note/{enote}', 'Tenant\EngagementNotesController@update');
+    Route::delete('/delete-e-note/{id}', 'Tenant\EngagementNotesController@destroy');
+
     Route::get('/questions/{id}', 'Tenant\QuestionsController@show');
     Route::patch('/questions/{question}', 'Tenant\QuestionsController@update');
     Route::patch('/questionsanswer/{question}', 'Tenant\QuestionsController@updateanswer');
