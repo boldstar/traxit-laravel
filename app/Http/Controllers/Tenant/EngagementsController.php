@@ -99,7 +99,6 @@ class EngagementsController extends Controller
             'year' => 'required|string',
             'assigned_to' => 'required|integer',
             'status' => 'required|string',
-            'difficulty' => 'nullable|integer',
             'done' => 'required|boolean'
         ]);
 
@@ -110,6 +109,9 @@ class EngagementsController extends Controller
         $client = Client::findOrFail($request->client_id);
 
         if($request->type == 'taxreturn' || $request->type == 'custom') {
+            $request->validate([
+                'difficulty' => 'nullable|integer',
+            ]);
             $days = (int)7 * $request->difficulty;
             $date = \Carbon\Carbon::now();
             $estimated = $date->addDays($days);
