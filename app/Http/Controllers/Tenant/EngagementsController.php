@@ -106,10 +106,10 @@ class EngagementsController extends Controller
        
         
         $userName = User::where('id', $request->assigned_to)->value('name');
-        
+        $workflowName = Workflow::where('id', $request->workflow_id)->value('workflow');
         $client = Client::findOrFail($request->client_id);
 
-        if($request->type == 'taxreturn') {
+        if($request->type == 'taxreturn' || $request->type == 'custom') {
             $days = (int)7 * $request->difficulty;
             $date = \Carbon\Carbon::now();
             $estimated = $date->addDays($days);
@@ -123,6 +123,7 @@ class EngagementsController extends Controller
                     'client_id' => $request->client_id,
                     'name' => $client->fullNameWithSpouse(),
                     'workflow_id' => $request->workflow_id,
+                    'description' => $workflowName,
                     'return_type' => $request->return_type,
                     'year' => $request->year,
                     'assigned_to' => $userName,
