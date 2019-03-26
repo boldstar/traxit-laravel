@@ -16,7 +16,7 @@ class CreateENotesTable extends Migration
         Schema::create('e_notes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('engagement_id')->unsigned()->nullable();
-            $table->foreign('engagement_id')->references('id')->on('engagements');
+            $table->foreign('engagement_id')->references('id')->on('engagements')->onDelete('cascade');
             $table->text('note')->nullable();
             $table->timestamps();
         });
