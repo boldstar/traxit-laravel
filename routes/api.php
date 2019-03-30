@@ -71,6 +71,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('/businesses/{business}', 'Tenant\BusinessesController@update');
     Route::delete('/businesses/{business}', 'Tenant\BusinessesController@destroy');
 
+    Route::get('/engagements-history', 'Tenant\EngagementsHistoryController@index');
     Route::get('/engagements', 'Tenant\EngagementsController@index');
     Route::get('/engagements/{id}', 'Tenant\EngagementsController@clientindex');
     Route::get('/engagementhistory/{id}', 'Tenant\EngagementsController@historyindex');
@@ -81,8 +82,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/archive', 'Tenant\EngagementsController@archiveEngagement');
 
     Route::get('/e-notes/{id}', 'Tenant\EngagementNotesController@index');
+    Route::get('/show-e-note/{id}', 'Tenant\EngagementNotesController@show');
     Route::post('/add-e-note', 'Tenant\EngagementNotesController@store');
-    Route::patch('/edit-e-note/{enote}', 'Tenant\EngagementNotesController@update');
+    Route::patch('/edit-e-note', 'Tenant\EngagementNotesController@update');
     Route::delete('/delete-e-note/{id}', 'Tenant\EngagementNotesController@destroy');
 
     Route::get('/questions/{id}', 'Tenant\QuestionsController@show');
