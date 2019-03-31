@@ -53,7 +53,7 @@ class EngagementNotesController extends Controller
      */
     public function show($id)
     {
-        //
+        return ENote::find($id);
     }
 
     /**
@@ -74,16 +74,18 @@ class EngagementNotesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ENote $ENote)
+    public function update(Request $request, ENote $enote)
     {
         $data = $request->validate([
             'engagement_id' => 'required|integer',
             'note' => 'required|string'
         ]);
 
-        $ENote->update($data);
+        $note = ENote::where('id', $request->id)->first();
+        $note->update($data);
+        $note->save();
 
-        return response()->json(['message' => 'Note updated', 'note' => $ENote]);
+        return response()->json(['message' => 'Note updated', 'note' => $note]);
     }
 
     /**
