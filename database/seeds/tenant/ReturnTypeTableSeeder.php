@@ -45,5 +45,9 @@ class ReturnTypeTableSeeder extends Seeder
         $return = new ReturnType();
         $return->return_type = '1041';
         $return->save();
+
+        $return = new ReturnType();
+        $return->return_type = '1120H';
+        $return->save();
     }
 }
