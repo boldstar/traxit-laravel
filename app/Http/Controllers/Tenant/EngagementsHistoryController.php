@@ -70,7 +70,7 @@ class EngagementsHistoryController extends Controller
             $action->created_at = \Carbon\Carbon::parse($request->date)->timestamp;
             $action->save();
         } catch(\Exception $e) {
-            return response(['message' => $e->getMessage()]);
+            return response(['message' => $e->getMessage()], 422);
         }
 
         return response()->json(['message' => 'The history has been updated', 'history' => $action]);
