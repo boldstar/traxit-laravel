@@ -15,6 +15,7 @@ class Question extends Model
         'question',
         'answer',
         'email_sent',
+        'username',
         'answered',
         'created_at',
     ];

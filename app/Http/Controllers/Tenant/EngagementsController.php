@@ -211,6 +211,7 @@ class EngagementsController extends Controller
     public function update(Request $request, Engagement $engagement)
     {
         $data = $request->validate([
+            'name' => 'required|string',
             'client_id' => 'required|integer',
             'workflow_id' => 'required|integer',
             'title' => 'nullable|string',
@@ -229,6 +230,7 @@ class EngagementsController extends Controller
         if($request->done == false) {
 
             $engagement->update([
+                'name' => $request->name,
                 'client_id' => $request->client_id,
                 'workflow_id' => $request->workflow_id,
                 'title' => $request->title,
@@ -258,6 +260,7 @@ class EngagementsController extends Controller
 
         if($request->done == true) {
             $engagement->update([
+                'name' => $request->name,
                 'client_id' => $request->client_id,
                 'workflow_id' => $request->workflow_id,
                 'title' => $request->title,

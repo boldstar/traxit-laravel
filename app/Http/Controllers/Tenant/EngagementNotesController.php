@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\ENote;
+use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -35,9 +36,12 @@ class EngagementNotesController extends Controller
             'note' => 'required|string'
         ]);
 
+        $user = User::where('id', auth()->user()->id)->value('name');
+
         $note = ENote::create([
             'engagement_id' => $request->engagement_id,
-            'note' => $request->note
+            'note' => $request->note,
+            'username' => $user
         ]);
 
         $notes = ENote::where('engagement_id', $request->engagement_id)->get();
