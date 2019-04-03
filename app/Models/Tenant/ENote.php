@@ -11,7 +11,8 @@ class ENote extends Model
     
     protected $fillable = [
         'engagement_id',
-        'note'
+        'note',
+        'username'
     ];
 
     public function engagement()

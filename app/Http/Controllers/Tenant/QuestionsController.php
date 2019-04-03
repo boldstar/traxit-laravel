@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Models\Tenant\Question;
 use App\Models\Tenant\Engagement;
 use App\Models\Tenant\Client;
+use App\Models\Tenant\User;
 use App\Mail\StartConversation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
@@ -30,6 +31,8 @@ class QuestionsController extends Controller
         ]);
 
         $question = Question::create($data);
+        $question->username = User::where('id', auth()->user()->id)->value('name');
+        $question->save();
         
         if($request->email === true) {
             $request->validate([
@@ -172,6 +175,28 @@ class QuestionsController extends Controller
 
 
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function editanswer(Request $request, Question $question)
+    {
+
+            $data = $request->validate([
+                'answer' => 'required|string',
+                'answered' => 'required|boolean',
+            ]);
+    
+            $question->update($data);
+            
+            return response($question, 201);
+
+    }
+    
     /**
      * Remove the specified resource from storage.
      *
