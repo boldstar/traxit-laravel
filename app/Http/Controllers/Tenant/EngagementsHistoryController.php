@@ -53,4 +53,26 @@ class EngagementsHistoryController extends Controller
         }
         return response()->json(['created' => $createdArray, 'completed' => $completedArray]); 
     }
+
+    /**
+     * update received date of engagements history
+     */
+    public function updateReceivedDate(Request $request) 
+    {
+        $data = $request->validate([
+            'id' => 'required|integer',
+            'date' => 'required|string'
+        ]);
+
+        $history = EngagementActions::where('engagement_id', $request->id)->get();
+        $action = $history->where('action', 'created')->first();
+        try {
+            $action->created_at = \Carbon\Carbon::parse($request->date)->timestamp;
+            $action->save();
+        } catch(\Exception $e) {
+            return response(['message' => $e->getMessage()], 422);
+        }
+
+        return response()->json(['message' => 'The history has been updated', 'history' => $action]);
+    }
 }

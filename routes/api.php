@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/engagementquestions/{id}', 'Tenant\EngagementsController@questionindex');
     Route::get('/engagementReturnTypes', 'Tenant\EngagementsController@returnType_index');
     Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
+    Route::patch('/updatereceiveddate', 'Tenant\EngagementsHistoryController@updateReceivedDate');
     Route::post('/archive', 'Tenant\EngagementsController@archiveEngagement');
 
     Route::get('/e-notes/{id}', 'Tenant\EngagementNotesController@index');
@@ -90,6 +91,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/questions/{id}', 'Tenant\QuestionsController@show');
     Route::patch('/questions/{question}', 'Tenant\QuestionsController@update');
     Route::patch('/questionsanswer/{question}', 'Tenant\QuestionsController@updateanswer');
+    Route::patch('/editquestionsanswer/{question}', 'Tenant\QuestionsController@editanswer');
     Route::delete('/questions/{question}', 'Tenant\QuestionsController@destroy');
 
     Route::get('/dependents/{id}', 'Tenant\DependentsController@show');
