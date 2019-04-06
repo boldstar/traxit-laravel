@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Role;
 use App\Models\Tenant\Account;
+use App\Models\Tenant\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Hyn\Tenancy\Environment;
@@ -103,11 +104,13 @@ class AuthController extends Controller
 
                     $user = User::where('email', $request->username)->with('roles.rules')->get();
 
+                    $role = $user->pluck('roles');
+
                     $rules = $user->pluck('roles')->collapse()->pluck('rules');
 
                     $rules->put('access_token', $data['access_token']);
 
-                    return response()->json(['rules' => $rules, 'fqdn' => $hostname->fqdn]);
+                    return response()->json(['role' => $role, 'rules' => $rules, 'fqdn' => $hostname->fqdn]);
                 } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                     if ($e->getCode() === 400) {
                         return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
@@ -148,5 +151,19 @@ class AuthController extends Controller
         });
 
         return response()->json('Logged out successfully', 200);
+    }
+
+    /**
+     * delete a user
+     */
+    public function destroy(User $user) 
+    {
+        if($user->tasks()->get()->count() > 0 ) {
+            return response($user->name . ' Currently Has Tasks, Please Remove Tasks Before Deleting The User', 403);
+        }
+
+        $user->delete();
+
+        return response('User Has Been Deleted');
     }
 }
