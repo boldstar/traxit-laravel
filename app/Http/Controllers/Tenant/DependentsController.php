@@ -21,9 +21,9 @@ class DependentsController extends Controller
         $data = $request->validate([
             'client_id' => 'required|integer',
             'first_name' => 'required|string',
-            'middle_name' => 'required|string',
-            'last_name' => 'required|string',
-            'dob' => 'required|string',
+            'middle_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'dob' => 'nullable|string',
         ]);
 
         $dependent = Dependent::create($data);
@@ -56,9 +56,9 @@ class DependentsController extends Controller
         $data = $request->validate([
             'client_id' => 'required|integer',
             'first_name' => 'required|string',
-            'middle_name' => 'required|string',
-            'last_name' => 'required|string',
-            'dob' => 'required|string',
+            'middle_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'dob' => 'nullable|string',
         ]);
 
         $dependent = Dependent::create($data);

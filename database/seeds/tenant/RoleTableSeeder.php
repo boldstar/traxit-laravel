@@ -28,5 +28,10 @@ class RoleTableSeeder extends Seeder
         $role_admin->name = 'Admin';
         $role_admin->description = 'A Admin';
         $role_admin->save();
+
+        $role_outsource = new Role();
+        $role_outsource->name = 'Outsource';
+        $role_outsource->description = 'A outsourced user';
+        $role_outsource->save();
     }
 }    

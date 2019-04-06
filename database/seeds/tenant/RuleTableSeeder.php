@@ -56,5 +56,24 @@ class RuleTableSeeder extends Seeder
         $rule->subject = 'all';
         $rule->save();
 
+
+        $rule = new Rule();
+        $rule->role_id = 4;
+        $rule->action = 'create';
+        $rule->subject = 'all';
+        $rule->save();
+
+        $rule = new Rule();
+        $rule->role_id = 4;
+        $rule->action = 'read';
+        $rule->subject = 'all';
+        $rule->save();
+
+        $rule = new Rule();
+        $rule->role_id = 4;
+        $rule->action = 'update';
+        $rule->subject = 'all';
+        $rule->save();
+
     }
 }
