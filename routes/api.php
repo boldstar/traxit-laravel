@@ -13,7 +13,6 @@ use App\Exports\ClientsExport;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
 Route::group([    
