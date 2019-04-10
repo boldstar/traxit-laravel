@@ -29,11 +29,11 @@ class QuestionsController extends Controller
             'email_sent' => 'required|boolean',
             'answered' => 'required|boolean',
         ]);
-
+        //save created question
         $question = Question::create($data);
         $question->username = User::where('id', auth()->user()->id)->value('name');
         $question->save();
-        
+        //if email is set to true, send email to client
         if($request->email === true) {
             $request->validate([
                 'send_to' => 'required|string',
@@ -42,18 +42,26 @@ class QuestionsController extends Controller
             $this->send($question, $request->send_to);
             $question->email_sent = true;
             $question->save();
-            
-            return response([ 'question' => $question, 'message' => 'Email Sent To Client'], 201);
+            //if email sent is successful, return question to client with success message
+            return response([ 
+                'question' => $question, 
+                'message' => 'Email Sent To Client'], 
+                201
+            );
         }
-
-        return response([ 'question' => $question, 'message' => 'A new question has been added!'], 201);
+        //if no email is sent, return new question added only
+        return response([ 
+            'question' => $question, 
+            'message' => 'A new question has been added!'], 
+            201
+        );
     }
 
     public function send($question, $send_to)
     {
         $engagement = Engagement::where('id', $question->engagement_id)->first();
         $client = CLient::where('id', $engagement->client_id)->first();
-
+        //determine which person to send to or both
         try {
             if($send_to == 'both') {
                 Mail::to($client->email)->send(new StartConversation([
@@ -83,6 +91,7 @@ class QuestionsController extends Controller
                 ]));
             }
         } catch(\Exception $e) {
+            //if fail, question sent = false return error to user
             $question->email_sent = false;
             $question->save();
             return response()->json(['message' => $e->getMessage()], 422);
@@ -96,11 +105,11 @@ class QuestionsController extends Controller
         $data = $request->validate([
             'id' => 'required|integer'
         ]);
-
+        //grab needed data to send email to client
         $question = Question::where('id', $request->id)->first();
         $engagement = Engagement::where('id', $question->engagement_id)->first();
         $client = CLient::where('id', $engagement->client_id)->first();
-
+        //try to send mail, if failed catch error and send back message
         try {
             Mail::to($client->email)->send(new StartConversation([
                 'question' => $question, 
@@ -112,12 +121,12 @@ class QuestionsController extends Controller
         } catch(\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
-
-
         $question->email_sent = true;
         $question->save();
-
-        return response()->json([ 'question' => $question, 'message' => 'Email Was Sent']);
+        return response()->json([ 
+            'question' => $question, 
+            'message' => 'Email Was Sent'
+        ]);
     }
 
     /**
@@ -163,17 +172,14 @@ class QuestionsController extends Controller
      */
     public function updateanswer(Request $request, Question $question)
     {
+        $data = $request->validate([
+            'answer' => 'required|string',
+            'answered' => 'required|boolean',
+        ]);
 
-            $data = $request->validate([
-                'answer' => 'required|string',
-                'answered' => 'required|boolean',
-            ]);
-    
-            $question->update($data);
-            
-            return response($question, 201);
-
-
+        $question->update($data);
+        
+        return response($question, 201);
     }
 
     /**
@@ -185,16 +191,14 @@ class QuestionsController extends Controller
      */
     public function editanswer(Request $request, Question $question)
     {
+        $data = $request->validate([
+            'answer' => 'required|string',
+            'answered' => 'required|boolean',
+        ]);
 
-            $data = $request->validate([
-                'answer' => 'required|string',
-                'answered' => 'required|boolean',
-            ]);
-    
-            $question->update($data);
-            
-            return response($question, 201);
-
+        $question->update($data);
+        
+        return response($question, 201);
     }
     
     /**

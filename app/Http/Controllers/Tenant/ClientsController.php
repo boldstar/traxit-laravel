@@ -88,13 +88,11 @@ class ClientsController extends Controller
 
         if (empty($request->file('file')->getRealPath())) {
             return back()->with('success','No file selected');
+        } else {
+            //import client using ClientsImport from imports folder
+            Excel::import(new ClientsImport, $request->file('file'));
         }
-        else {
-        Excel::import(new ClientsImport, $request->file('file'));
-   
         return response('Import Succesful, Please Refresh Page');
-        }
-
     }
 
     /**

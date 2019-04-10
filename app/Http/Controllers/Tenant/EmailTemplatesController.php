@@ -25,6 +25,8 @@ class EmailTemplatesController extends Controller
     public function index()
     {
         $templates = EmailTemplate::all();
+        //try to parse data into readable text for user
+        //HtmlDomParser is used to grab html of email templates stored in database
         try {
             foreach($templates as $template) {
                 $document = HtmlDomParser::str_get_html($template->html_template);
@@ -140,17 +142,6 @@ class EmailTemplatesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
