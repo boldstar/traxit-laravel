@@ -44,7 +44,7 @@ class PasswordResetRequest extends Notification implements ShouldQueue
         // $url = url('http://localhost:8080/reset-password/'.$this->token);
         $url = url('https://'. $hostname->subdomain.'.traxit.io/reset-password/'.$this->token);
         return (new MailMessage)
-            ->line('You are receiving this email because we received a password reset request for your account. Please click the below button.')
+            ->line('You are receiving this email because we received a password reset request for your account. Please click the button below.')
             ->action('Reset Password', url($url))
             ->line('If you did not request a password reset, please contact your administrator for immidiate action.');
     }
