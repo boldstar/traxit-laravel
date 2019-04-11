@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Exports\EngagementsExport;
 use App\Exports\ClientsExport;
+use Maatwebsite\Excel\Facades\Excel;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -111,7 +112,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/message', 'Tenant\WorkflowsController@message');
     Route::put('/workflowstatuses', 'Tenant\WorkflowsController@updateWorkflowStatuses');
     Route::patch('/workflowstatuses/{workflow}', 'Tenant\WorkflowsController@workflowStatuses');
-    Route::delete('/workflowstatuses/{status}', 'Tenant\WorkflowsController@destroy');
+    Route::delete('/workflowstatuses/{status}', 'Tenant\WorkflowsController@destroyStatus');
     Route::delete('/workflow/{workflow}', 'Tenant\WorkflowsController@destroyWorkflow');
 
     Route::get('/templates', 'Tenant\EmailTemplatesController@index');

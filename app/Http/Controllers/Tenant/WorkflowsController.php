@@ -21,6 +21,16 @@ class WorkflowsController extends Controller
     }
 
     /**
+     * valdate store request
+     */
+    public function validateWorkflow($request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string',
+        ]); 
+        return $data;
+    }
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -30,39 +40,24 @@ class WorkflowsController extends Controller
     {
 
         // validate form data
-        $data = $request->validate([
-            'name' => 'required|string',
-        ]);
-
+        $this->validateWorkflow($request);
+        $copy = $request->copy_workflow;
 
         // create new workflow
-        if($request->copy_workflow === false) {
-            $workflow = Workflow::create([
-                'workflow' => $request->name,
-            ]);
-
+        if(!$copy) {
+            $workflow = Workflow::create(['workflow' => $request->name]);
             return response($workflow, 201);
-        }
-
-        if($request->copy_workflow === true) {
-
+        }else if($copy) {
             $workflowToCopy = Workflow::where('id', $request->workflow_id)->with('statuses')->get();
-
             $statusesToCopy = $workflowToCopy->pluck('statuses');
-
             $statuses = $statusesToCopy[0];
-
-            $newWorkflow = Workflow::create([
-                'workflow' => $request->name,
-            ]);
-
+            $newWorkflow = Workflow::create(['workflow' => $request->name]);
             foreach($statuses as $status){
                 $newWorkflow->statuses()->create([
                     'status' => $status['status'],
                     'order' => $status['order'],
                 ]);
             };
-
             return response($newWorkflow->load('statuses'), 201);
         }
 
@@ -76,12 +71,10 @@ class WorkflowsController extends Controller
      */
     public function show($id)
     {
-        $workflow = Workflow::with('statuses')->find($id);
-
-        return response($workflow);
+       return Workflow::with('statuses')->find($id);
     }
 
-    /**
+   /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -97,12 +90,9 @@ class WorkflowsController extends Controller
             'statuses' => 'nullable|array',
             'newStatuses' => 'nullable|array',
         ]);
-
         $statuses = $validated['statuses'];
         $newStatuses = $validated['newStatuses'];
-
         $workflow->update($validated);
-
         foreach($newStatuses as $newStatus){
             $workflow->statuses()->create([
                 'status' => $newStatus['value'],
@@ -113,7 +103,6 @@ class WorkflowsController extends Controller
         
         $engagements = Engagement::where('workflow_id', $workflow->id)->get();
         $engagementsExist = $engagements->containsStrict('workflow_id', $workflow->id);
-
         foreach($statuses as $status){
             $workflow->statuses()->where('id', $status['id'])->update([
                 'notify_client' => $status['notify_client']
@@ -143,7 +132,7 @@ class WorkflowsController extends Controller
             };
             return response()->json([
                 'workflow' => $workflow->load('statuses'),
-                'message' => 'Statuses Applied To Existing Engagements Were Not Updated, Please Update Enagagements First',
+                'message' => 'Updates Applied, However Statuses Colored In Red Are Currently In Use. If You Were Wanting To Edit Any Of The In Use Statuses Please Reassign Engagements First',
                 'statuses' => $matchedIds
             ], 403);
         };
@@ -154,9 +143,7 @@ class WorkflowsController extends Controller
                 'notify_client' => $status['notify_client']
             ]);
         };
-
         return response()->json([ 'workflow' => $workflow->load('statuses'), 'message' => 'The Workflow Has Been Updated!'], 200);
-
     }
 
   /**
@@ -174,16 +161,15 @@ class WorkflowsController extends Controller
         ]);
 
         $workflow = Workflow::where('id', $validated['id'])->firstOrFail();
-
         $statuses = $validated['statuses'];
-
         $workflow->statuses->each->delete();
-       
+        //after deleting statuses, recreate with new order.
         foreach($statuses as $status){
             $workflow->statuses()->create([
                 'status' => $status['status'],
                 'notify_client' => $status['notify_client'],
-                'order' => $status['order']
+                'order' => $status['order'],
+                'message' => $status['message']
             ]);
         };
 
@@ -212,31 +198,17 @@ class WorkflowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Status $status)
+    public function destroyStatus(Status $status)
     {
         $statusToDelete = Status::where('id', $status->id)->first();
-
-        $allEngagements = Engagement::all();
-
-        $engagementsExist = $allEngagements->containsStrict('workflow_id', $statusToDelete->workflow_id);
-
-        if($engagementsExist === false) {
-            $statusToDelete->delete();
-
-            return response('Status Has Been Deleted', 200);
-        };
-
         $engagements = Engagement::where('workflow_id', $statusToDelete->workflow_id)->get();
-
         $statusInUse = $engagements->containsStrict('status', $statusToDelete->status);
-
-        if($statusInUse === false) {
+        //if status is not in use delete it, else return error message
+        if(!$statusInUse) {
             $statusToDelete->delete();
-        } else {
+        } else if($statusInUse) {
             return response('Status Is Currently In Use, Please Re-assign Engagements Before Deleting', 401);
         };
-
-        return response('Status Has Been Deleted', 200);
     }
 
     /**
@@ -247,28 +219,14 @@ class WorkflowsController extends Controller
      */
     public function destroyWorkflow(Workflow $workflow)
     {
-        $workflowToDelete = Workflow::where('id', $workflow->id)->first();
-
-        $allEngagements = Engagement::all();
-
-        $engagementsExist = $allEngagements->containsStrict('workflow_id', $workflowToDelete->id);
-
-        if($engagementsExist === false) {
-            $workflowToDelete->delete();
-
+        $engagements = Engagement::all();
+        $engagementsExist = $engagements->containsStrict('workflow_id', $workflow->id);
+        //if engagements are not using this workflow delete it, else return error message
+        if(!$engagementsExist) {
+            $workflow->delete();
             return response('Workflow Has Been Deleted', 200);
-        };
-
-        $engagements = Engagement::where('workflow_id', $workflowToDelete->id)->get();
-
-        $workflowInUse = $engagements->containsStrict('workflow_id', $workflowToDelete->id);
-
-        if($workflowInUse === false) {
-            $workflowToDelete->delete();
-        } else {
+        } else if($engagementsExist) {
             return response('Workflow Is Currently In Use, Please Re-assign Engagements Before Deleting', 401);
         };
-
-        return response('Workflow Has Been Deleted', 200);
     }
 }
