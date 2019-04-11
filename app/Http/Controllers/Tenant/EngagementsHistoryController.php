@@ -27,7 +27,10 @@ class EngagementsHistoryController extends Controller
             array_push($completedArray, $c->created_at);
         }
 
-        return response()->json(['created' => $createdArray, 'completed' => $completedArray]); 
+        return response()->json([
+            'created' => $createdArray, 
+            'completed' => $completedArray
+        ]); 
     }
 
     /**
@@ -51,7 +54,10 @@ class EngagementsHistoryController extends Controller
         foreach($completed as $c) {
             array_push($completedArray, $c);
         }
-        return response()->json(['created' => $createdArray, 'completed' => $completedArray]); 
+        return response()->json([
+            'created' => $createdArray, 
+            'completed' => $completedArray
+        ]); 
     }
 
     /**
@@ -73,6 +79,9 @@ class EngagementsHistoryController extends Controller
             return response(['message' => $e->getMessage()], 422);
         }
 
-        return response()->json(['message' => 'The history has been updated', 'history' => $action]);
+        return response()->json([
+            'message' => 'The history has been updated', 
+            'history' => $action
+        ]);
     }
 }

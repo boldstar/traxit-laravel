@@ -30,29 +30,17 @@ class TasksController extends Controller
 
     }
 
-
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * validate task update data
      */
-    public function store(Request $request)
+    public function validateTask($request)
     {
-        //
+        $data = $request->validate([
+            'user_id' => 'required|integer',
+            'status' => 'required|string'
+        ]);
+        return $data;
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
    /**
      * Update the specified resource in storage.
      *
@@ -63,61 +51,52 @@ class TasksController extends Controller
     public function update(Request $request, Task $task)
     {
 
+        $this->validateTask($request);
         $this->authorize('update', $task);
-
+        $engagement = $task->engagements()->first();
         if($request->done === true) {
-
-            $engagement = $task->engagements()->first();
-
-            $engagement->update([ 
-                'assigned_to' => 'Complete',
-                'status' => 'Complete',
-                'done' => true
-            ]);
-
-            $task->engagements()->detach();
-
-            $task->delete();
-
-            return response()->json(['task' => $task, 'message' => 'Task Was Updated'], 200);
+        $engagement->update([ 
+            'assigned_to' => 'Complete',
+            'status' => 'Complete',
+            'done' => true
+        ]);
+        $task->engagements()->detach();
+        $task->delete();
+        return response()->json(['task' => $task, 'message' => 'Task Was Updated'], 200);
         }
 
-        $data = $request->validate([
-            'user_id' => 'required|integer',
-            'status' => 'required|string'
-        ]);
-
-        $task->update([
-            'user_id' => $request->user_id,
-            'title' => $request->status
-        ]);
-
         $assigned_to = User::where('id', $request->user_id)->value('name');
-
-        $status = $request->validate([
-            'status' => 'required|string'
-        ]);
-
-        $engagement = $task->engagements()->first();
-
-        $engagement->update([ 
-            'assigned_to' => $assigned_to,
-            'status' => $status['status'],
-        ]);
+        $task->update(['user_id' => $request->user_id,'title' => $request->status]);
+        $status = $request->validate(['status' => 'required|string']);
+        $engagement->update([ 'assigned_to' => $assigned_to,'status' => $status['status'],]);
 
         $workflow = Workflow::where('id', $engagement->workflow_id)->with('statuses')->get();
-
         $statuses = $workflow->pluck('statuses')->collapse();
-
         $notifyClient = $statuses->contains(function ($val, $key) use ($engagement) {
             return $val->status == $engagement->status && $val->notify_client == true;
         });
 
         $matches = ['workflow_id' => $workflow[0]->id, 'status' => $task->title];
-
         $status = Status::where($matches)->first();
-
-        return response()->json(['task' => $task, 'message' => 'Task Was Updated', 'notify' => $notifyClient, 'status' => $status], 200);
+        return response()->json([
+            'task' => $task, 
+            'message' => 'Task Was Updated', 
+            'notify' => $notifyClient, 
+            'status' => $status], 
+            200
+        );
+    }
+    /**
+     * validate batch update for tasks
+     */
+    public function validateBatchTasks($request)
+    {
+        $data = $request->validate([
+            'tasksToUpdate' => 'required|array',
+            'user_id' => 'required|integer',
+            'status' => 'required|string'
+        ]);
+        return $data;
     }
 
     /**
@@ -125,11 +104,7 @@ class TasksController extends Controller
      */
     public function batchUpdateTasks(Request $request)
     {
-        $data = $request->validate([
-            'tasksToUpdate' => 'required|array',
-            'user_id' => 'required|integer',
-            'status' => 'required|string'
-        ]);
+        $this->validateBatchTasks($request);
 
         Task::whereIn('id', $request->tasksToUpdate)->update([ 
             'user_id' => $request->user_id,
@@ -149,8 +124,27 @@ class TasksController extends Controller
             ]);
         };
 
-        return response()->json(['tasks' => $request->tasksToUpdate, 'message' => 'Tasks Were Succesfully Updated'], 200);
+        return response()->json([
+            'tasks' => $request->tasksToUpdate, 
+            'message' => 'Tasks Were Succesfully Updated'],
+             200
+        );
 
+    }
+
+    /**
+     * check send to for email
+     */
+    public function checkSendTo($send_to, $client) 
+    {
+        if($send_to == 'both') {
+            $email = $client->email;
+        } else if($send_to == 'taxpayer') {
+            $email = $client->email;
+        } else if($send_to == 'spouse') {
+            $email = $client->spouse_email;
+        }
+        return $email;
     }
 
     /**
@@ -163,16 +157,8 @@ class TasksController extends Controller
         $status = $workflow->statuses()->get();
         $message = $status->where('status', $engagement->status)->first();
         $client = Client::where('id', $engagement->client_id)->first();
-        if($request->send_to == 'both') {
-            $email = $client->email;
-        }
-        if($request->send_to == 'taxpayer') {
-            $email = $client->email;
-        }
-        if($request->send_to == 'spouse') {
-            $email = $client->spouse_email;
-        }
-        
+        $email = $this->checkSendTo($request->send_to, $client);
+       
         try {
             Mail::to($email)->send(new StatusUpdate([
                 'engagement' => $engagement, 
@@ -184,18 +170,7 @@ class TasksController extends Controller
     
             return response()->json(['message' => 'The Contact Has Been Notified']);
         } catch(\Exception $e) {
-            $e->getMessage();
+            return response( $e->getMessage(), 422);
         }    
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

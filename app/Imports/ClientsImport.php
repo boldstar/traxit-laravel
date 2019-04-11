@@ -50,9 +50,9 @@ class ClientsImport implements ToModel
     {
         try {
             return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return \Carbon\Carbon::createFromFormat($format, $value);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return $value;
         }
     }

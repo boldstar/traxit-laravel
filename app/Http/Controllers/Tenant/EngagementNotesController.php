@@ -16,11 +16,7 @@ class EngagementNotesController extends Controller
      */
     public function index($id)
     {
-        try{
-            return ENote::where('engagement_id', $id)->get();
-        } catch(\Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
-        }
+        return ENote::where('engagement_id', $id)->get();
     }
 
     /**
@@ -46,7 +42,10 @@ class EngagementNotesController extends Controller
 
         $notes = ENote::where('engagement_id', $request->engagement_id)->get();
 
-        return response()->json(['notes' => $notes, 'message' => 'Engagement note has been added']);
+        return response()->json([
+            'notes' => $notes, 
+            'message' => 'Engagement note has been added'
+        ]);
     }
 
     /**
@@ -58,17 +57,6 @@ class EngagementNotesController extends Controller
     public function show($id)
     {
         return ENote::find($id);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
