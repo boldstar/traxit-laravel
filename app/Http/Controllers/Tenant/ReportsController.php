@@ -21,8 +21,20 @@ class ReportsController extends Controller
 
     public function excelReport(Request $request) 
     {
-
-        return Excel::download(new EngagementsReportExport, 'engagements_report.xlsx');
+        $year = $request->year;
+        $type = $request->type;
+        $action = $request->action;
+        $workflow_id = $request->workflow_id;
+        $status = $request->status;
+        $return_type = $request->return_type;
+        $from = null;
+        $to = null;
+        if($request->fromValue != null) {
+            $from = \Carbon\Carbon::parse($request->fromValue);
+        } else if ($request->toValue != null) {
+            $to = \Carbon\Carbon::parse($request->toValue);
+        }
+        return Excel::download(new EngagementsReportExport($year, $type, $from, $to, $action, $workflow_id, $status, $return_type), 'engagements_report.xlsx');
 
     }
 
