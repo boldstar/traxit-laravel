@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\EngagementActions;
+use Illuminate\Support\Arr;
 
 class EngagementsHistoryController extends Controller
 {
