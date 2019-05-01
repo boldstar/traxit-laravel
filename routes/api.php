@@ -122,6 +122,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/search', 'Tenant\SearchController@search');
     Route::post('/reports', 'Tenant\ReportsController@excelReport');
     Route::post('/importclients', 'Tenant\ClientsController@importExcel');
+    Route::post('/importclientsonsetup', 'Tenant\ClientsController@importExcelOnSetup');
     Route::get('/downloadengagements', function () {
         return Excel::download(new EngagementsExport, 'engagements.xlsx');
     });
