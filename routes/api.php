@@ -130,5 +130,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/downloadclients', function () {
         return Excel::download(new ClientsExport, 'clients.xlsx');
     });
+
+    Route::get('/tours', 'Tenant\TourController@index');
 });
 
