@@ -132,5 +132,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::get('/tours', 'Tenant\TourController@index');
+    Route::post('/complete-setup-tour', 'Tenant\TourController@completeSetup');
 });
 

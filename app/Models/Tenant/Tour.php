@@ -14,4 +14,9 @@ class Tour extends Model
         'default_tour',
         'admin_tour'
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 }

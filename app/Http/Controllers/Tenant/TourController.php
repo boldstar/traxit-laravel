@@ -18,4 +18,16 @@ class TourController extends Controller
         return Tour::all();
     }
 
+    /**
+     * complete the setup tour
+     */
+    public function completeSetup() 
+    {
+        $tour = Tour::first();
+        $tour->setup_tour = true;
+        $tour->save();
+
+        return response($tour);
+    }
+
 }
