@@ -57,6 +57,25 @@ class AccountsController extends Controller
         return response($account, 200);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeOnSetup(Request $request)
+    {
+        $data = $request->validate([
+            'business_name' => 'required|string',
+            'email' => 'nullable|string',
+            'phone_number' => 'nullable|string'
+        ]);
+
+        $account = Account::create($data);
+
+        return response()->json(['message' => 'Account details added']);
+    }
+
 
     /**
      * Update the specified resource in storage.

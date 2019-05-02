@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/logout', 'Tenant\AuthController@logout');
 
     Route::post('/account', 'Tenant\AccountsController@store');
+    Route::post('/accountsetup', 'Tenant\AccountsController@storeOnSetup');
     Route::get('/subscription', 'System\SubscriptionsController@invoices');
     Route::get('/plans', 'System\SubscriptionsController@plans');
     Route::get('/grace', 'System\SubscriptionsController@gracePeriod')->middleware('grace.period');
