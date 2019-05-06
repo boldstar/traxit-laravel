@@ -26,7 +26,7 @@ class WorkflowsController extends Controller
     public function validateWorkflow($request)
     {
         $data = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string'
         ]); 
         return $data;
     }
@@ -60,6 +60,33 @@ class WorkflowsController extends Controller
             };
             return response($newWorkflow->load('statuses'), 201);
         }
+
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeOnSetup(Request $request)
+    {
+
+        // validate form data
+        $data = $request->validate([
+            'name' => 'required|string',
+            'statuses' => 'required|array'
+        ]); 
+
+        // create new workflow
+
+        $workflow = Workflow::create(['workflow' => $request->name]);
+        foreach($request->statuses as $status){
+            $workflow->statuses()->create([
+                'status' => $status['value'],
+                'order' => $status['order'],
+            ]);
+        };
+        return response()->json(['message' => 'Workflow was succesfully created']);
 
     }
 

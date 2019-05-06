@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/logout', 'Tenant\AuthController@logout');
 
     Route::post('/account', 'Tenant\AccountsController@store');
+    Route::post('/accountsetup', 'Tenant\AccountsController@storeOnSetup');
     Route::get('/subscription', 'System\SubscriptionsController@invoices');
     Route::get('/plans', 'System\SubscriptionsController@plans');
     Route::get('/grace', 'System\SubscriptionsController@gracePeriod')->middleware('grace.period');
@@ -110,6 +111,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/workflowstatuses', 'Tenant\WorkflowsController@index');
     Route::get('/workflowstatuses/{id}', 'Tenant\WorkflowsController@show');
     Route::post('/workflowstatuses', 'Tenant\WorkflowsController@store');
+    Route::post('/createworkflowonsetup', 'Tenant\WorkflowsController@storeOnSetup');
     Route::post('/message', 'Tenant\WorkflowsController@message');
     Route::put('/workflowstatuses', 'Tenant\WorkflowsController@updateWorkflowStatuses');
     Route::patch('/workflowstatuses/{workflow}', 'Tenant\WorkflowsController@workflowStatuses');
@@ -122,11 +124,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/search', 'Tenant\SearchController@search');
     Route::post('/reports', 'Tenant\ReportsController@excelReport');
     Route::post('/importclients', 'Tenant\ClientsController@importExcel');
+    Route::post('/importclientsonsetup', 'Tenant\ClientsController@importExcelOnSetup');
     Route::get('/downloadengagements', function () {
         return Excel::download(new EngagementsExport, 'engagements.xlsx');
     });
     Route::get('/downloadclients', function () {
         return Excel::download(new ClientsExport, 'clients.xlsx');
     });
+
+    Route::get('/tours', 'Tenant\TourController@index');
+    Route::post('/complete-setup-tour', 'Tenant\TourController@completeSetup');
 });
 
