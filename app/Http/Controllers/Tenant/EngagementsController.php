@@ -322,7 +322,7 @@ class EngagementsController extends Controller
                 }       
             }
         }
-        return response($engagements, 200);
+        return response()->json(['engagements' => $engagements, 'message' => 'Engagements Updated'], 200);
     }
     /**
      * archive an engagement
