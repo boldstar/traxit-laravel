@@ -168,6 +168,25 @@ class SubscriptionsController extends Controller
     }
 
     /**
+     * Start new subscription from client side
+     */
+    public function start(Request $request)
+    {
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+        $host = Hostname::where('fqdn', $hostname->fqdn)->first();
+
+        try {
+            $host->newSubscription('main', $request->plan)->create($request->stripeToken, [
+                'email' => $request->email,
+            ]);
+    
+            return response()->json(['host' => $host, 'message' => 'Your subscription has been started']);
+        } catch (\Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    /**
      * Resume subscription from front end.
      *
      * @return \Illuminate\Http\Response
@@ -289,6 +308,15 @@ class SubscriptionsController extends Controller
     public function gracePeriod() {
         $bool = 'false';
         return response($bool);
+    }
+
+    /**
+     * this is a dummy call for the grace period middleware
+     */
+    public function trialPeriod() {
+        $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
+        $host = Hostname::where('fqdn', $hostname->fqdn)->first();
+        return $host->trial_ends_at;
     }
 
     /**

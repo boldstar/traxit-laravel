@@ -21,7 +21,7 @@ class Subscribed
         if ($hostname && !$hostname->subscribed('main')) {
             $hostModel = HostnameModel::where('fqdn', $hostname->fqdn)->first();
             // if host is still during trial period don't return subscribe view
-            if($hostModel->onTrial()) {
+            if($hostModel->onGenericTrial()) {
                 return $next($request);
             }
             // This user is not a paying customer...

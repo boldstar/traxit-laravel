@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Imports\ClientsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\Business;
 
 class ClientsController extends Controller
 {
@@ -160,6 +161,12 @@ class ClientsController extends Controller
      */
     public function destroy(Client $client)
     {
+        //added this because I forgot to add to add onDelete cascade to business table migration
+        $businesses = Business::where('client_id', $client->id)->get();
+        foreach($businesses as $business) {
+            $business->delete();
+        }
+
         $client->delete();
 
         return response('Deleted Client', 200);
