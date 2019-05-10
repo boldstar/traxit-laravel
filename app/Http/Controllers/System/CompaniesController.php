@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\System;
 
+use \Stripe\Plan;
+use \Stripe\Stripe;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Role;
 use App\Models\Tenant\Tenant;
@@ -14,6 +16,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Hyn\Tenancy\Models\Website;
 use Hyn\Tenancy\Models\Hostname;
+use App\Models\System\Hostname as HostnameModel;
 use Illuminate\Support\Facades\DB;
 use Hyn\Tenancy\Environment;
 use Illuminate\Support\Facades\Config;
@@ -114,6 +117,42 @@ class CompaniesController extends Controller
         $user->roles()->attach(Role::where('name', 'Admin')->first());
         
         return response()->json(['message' => 'A New Company Has Been Created!'], 200);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function freeTrialRegister(Request $request)
+    {
+        $this->validator($request->all())->validate();
+        
+        $company = Tenant::create($request);
+        
+        event(new Registered($user = $this->create($request->all())));
+
+        $user->roles()->attach(Role::where('name', 'Admin')->first());
+
+        $host = HostnameModel::where('fqdn', $company->hostname->fqdn)->first();
+
+        $host->trial_ends_at = now()->addDays(1);
+        $host->save();
+        
+        return response(200);
+    }
+
+    /**
+     * get subscription plan
+     */
+    public function freeTrialPlan() 
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+        
+        $plans = Plan::all();
+
+        return $plans;
     }
 
        /**

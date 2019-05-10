@@ -1,5 +1,6 @@
 <?php
 
+namespace database\seeds\tenant;
 
 use Illuminate\Database\Seeder;
 use App\Models\Tenant\User;

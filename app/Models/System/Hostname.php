@@ -10,4 +10,7 @@ class Hostname extends Contract
 {
     use Billable;
 
+    protected $fillable = [
+        'trial_ends_at'
+    ];
 }
