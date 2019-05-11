@@ -9,6 +9,8 @@ use App\Models\Tenant\Role;
 use App\Models\Tenant\Tenant;
 use App\Models\Tenant\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewAccount;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -120,7 +122,7 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Handle a registration request for the application.
+     * Handle a registration request for the application from the traxit.io website.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -139,6 +141,13 @@ class CompaniesController extends Controller
 
         $host->trial_ends_at = now()->addDays(1);
         $host->save();
+
+        try {
+            Mail::to($user->email)->queue(new NewAccount($user));
+        } catch(\Exception $e) {
+            // sending 200 so that the registration continues without queing email to new account user
+            return response($e->getMessage(), 401);
+        }
         
         return response(200);
     }
