@@ -331,6 +331,7 @@ class EngagementsController extends Controller
      */
     public function archiveEngagement(Request $request) 
     {
+        Engagement::unsetEventDispatcher();
         $engagement = Engagement::where('id', $request->id)
                     ->with(['client', 'questions'])
                     ->first();
