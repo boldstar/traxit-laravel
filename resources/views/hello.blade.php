@@ -1,4 +1,4 @@
-Hello
+Hello, {{ $company->website->company }}
 
 <p style="font-size: 1.25rem;">
 We are thrilled that you have given our tool the chance! We hope that getting you started using TRAXIT is as smooth as possible and would like to provide you with somethings that you will need to make this happen.
@@ -8,7 +8,7 @@ We are thrilled that you have given our tool the chance! We hope that getting yo
 
 <p style="background: rgb(240,240,240)">Login using the email and password provided when registering. If you forgot simply click the "forgot password" and provide the email that was used to register.</p>
 
-<ol style="font-weight: bold; line-spacing: 1.25;">
+<ol style="font-weight: bold; line-spacing: 1.25; font-size: 1rem;">
     <li>When first logged in to TRAXIT you will be presented a "Start Guide", with the first step being to provide account details. Now you may notice that it is a little redundant to registering however we do this to make sure that we are getting a specific type of user and apologize for this inconveniance. This guide is intened to help you get started. The next steps listed are to work in conjuction with the getting started guide.</li>
     <br>
     <li>Attached to this email you will find an example spread sheet which you can use to properly format a list of contacts/clients you would like to upload. Now this is not required and you do have the option to input manually however uploading is the faster option. If you choose to use this spread sheet make sure that you follow the format provided and prior to uploading remove the row that contains the headers of each column. If you do not do this you will get an error.</li>
@@ -21,6 +21,9 @@ We are thrilled that you have given our tool the chance! We hope that getting yo
     <br>
     <li>At this point you should be able to navigate to your dashboard where it should being showing you data visualization of your firm. The goal of the dashboard is to give you 10,000 ft view of what is happening and as you add engagements this feature will make more sense and potentially become more useful when making decisions.</li>
 </ol>
+
+
+<p style="background: rgb(240,240,240)">At anytime you have the ability to subscribe to TRAXIT. Locate the "Admin" panel and click on "Subscription". Click "Subscribe" to provide your credit card information. Currently the trial period is set to last for 30 days. If for some reason you would like to subscribe after the trial period has ended feel free to contact us at (936) 213-0639. Once subscribe you can easily cancel at anytime. All invoices are available under this same view.</p>
 
 <div style="display: flex; flex-direction: column; text-align-left">
 <h3 style="font-weight: bold; color: #0077ff; margin: 0;">TRAXIT</h3>

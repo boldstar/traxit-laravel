@@ -130,38 +130,38 @@ class CompaniesController extends Controller
     public function freeTrialRegister(Request $request)
     {
         $this->validator($request->all())->validate();
-        
-        $company = Tenant::create($request);
-        
+
+        try {
+            $company = Tenant::create($request);
+        } catch(\Exception $e) {
+            return response($e->getMessage(), 405);
+        }
+        // create user for the new account
         event(new Registered($user = $this->create($request->all())));
-
         $user->roles()->attach(Role::where('name', 'Admin')->first());
-
+        // set trial period for new account without actual subscription
         $host = HostnameModel::where('fqdn', $company->hostname->fqdn)->first();
-
         $host->trial_ends_at = now()->addDays(1);
         $host->save();
 
-        try {
-            Mail::to($user->email)->queue(new NewAccount($user));
-        } catch(\Exception $e) {
-            // sending 200 so that the registration continues without queing email to new account user
-            return response($e->getMessage(), 401);
-        }
+        $this->sendNewAccountEmail($user, $company);
         
         return response(200);
     }
 
     /**
-     * get subscription plan
+     * Send email to new account admin
      */
-    public function freeTrialPlan() 
+    public function sendNewAccountEmail($user, $company)
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
-        
-        $plans = Plan::all();
+        try {
+            Mail::to($user->email)->queue(new NewAccount($company));
+        } catch(\Exception $e) {
+            // sending 200 so that the registration continues without queing email to new account user
+            return response($e->getMessage(), 200);
+        }
 
-        return $plans;
+        return;
     }
 
        /**
@@ -259,7 +259,6 @@ class CompaniesController extends Controller
             'city' => 'required|string',
             'state' => 'required|string',
             'postal_code' => 'required|string',
-            'subscription' => 'required|string'
         ]);
 
         $accountToUpdate->update($data);
