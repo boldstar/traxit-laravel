@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
 Route::group([    
@@ -45,9 +46,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/accountsetup', 'Tenant\AccountsController@storeOnSetup');
     Route::get('/subscription', 'System\SubscriptionsController@invoices');
     Route::get('/plans', 'System\SubscriptionsController@plans');
+    Route::get('/plans-only', 'System\SubscriptionsController@subscriptionPlans');
     Route::get('/grace', 'System\SubscriptionsController@gracePeriod')->middleware('grace.period');
+    Route::get('/trial-date', 'System\SubscriptionsController@trialPeriod');
     Route::get('/stripe-key', 'System\SubscriptionsController@stripeKey');
     Route::post('/update-card', 'System\SubscriptionsController@updateCard');
+    Route::post('/start-subscription', 'System\SubscriptionsController@start');
     Route::post('/upgrade-subscription', 'System\SubscriptionsController@upgrade');
     Route::post('/resume-subscription', 'System\SubscriptionsController@resume');
     Route::post('/cancel-subscription', 'System\SubscriptionsController@cancel');

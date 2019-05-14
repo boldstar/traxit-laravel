@@ -20,6 +20,7 @@ class Tenant
         
         $this->website = $website ?? $sub->website;
         $this->hostname = $hostname ?? $sub->websites->hostnames->first();
+       
     }
     
     public function delete()
@@ -30,6 +31,11 @@ class Tenant
     
     public static function create($request): Tenant
     {
+        // check that host is not duplicated
+        if(Hostname::where('subdomain', $request->fqdn)->exists()) {
+            throw new \Exception ('That tenant already exists');
+        }
+
         // Create New Website
         $website = new Website;
         $website->company = $request->company;
@@ -50,11 +56,6 @@ class Tenant
         Artisan::call('passport:install');
         
         return new Tenant($website, $hostname);
-    }
-    
-    public static function tenantExists($name)
-    {
-        return Hostname::where('fqdn', $name)->exists();
     }
 }
 
