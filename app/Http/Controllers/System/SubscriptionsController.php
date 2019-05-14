@@ -40,6 +40,8 @@ class SubscriptionsController extends Controller
             return response(['message' => 'The Company Has Already Been Subscribed To A Plan']);
         };
 
+        Stripe::setApiKey(config('services.stripe.secret'));
+
         try {
             $host->newSubscription('main', $request->plan)->create($request->stripeToken, [
                 'email' => $request->email,
