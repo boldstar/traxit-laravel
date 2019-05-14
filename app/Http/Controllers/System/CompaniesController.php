@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\System;
 
+use \Stripe\Plan;
+use \Stripe\Stripe;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Role;
 use App\Models\Tenant\Tenant;
 use App\Models\Tenant\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewAccount;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -14,6 +18,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Hyn\Tenancy\Models\Website;
 use Hyn\Tenancy\Models\Hostname;
+use App\Models\System\Hostname as HostnameModel;
 use Illuminate\Support\Facades\DB;
 use Hyn\Tenancy\Environment;
 use Illuminate\Support\Facades\Config;
@@ -116,6 +121,49 @@ class CompaniesController extends Controller
         return response()->json(['message' => 'A New Company Has Been Created!'], 200);
     }
 
+    /**
+     * Handle a registration request for the application from the traxit.io website.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function freeTrialRegister(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        try {
+            $company = Tenant::create($request);
+        } catch(\Exception $e) {
+            return response($e->getMessage(), 405);
+        }
+        // create user for the new account
+        event(new Registered($user = $this->create($request->all())));
+        $user->roles()->attach(Role::where('name', 'Admin')->first());
+        // set trial period for new account without actual subscription for 30 days
+        $host = HostnameModel::where('fqdn', $company->hostname->fqdn)->first();
+        $host->trial_ends_at = now()->addDays(30);
+        $host->save();
+
+        $this->sendNewAccountEmail($user, $company);
+        
+        return response(200);
+    }
+
+    /**
+     * Send email to new account admin
+     */
+    public function sendNewAccountEmail($user, $company)
+    {
+        try {
+            Mail::to($user->email)->queue(new NewAccount($company));
+        } catch(\Exception $e) {
+            // sending 200 so that the registration continues without queing email to new account user
+            return response($e->getMessage(), 200);
+        }
+
+        return;
+    }
+
        /**
      * Get a validator for an incoming registration request.
      *
@@ -130,7 +178,7 @@ class CompaniesController extends Controller
             'company_number' => 'nullable|string',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:10',
             'fqdn' => 'required|unique:system.hostnames'
         ]);
     }
@@ -211,7 +259,6 @@ class CompaniesController extends Controller
             'city' => 'required|string',
             'state' => 'required|string',
             'postal_code' => 'required|string',
-            'subscription' => 'required|string'
         ]);
 
         $accountToUpdate->update($data);

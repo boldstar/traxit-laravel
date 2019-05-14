@@ -13,7 +13,7 @@
         <span class="font-weight-bold h5">In order to continue, you must be subscribed</span>
     </div>
     <div class="card-body">
-        <h4 class="mx-3">Please contact sales at <strong class="text-primary">(111) 222-3333</strong></h4>
-        <p class="p-3">We apologize for this inconveniance and will do everything we can to help resolve this situation</p>
+        <h4 class="mx-3">Please contact sales at <strong class="text-primary">(936) 213-0639</strong></h4>
+        <p class="p-3">We apologize for this inconveniance and will do everything we can to help resolve this situation as quickly as possible.</p>
     </div>
 </div>

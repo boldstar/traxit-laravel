@@ -105,6 +105,8 @@ class EngagementsController extends Controller
         $days = $this->engagementEstimatedDate($request);
         $type = $this->determineType($request->type);
         $engagement = Engagement::create($data);
+        Engagement::unsetEventDispatcher();
+
         if($type) {
             $engagement->name = $clientName;
             $engagement->assigned_to = $userName;
@@ -329,6 +331,7 @@ class EngagementsController extends Controller
      */
     public function archiveEngagement(Request $request) 
     {
+        Engagement::unsetEventDispatcher();
         $engagement = Engagement::where('id', $request->id)
                     ->with(['client', 'questions'])
                     ->first();

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Hyn\Tenancy\Models\Website;
 use App\Models\System\Hostname;
+use App\Models\System\Hostname as HostnameModel;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
