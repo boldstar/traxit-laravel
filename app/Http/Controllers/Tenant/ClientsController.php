@@ -87,13 +87,19 @@ class ClientsController extends Controller
     public function importExcel(Request $request) 
     {
 
-        if (empty($request->file('file')->getRealPath())) {
-            return back()->with('success','No file selected');
-        } else {
-            //import client using ClientsImport from imports folder
-            Excel::import(new ClientsImport, $request->file('file'));
+        try {
+            if (empty($request->file('file')->getRealPath())) {
+                return back()->with('success','No file selected');
+            } else {
+                //import client using ClientsImport from imports folder
+                Excel::import(new ClientsImport, $request->file('file'));
+            }
+        }catch(\Exception $e) {
+            return response()->json(['message' => 'Oops, something went wrong. It appears that there was a formatting issue. Make sure that first row of spreadsheet does not contain a header. Only contact information should be present.']);
         }
-        return response('Import Succesful, Please Refresh Page');
+
+        $clients = Client::all();
+        return response()->json(['message' => 'Upload was succesful', 'clients' => $clients]);
     }
 
     public function importExcelOnSetup(Request $request) 
