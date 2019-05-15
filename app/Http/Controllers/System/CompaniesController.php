@@ -155,10 +155,10 @@ class CompaniesController extends Controller
     public function sendNewAccountEmail($user, $company)
     {
         try {
-            Mail::to($user->email)->queue(new NewAccount($company));
+            Mail::to($user->email)->send(new NewAccount($company));
         } catch(\Exception $e) {
             // sending 200 so that the registration continues without queing email to new account user
-            return response($e->getMessage(), 405);
+            return response($e->getMessage(), 200);
         }
 
         return;
