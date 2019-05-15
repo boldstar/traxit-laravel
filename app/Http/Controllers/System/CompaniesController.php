@@ -144,24 +144,9 @@ class CompaniesController extends Controller
         $host->trial_ends_at = now()->addDays(30);
         $host->save();
 
-        $this->sendNewAccountEmail($user, $company);
+        Mail::to($user->email)->send(new NewAccount($company));
         
         return response(200);
-    }
-
-    /**
-     * Send email to new account admin
-     */
-    public function sendNewAccountEmail($user, $company)
-    {
-        try {
-            Mail::to($user->email)->send(new NewAccount($company));
-        } catch(\Exception $e) {
-            // sending 200 so that the registration continues without queing email to new account user
-            return response($e->getMessage(), 200);
-        }
-
-        return;
     }
 
        /**
