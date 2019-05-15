@@ -39,6 +39,6 @@ class NewAccount extends Mailable
         return $this->subject('Hello, and welcome to TRAXIT')
                     ->cc($this->company->website->email)
                     ->view('hello')
-                    ->attach('../storage/app/public/import_contacts.xlsx');
+                    ->attach('../resources/import_contacts.xlsx');
     }
 }
