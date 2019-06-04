@@ -1,7 +1,5 @@
 <?php
 
-namespace database\seeds\tenant;
-
 use Illuminate\Database\Seeder;
 
 class TenantDatabaseSeeder extends Seeder
@@ -19,5 +17,6 @@ class TenantDatabaseSeeder extends Seeder
         $this->call(UserTableSeeder::class);
         $this->call(EmailTemplateTableSeeder::class);
         $this->call(TourTableSeeder::class);
+        $this->call(WorkflowTableSeeder::class);
     }
 }
