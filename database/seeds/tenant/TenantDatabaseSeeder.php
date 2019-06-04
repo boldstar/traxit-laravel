@@ -1,7 +1,5 @@
 <?php
 
-namespace database\seeds\tenant;
-
 use Illuminate\Database\Seeder;
 
 class TenantDatabaseSeeder extends Seeder
