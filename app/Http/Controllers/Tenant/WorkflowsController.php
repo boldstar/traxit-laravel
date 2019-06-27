@@ -56,6 +56,7 @@ class WorkflowsController extends Controller
                 $newWorkflow->statuses()->create([
                     'status' => $status['status'],
                     'order' => $status['order'],
+                    'state' => $status['state']
                 ]);
             };
             return response($newWorkflow->load('statuses'), 201);
@@ -124,7 +125,8 @@ class WorkflowsController extends Controller
             $workflow->statuses()->create([
                 'status' => $newStatus['value'],
                 'notify_client' => $newStatus['notify_client'],
-                'order' => $newStatus['order']
+                'order' => $newStatus['order'],
+                'state' => $newStatus['state']
             ]);
         };
         
@@ -132,7 +134,8 @@ class WorkflowsController extends Controller
         $engagementsExist = $engagements->containsStrict('workflow_id', $workflow->id);
         foreach($statuses as $status){
             $workflow->statuses()->where('id', $status['id'])->update([
-                'notify_client' => $status['notify_client']
+                'notify_client' => $status['notify_client'],
+                'state' => $status['state']
             ]);
         };
         
@@ -151,7 +154,8 @@ class WorkflowsController extends Controller
                 if(!$matched) {
                     $workflow->statuses()->where('id', $status['id'])->update([
                         'status' =>  $status['status'],
-                        'notify_client' => $status['notify_client']
+                        'notify_client' => $status['notify_client'],
+                        'state' => $status['state']
                     ]);
                 } else if($matched) {
                     array_push($matchedIds, $status['id']);
@@ -167,7 +171,8 @@ class WorkflowsController extends Controller
         foreach($statuses as $status){
             $workflow->statuses()->where('id', $status['id'])->update([
                 'status' =>  $status['status'],
-                'notify_client' => $status['notify_client']
+                'notify_client' => $status['notify_client'],
+                'state' => $status['state']
             ]);
         };
         return response()->json([ 'workflow' => $workflow->load('statuses'), 'message' => 'The Workflow Has Been Updated!'], 200);
@@ -194,6 +199,7 @@ class WorkflowsController extends Controller
         foreach($statuses as $status){
             $workflow->statuses()->create([
                 'status' => $status['status'],
+                'state' => $status['state'],
                 'notify_client' => $status['notify_client'],
                 'order' => $status['order'],
                 'message' => $status['message']

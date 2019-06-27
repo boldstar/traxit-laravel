@@ -12,6 +12,7 @@ class Status extends Model
     protected $fillable = [
         'workflow_id',
         'status',
+        'state',
         'order',
         'notify_client',
         'message',
