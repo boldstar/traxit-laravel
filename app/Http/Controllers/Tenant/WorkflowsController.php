@@ -115,6 +115,7 @@ class WorkflowsController extends Controller
         // validate form data
         $validated = $request->validate([
             'workflow' => 'required|string',
+            'engagement_type' => 'nullable|string',
             'statuses' => 'nullable|array',
             'newStatuses' => 'nullable|array',
         ]);
