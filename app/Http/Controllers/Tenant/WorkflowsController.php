@@ -227,6 +227,17 @@ class WorkflowsController extends Controller
     }
 
     /**
+     * Change workflow activity
+     */
+    public function changeActivity(Request $request, Workflow $workflow)
+    {
+        $workflow->active = !$workflow->active;
+        $workflow->save();
+
+        return response()->json(['workflow' => $workflow->load('statuses'), 'message' => 'Workflow activity has been changed']);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

@@ -119,6 +119,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/message', 'Tenant\WorkflowsController@message');
     Route::put('/workflowstatuses', 'Tenant\WorkflowsController@updateWorkflowStatuses');
     Route::patch('/workflowstatuses/{workflow}', 'Tenant\WorkflowsController@workflowStatuses');
+    Route::patch('/workflow-activity/{workflow}', 'Tenant\WorkflowsController@changeActivity');
     Route::delete('/workflowstatuses/{status}', 'Tenant\WorkflowsController@destroyStatus');
     Route::delete('/workflow/{workflow}', 'Tenant\WorkflowsController@destroyWorkflow');
 
