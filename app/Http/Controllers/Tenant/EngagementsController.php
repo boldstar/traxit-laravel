@@ -343,6 +343,19 @@ class EngagementsController extends Controller
         ]);
     }
 
+    /**
+     * Checkout engagement
+     */
+    public function engagementProgress(Request $request, Engagement $engagement)
+    {
+        $engagement->in_progress = !$engagement->in_progress;
+        $engagement->save();
+
+        $task = $engagement->tasks()->get();
+
+        return response()->json(['message' => 'Engagement Updated', 'task' => $task->load('engagements')]);
+    }
+
 
     /**
      * Remove the specified resource from storage.

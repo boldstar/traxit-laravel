@@ -88,6 +88,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
     Route::patch('/updatereceiveddate', 'Tenant\EngagementsHistoryController@updateReceivedDate');
     Route::post('/archive', 'Tenant\EngagementsController@archiveEngagement');
+    Route::patch('/engagement-progress/{engagement}', 'Tenant\EngagementsController@engagementProgress');
 
     Route::get('/e-notes/{id}', 'Tenant\EngagementNotesController@index');
     Route::get('/show-e-note/{id}', 'Tenant\EngagementNotesController@show');
