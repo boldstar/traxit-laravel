@@ -220,7 +220,9 @@ class EngagementsController extends Controller
             'difficulty' => 'nullable|integer',
             'fee' => 'nullable|string',
             'balance' => 'nullable|string',
-            'done' => 'required|boolean'
+            'done' => 'required|boolean',
+            'in_progress' => 'required|boolean',
+            'paid' => 'required|boolean'
         ]);
         return $data;
     }
@@ -249,6 +251,7 @@ class EngagementsController extends Controller
             $engagement->update($data);
             $engagement->status = 'Complete';
             $engagement->assigned_to = 'Complete';
+            $engagement->in_progress = false;
             $engagement->done = true;
             $engagement->save();
             $task = $engagement->tasks()->first();
@@ -297,6 +300,7 @@ class EngagementsController extends Controller
                 $engagement->update([
                     'assigned_to' => 'Complete',
                     'status' => $request->status,
+                    'in_progress' => false,
                     'done' => true
                 ]);
                 $task = $engagement->tasks()->first();
@@ -305,7 +309,8 @@ class EngagementsController extends Controller
             }   else {
                 $engagement->update([
                     'assigned_to' => $user,
-                    'status' => $request->status, 
+                    'status' => $request->status,
+                    'in_progress' => false 
                 ]);
 
                 if($engagement->done == false) {
@@ -348,12 +353,18 @@ class EngagementsController extends Controller
      */
     public function engagementProgress(Request $request, Engagement $engagement)
     {
+        Engagement::unsetEventDispatcher();
+
         $engagement->in_progress = !$engagement->in_progress;
         $engagement->save();
 
         $task = $engagement->tasks()->get();
 
-        return response()->json(['message' => 'Engagement Updated', 'task' => $task->load('engagements')]);
+        return response()->json([
+            'message' => 'Engagement Updated', 
+            'task' => $task->load(['engagements']), 
+            'engagement' => $engagement->load(['client', 'questions'])
+        ]);
     }
 
 
