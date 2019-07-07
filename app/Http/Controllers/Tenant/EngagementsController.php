@@ -83,7 +83,10 @@ class EngagementsController extends Controller
             'year' => 'required|string',
             'assigned_to' => 'required|integer',
             'status' => 'required|string',
-            'done' => 'required|boolean'
+            'done' => 'required|boolean',
+            'difficulty' => 'nullable|integer',
+            'priority' => 'nullable|integer',
+            'estimated_date' => 'nullable|string'
         ]); 
         return $data;
     }
@@ -99,24 +102,14 @@ class EngagementsController extends Controller
         // validate form data
         $data = $this->validateStoreRequest($request);
         $userName = User::where('id', $request->assigned_to)->value('name');
-        $workflowName = Workflow::where('id', $request->workflow_id)->value('workflow');
         $client = Client::findOrFail($request->client_id);
         $clientName = $this->engagementName($request, $client);
         $days = $this->engagementEstimatedDate($request);
-        $type = $this->determineType($request->type);
+        $estimatedDate = $request->estimated_date ? \Carbon\Carbon::parse($request->estimated_date) : null;
+        $data['estimated_date'] = $estimatedDate;
+        $data['name'] = $clientName;
+        $data['assigned_to'] = $userName;
         $engagement = Engagement::create($data);
-        Engagement::unsetEventDispatcher();
-
-        if($type) {
-            $engagement->name = $clientName;
-            $engagement->assigned_to = $userName;
-            $engagement->description = $workflowName;
-            $engagement->estimated_date = $days;
-        } else if(!$type) {
-            $engagement->assigned_to = $userName;
-            $engagement->estimated_date = null;
-            $engagement->return_type = null;}
-        $engagement->save();
 
         // create task
         $task = Task::create([
@@ -140,33 +133,18 @@ class EngagementsController extends Controller
     public function engagementName($engagement, $client)
     {
         $name = '';
-        if($engagement->type == 'taxreturn' || $engagement->type == 'custom') {
-            if($engagement->category == 'Personal') {
-                $name = $client->fullNameWithSpouse();
-                return $name;
-            } else if ($engagement->category == 'Business') {
-                $name = $engagement->name;
-                return $name;
-            }
-        } else if($engagement->type == 'bookkeeping') {
+
+        if($engagement->category == 'Personal') {
+            $name = $client->fullNameWithSpouse();
+            return $name;
+        } else if ($engagement->category == 'Business') {
             $name = $engagement->name;
             return $name;
         }
-
+        
         return $name;
     }
 
-    /**
-     * determine engagement type
-     */
-    public function determineType($type) 
-    {
-        if($type == 'taxreturn' || $type == 'custom') {
-            return true;
-        } else if($type == 'bookkeeping') {
-            return false;
-        }
-    }
 
     /**
      * determine the estimated days of completiong
