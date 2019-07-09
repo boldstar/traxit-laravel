@@ -10,6 +10,8 @@ use App\Models\Tenant\Question;
 use App\Models\Tenant\ReturnType;
 use App\Models\Tenant\Workflow;
 use App\Models\Tenant\EngagementActions;
+use App\Exports\EngagementsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -103,11 +105,10 @@ class EngagementsController extends Controller
         $data = $this->validateStoreRequest($request);
         $userName = User::where('id', $request->assigned_to)->value('name');
         $client = Client::findOrFail($request->client_id);
-        $clientName = $this->engagementName($request, $client);
-        $days = $this->engagementEstimatedDate($request);
+        $engagementName = $this->engagementName($request, $client);
         $estimatedDate = $request->estimated_date ? \Carbon\Carbon::parse($request->estimated_date) : null;
         $data['estimated_date'] = $estimatedDate;
-        $data['name'] = $clientName;
+        $data['name'] = $engagementName;
         $data['assigned_to'] = $userName;
         $engagement = Engagement::create($data);
 
@@ -143,23 +144,6 @@ class EngagementsController extends Controller
         }
         
         return $name;
-    }
-
-
-    /**
-     * determine the estimated days of completiong
-     */
-    public function engagementEstimatedDate($request) 
-    {
-
-        $request->validate([
-            'difficulty' => 'nullable|integer',
-        ]);
-        $days = (int)7 * $request->difficulty;
-        $date = \Carbon\Carbon::now();
-        $estimated = $date->addDays($days);
-
-        return $estimated;
     }
 
     /**
@@ -200,7 +184,9 @@ class EngagementsController extends Controller
             'balance' => 'nullable|string',
             'done' => 'required|boolean',
             'in_progress' => 'required|boolean',
-            'paid' => 'required|boolean'
+            'paid' => 'required|boolean', 
+            'estimated_date' => 'nullable|string',
+            'priority' => 'nullable|integer'
         ]);
         return $data;
     }
@@ -216,6 +202,8 @@ class EngagementsController extends Controller
     {
         
         $data = $this->validateUpdateRequest($request);
+        $estimatedDate = $request->estimated_date ? \Carbon\Carbon::parse($request->estimated_date) : null;
+        $data['estimated_date'] = $estimatedDate;
 
         if($request->done == false) {
             $engagement->update($data);
@@ -343,6 +331,14 @@ class EngagementsController extends Controller
             'task' => $task->load(['engagements']), 
             'engagement' => $engagement->load(['client', 'questions'])
         ]);
+    }
+
+    /**
+     * download engagements
+     */
+    public function downloadEngagements(Request $request)
+    {
+        return Excel::download(new EngagementsExport($request), 'engagements.xlsx');
     }
 
 

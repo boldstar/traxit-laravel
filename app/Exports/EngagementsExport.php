@@ -10,12 +10,19 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class EngagementsExport implements FromQuery, WithHeadings
 {
+     /**
+     * query by year
+     */
+    public function __construct($ids) {
+        $this->ids = $ids;
+    }
+
     /**
     * @return \Illuminate\Support\Query
     */
     public function query()
     {
-        return Engagement::select('id', 'category', 'name', 'return_type', 'year', 'assigned_to', 'status', 'created_at');
+        return Engagement::query()->whereIn('id', $this->ids)->select('id', 'category', 'name', 'return_type', 'year', 'assigned_to', 'status', 'created_at');
 
     }
 
