@@ -22,7 +22,21 @@ class EngagementsExport implements FromQuery, WithHeadings
     */
     public function query()
     {
-        return Engagement::query()->whereIn('id', $this->ids)->select('id', 'category', 'name', 'return_type', 'year', 'assigned_to', 'status', 'created_at');
+        return Engagement::query()->whereIn('id', $this->ids)
+                                ->select(
+                                    'id', 
+                                    'category', 
+                                    'name', 
+                                    'type', 
+                                    'description', 
+                                    'return_type',
+                                    'title', 
+                                    'year', 
+                                    'assigned_to', 
+                                    'status', 
+                                    'estimated_date', 
+                                    'created_at'
+                                );
 
     }
 
@@ -32,10 +46,14 @@ class EngagementsExport implements FromQuery, WithHeadings
             'Id',
             'Category',
             'Name',
+            'Engagement Type',
+            'Workflow',
             'Return Type',
-            'Year',
+            'Time Period',
+            'Tax Year',
             'Assigned To',
             'Status',
+            'Due Date',
             'Created Date',
         ];
     }
