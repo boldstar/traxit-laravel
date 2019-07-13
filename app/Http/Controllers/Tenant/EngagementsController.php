@@ -10,6 +10,8 @@ use App\Models\Tenant\Question;
 use App\Models\Tenant\ReturnType;
 use App\Models\Tenant\Workflow;
 use App\Models\Tenant\EngagementActions;
+use App\Exports\EngagementsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -83,7 +85,10 @@ class EngagementsController extends Controller
             'year' => 'required|string',
             'assigned_to' => 'required|integer',
             'status' => 'required|string',
-            'done' => 'required|boolean'
+            'done' => 'required|boolean',
+            'difficulty' => 'nullable|integer',
+            'priority' => 'nullable|integer',
+            'estimated_date' => 'nullable|string'
         ]); 
         return $data;
     }
@@ -99,24 +104,13 @@ class EngagementsController extends Controller
         // validate form data
         $data = $this->validateStoreRequest($request);
         $userName = User::where('id', $request->assigned_to)->value('name');
-        $workflowName = Workflow::where('id', $request->workflow_id)->value('workflow');
         $client = Client::findOrFail($request->client_id);
-        $clientName = $this->engagementName($request, $client);
-        $days = $this->engagementEstimatedDate($request);
-        $type = $this->determineType($request->type);
+        $engagementName = $this->engagementName($request, $client);
+        $estimatedDate = $request->estimated_date ? \Carbon\Carbon::parse($request->estimated_date) : null;
+        $data['estimated_date'] = $estimatedDate;
+        $data['name'] = $engagementName;
+        $data['assigned_to'] = $userName;
         $engagement = Engagement::create($data);
-        Engagement::unsetEventDispatcher();
-
-        if($type) {
-            $engagement->name = $clientName;
-            $engagement->assigned_to = $userName;
-            $engagement->description = $workflowName;
-            $engagement->estimated_date = $days;
-        } else if(!$type) {
-            $engagement->assigned_to = $userName;
-            $engagement->estimated_date = null;
-            $engagement->return_type = null;}
-        $engagement->save();
 
         // create task
         $task = Task::create([
@@ -140,48 +134,16 @@ class EngagementsController extends Controller
     public function engagementName($engagement, $client)
     {
         $name = '';
-        if($engagement->type == 'taxreturn' || $engagement->type == 'custom') {
-            if($engagement->category == 'Personal') {
-                $name = $client->fullNameWithSpouse();
-                return $name;
-            } else if ($engagement->category == 'Business') {
-                $name = $engagement->name;
-                return $name;
-            }
-        } else if($engagement->type == 'bookkeeping') {
+
+        if($engagement->category == 'Personal') {
+            $name = $client->fullNameWithSpouse();
+            return $name;
+        } else if ($engagement->category == 'Business') {
             $name = $engagement->name;
             return $name;
         }
-
+        
         return $name;
-    }
-
-    /**
-     * determine engagement type
-     */
-    public function determineType($type) 
-    {
-        if($type == 'taxreturn' || $type == 'custom') {
-            return true;
-        } else if($type == 'bookkeeping') {
-            return false;
-        }
-    }
-
-    /**
-     * determine the estimated days of completiong
-     */
-    public function engagementEstimatedDate($request) 
-    {
-
-        $request->validate([
-            'difficulty' => 'nullable|integer',
-        ]);
-        $days = (int)7 * $request->difficulty;
-        $date = \Carbon\Carbon::now();
-        $estimated = $date->addDays($days);
-
-        return $estimated;
     }
 
     /**
@@ -220,7 +182,11 @@ class EngagementsController extends Controller
             'difficulty' => 'nullable|integer',
             'fee' => 'nullable|string',
             'balance' => 'nullable|string',
-            'done' => 'required|boolean'
+            'done' => 'required|boolean',
+            'in_progress' => 'required|boolean',
+            'paid' => 'required|boolean', 
+            'estimated_date' => 'nullable|string',
+            'priority' => 'nullable|integer'
         ]);
         return $data;
     }
@@ -236,6 +202,8 @@ class EngagementsController extends Controller
     {
         
         $data = $this->validateUpdateRequest($request);
+        $estimatedDate = $request->estimated_date ? \Carbon\Carbon::parse($request->estimated_date) : null;
+        $data['estimated_date'] = $estimatedDate;
 
         if($request->done == false) {
             $engagement->update($data);
@@ -249,6 +217,7 @@ class EngagementsController extends Controller
             $engagement->update($data);
             $engagement->status = 'Complete';
             $engagement->assigned_to = 'Complete';
+            $engagement->in_progress = false;
             $engagement->done = true;
             $engagement->save();
             $task = $engagement->tasks()->first();
@@ -297,6 +266,7 @@ class EngagementsController extends Controller
                 $engagement->update([
                     'assigned_to' => 'Complete',
                     'status' => $request->status,
+                    'in_progress' => false,
                     'done' => true
                 ]);
                 $task = $engagement->tasks()->first();
@@ -305,7 +275,8 @@ class EngagementsController extends Controller
             }   else {
                 $engagement->update([
                     'assigned_to' => $user,
-                    'status' => $request->status, 
+                    'status' => $request->status,
+                    'in_progress' => false 
                 ]);
 
                 if($engagement->done == false) {
@@ -341,6 +312,33 @@ class EngagementsController extends Controller
             'message' =>  'Done', 
             'engagement' => $engagement
         ]);
+    }
+
+    /**
+     * Checkout engagement
+     */
+    public function engagementProgress(Request $request, Engagement $engagement)
+    {
+        Engagement::unsetEventDispatcher();
+
+        $engagement->in_progress = !$engagement->in_progress;
+        $engagement->save();
+
+        $task = $engagement->tasks()->get();
+
+        return response()->json([
+            'message' => 'Engagement Updated', 
+            'task' => $task->load(['engagements']), 
+            'engagement' => $engagement->load(['client', 'questions'])
+        ]);
+    }
+
+    /**
+     * download engagements
+     */
+    public function downloadEngagements(Request $request)
+    {
+        return Excel::download(new EngagementsExport($request), 'engagements.xlsx');
     }
 
 

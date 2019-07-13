@@ -22,10 +22,10 @@ class EngagementsHistoryController extends Controller
         $createdArray = array();
         $completedArray = array();
         foreach($created as $c) {
-            array_push($createdArray, $c->created_at);
+            array_push($createdArray, [ $c->created_at, $c->year]);
         }
         foreach($completed as $c) {
-            array_push($completedArray, $c->created_at);
+            array_push($completedArray, [ $c->created_at, $c->year]);
         }
 
         return response()->json([

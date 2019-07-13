@@ -117,6 +117,10 @@ class CompaniesController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         $user->roles()->attach(Role::where('name', 'Admin')->first());
+        // set trial period for new account without actual subscription for 30 days
+        $host = HostnameModel::where('fqdn', $company->hostname->fqdn)->first();
+        $host->trial_ends_at = now()->addDays(30);
+        $host->save();
         
         return response()->json(['message' => 'A New Company Has Been Created!'], 200);
     }

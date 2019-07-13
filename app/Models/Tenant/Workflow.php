@@ -11,7 +11,9 @@ class Workflow extends Model
 
     protected $fillable = [
         'id',
-        'workflow'
+        'workflow',
+        'engagement_type',
+        'active'
     ];
 
     public function statuses()

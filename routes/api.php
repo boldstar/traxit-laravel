@@ -88,6 +88,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('/engagementsarray', 'Tenant\EngagementsController@updateCheckedEngagements');
     Route::patch('/updatereceiveddate', 'Tenant\EngagementsHistoryController@updateReceivedDate');
     Route::post('/archive', 'Tenant\EngagementsController@archiveEngagement');
+    Route::patch('/engagement-progress/{engagement}', 'Tenant\EngagementsController@engagementProgress');
 
     Route::get('/e-notes/{id}', 'Tenant\EngagementNotesController@index');
     Route::get('/show-e-note/{id}', 'Tenant\EngagementNotesController@show');
@@ -119,6 +120,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/message', 'Tenant\WorkflowsController@message');
     Route::put('/workflowstatuses', 'Tenant\WorkflowsController@updateWorkflowStatuses');
     Route::patch('/workflowstatuses/{workflow}', 'Tenant\WorkflowsController@workflowStatuses');
+    Route::patch('/workflow-activity/{workflow}', 'Tenant\WorkflowsController@changeActivity');
     Route::delete('/workflowstatuses/{status}', 'Tenant\WorkflowsController@destroyStatus');
     Route::delete('/workflow/{workflow}', 'Tenant\WorkflowsController@destroyWorkflow');
 
@@ -129,9 +131,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/reports', 'Tenant\ReportsController@excelReport');
     Route::post('/importclients', 'Tenant\ClientsController@importExcel');
     Route::post('/importclientsonsetup', 'Tenant\ClientsController@importExcelOnSetup');
-    Route::get('/downloadengagements', function () {
-        return Excel::download(new EngagementsExport, 'engagements.xlsx');
-    });
+    Route::post('/downloadengagements', 'Tenant\EngagementsController@downloadEngagements');
     Route::get('/downloadclients', function () {
         return Excel::download(new ClientsExport, 'clients.xlsx');
     });
