@@ -18,7 +18,8 @@ class WorkflowTableSeeder extends Seeder
         $statuses = ['Received', 'Data Entry', 'Review', 'Complete'];
 
         $workflow = new Workflow();
-        $workflow->workflow = 'Personal Returns';
+        $workflow->workflow = 'Individual Returns';
+        $workflow->engagement_type = 'Tax Return';
         $workflow->save();
         foreach($statuses as $status) {
             $workflow->statuses()->create([
@@ -29,6 +30,7 @@ class WorkflowTableSeeder extends Seeder
 
         $workflow = new Workflow();
         $workflow->workflow = 'Business Returns';
+        $workflow->engagement_type = 'Tax Return';
         $workflow->save();
         foreach($statuses as $status) {
             $workflow->statuses()->create([
@@ -39,6 +41,7 @@ class WorkflowTableSeeder extends Seeder
         
         $workflow = new Workflow();
         $workflow->workflow = 'Bookkeeping';
+        $workflow->engagement_type = 'Bookkeeping';
         $workflow->save();
         foreach($statuses as $status) {
             $workflow->statuses()->create([

@@ -58,7 +58,8 @@ class TasksController extends Controller
         $engagement->update([ 
             'assigned_to' => 'Complete',
             'status' => 'Complete',
-            'done' => true
+            'done' => true,
+            'in_progress' => false
         ]);
         $task->engagements()->detach();
         $task->delete();
@@ -68,7 +69,7 @@ class TasksController extends Controller
         $assigned_to = User::where('id', $request->user_id)->value('name');
         $task->update(['user_id' => $request->user_id,'title' => $request->status]);
         $status = $request->validate(['status' => 'required|string']);
-        $engagement->update([ 'assigned_to' => $assigned_to,'status' => $status['status'],]);
+        $engagement->update([ 'assigned_to' => $assigned_to,'status' => $status['status'], 'in_progress' => false]);
 
         $workflow = Workflow::where('id', $engagement->workflow_id)->with('statuses')->get();
         $statuses = $workflow->pluck('statuses')->collapse();
@@ -121,6 +122,7 @@ class TasksController extends Controller
             $engagement->update([ 
                 'assigned_to' => $assigned_to,
                 'status' => $request->status,
+                'in_progress' => false
             ]);
         };
 

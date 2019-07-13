@@ -28,7 +28,10 @@ class Engagement extends Model
         'balance',
         'archive',
         'estimated_date',
-        'done'
+        'done',
+        'priority',
+        'in_progress',
+        'paid'
     ];
 
     public function client() 
