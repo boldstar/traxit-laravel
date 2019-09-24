@@ -35,7 +35,8 @@ class EngagementsExport implements FromQuery, WithHeadings
                                     'assigned_to', 
                                     'status', 
                                     'estimated_date', 
-                                    'created_at'
+                                    'created_at',
+                                    'updated_at'
                                 );
 
     }
@@ -55,6 +56,7 @@ class EngagementsExport implements FromQuery, WithHeadings
             'Status',
             'Due Date',
             'Created Date',
+            'Last Updated'
         ];
     }
 }
