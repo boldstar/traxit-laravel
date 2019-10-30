@@ -14,6 +14,11 @@ use Maatwebsite\Excel\Facades\Excel;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
+Route::post('/files', 'Tenant\ShareFilesController@storeFiles');
+
+
 Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
@@ -138,5 +143,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/tours', 'Tenant\TourController@index');
     Route::post('/complete-setup-tour', 'Tenant\TourController@completeSetup');
+
+    
+    Route::get('/files', 'Tenant\ShareFilesController@getFiles');
+    Route::post('/download-client-file', 'Tenant\ShareFilesController@getClientFile');
+    Route::get('/download-client-files/{id}', 'Tenant\ShareFilesController@getClientFiles');
+    Route::patch('/archive-client-files/{id}', 'Tenant\ShareFilesController@archiveClientFiles');
 });
 
