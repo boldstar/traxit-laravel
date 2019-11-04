@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Tenant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\Filesystem;
 use App\Models\Tenant\Mail;
 use ZipArchive;
+use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
 class ShareFilesController extends Controller
 {
@@ -74,7 +76,7 @@ class ShareFilesController extends Controller
     {
         $record = Mail::where('id', $request['id'])->first();
 
-        $file = Storage::get($record->path . '/' . $request['name']);
+        $file = !$record->archived ? Storage::get($record->path . '/' . $request['name']) : Storage::disk('s3')->get($record->path . '/' . $request['name']);
 
         return response($file);
     }
@@ -93,10 +95,17 @@ class ShareFilesController extends Controller
             // Create ZipArchive Obj
             $zip = new ZipArchive();
             if($zip->open($zipFileName, ZipArchive::CREATE)) {
-                $files = json_decode($record->attachments, true);
-                foreach ($files as $ext) {
-                    $path = $record->path.'/'.$ext;
-                    $zip->addFile('../storage/app/'.$path, $ext);  
+                $files = $record->archived ? Storage::disk('s3')->files($record->path) : json_decode($record->attachments, true);
+                if($record->archived) {
+                    foreach ($files as $path) {
+                        $contents = Storage::disk('s3')->get($path);
+                        $zip->addFromString(basename($path), $contents);  
+                    }
+                } else {
+                    foreach ($files as $ext) {
+                        $path = $record->path.'/'.$ext;
+                        $zip->addFile('../storage/app/'.$path, $ext);  
+                    }
                 }
                 $zip->close();
             }
@@ -109,6 +118,30 @@ class ShareFilesController extends Controller
 
     public function archiveClientFiles($id)
     {
-        
+        $FileSystem = new FileSystem();
+
+        $record = Mail::find($id);
+        $dir = '../storage/app/'.$record->path;
+        $files = json_decode($record->attachments, true);
+        foreach ($files as $ext) {
+            $path = $record->path.'/'.$ext;
+            Storage::disk('s3')->put($path, file_get_contents('../storage/app/'.$path));
+            Storage::delete($path);
+
+            $file = $FileSystem->files($dir);
+            if(empty($file)) {
+                Storage::deleteDirectory($record->path);
+            }
+        }
+
+        $record->archived = true;
+        $record->save();
+
+        return response(Mail::all());
+    }
+
+    public function getArchivedClientFiles($id)
+    {
+        return response('archived');
     }
 }

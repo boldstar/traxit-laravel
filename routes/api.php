@@ -146,6 +146,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     
     Route::get('/files', 'Tenant\ShareFilesController@getFiles');
+    Route::get('/archived-files', 'Tenant\ShareFilesController@getArchivedFiles');
     Route::post('/download-client-file', 'Tenant\ShareFilesController@getClientFile');
     Route::get('/download-client-files/{id}', 'Tenant\ShareFilesController@getClientFiles');
     Route::patch('/archive-client-files/{id}', 'Tenant\ShareFilesController@archiveClientFiles');
