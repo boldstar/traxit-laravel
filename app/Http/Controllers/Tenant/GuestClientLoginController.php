@@ -9,5 +9,8 @@ use App\Models\Tenant\Client;
 
 class GuestClientLoginController extends Controller
 {
-    //
+    public function guestLogin()
+    {
+        
+    }
 }
