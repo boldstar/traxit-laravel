@@ -9,13 +9,16 @@ use Illuminate\Filesystem\Filesystem;
 use App\Models\Tenant\Mail;
 use ZipArchive;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
+use App\Models\System\Hostname;
 
 class ShareFilesController extends Controller
 {
+
     public function storeFiles(Request $request)
     {
         $validated = $request->validate([
-            'files.*' => 'required|file|mimes:jpeg,jpg,png,pdf,doc,docx,xls,xlsm,xlsx|max:2048'
+            'files.*' => 'required|file|mimes:jpeg,jpg,png,pdf,doc,docx,xls,xlsm,xlsx|max:2048',
+            'fqdn' => 'required|string'
         ]);
 
 
@@ -140,8 +143,33 @@ class ShareFilesController extends Controller
         return response(Mail::all());
     }
 
-    public function getArchivedClientFiles($id)
+    public function deleteFiles($id)
     {
-        return response('archived');
+        $FileSystem = new FileSystem();
+        $record = Mail::find($id);
+        $dir = '../storage/app/'.$record->path;
+        $files = json_decode($record->attachments, true);
+
+        foreach($files as $ext) {
+            if($record->archived) {
+                Storage::disk('s3')->delete($record->path.'/'.$ext);
+            } else {
+                Storage::delete($record->path.'/'.$ext);
+                
+                $file = $FileSystem->files($dir);
+                if(empty($file)) {
+                    Storage::deleteDirectory($record->path);
+                }
+            }
+        }
+
+        $record->delete();
+
+        return response('Files Deleted');
+    }
+
+    public function numberOfFiles()
+    {
+        return count(Mail::where('archived', false)->get());
     }
 }

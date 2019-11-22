@@ -18,8 +18,8 @@ class CreateMailsTable extends Migration
             $table->string('name');
             $table->string('to');
             $table->string('from');
-            $table->string('subject')->nullable();
-            $table->string('message')->nullable();
+            $table->text('subject')->nullable();
+            $table->text('message')->nullable();
             $table->string('attachments');
             $table->string('path');
             $table->boolean('archived')->default(false);

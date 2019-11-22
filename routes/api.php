@@ -18,7 +18,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 Route::post('/files', 'Tenant\ShareFilesController@storeFiles');
 
-
 Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
@@ -147,8 +146,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     Route::get('/files', 'Tenant\ShareFilesController@getFiles');
     Route::get('/archived-files', 'Tenant\ShareFilesController@getArchivedFiles');
+    Route::get('/number-of-files', 'Tenant\ShareFilesController@numberOfFiles');
     Route::post('/download-client-file', 'Tenant\ShareFilesController@getClientFile');
     Route::get('/download-client-files/{id}', 'Tenant\ShareFilesController@getClientFiles');
     Route::patch('/archive-client-files/{id}', 'Tenant\ShareFilesController@archiveClientFiles');
+    Route::delete('/delete-files/{id}', 'Tenant\ShareFilesController@deleteFiles');
 });
 
