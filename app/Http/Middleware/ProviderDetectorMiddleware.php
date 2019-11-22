@@ -17,7 +17,6 @@ class ProviderDetectorMiddleware
     {
         $validator = validator()->make($request->all(), [
             'username' => 'required',
-            'provider' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -27,8 +26,8 @@ class ProviderDetectorMiddleware
             ], 422);
         }
 
-        config(['auth.guards.api.provider' => $request->input('provider')]);
-        
+        config(['auth.guards.api.provider' => 'guest']);
+
         return $next($request);
     }
 }

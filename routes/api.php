@@ -21,7 +21,8 @@ Route::post('/files', 'Tenant\ShareFilesController@storeFiles');
 Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
-Route::post('/guest-login', 'Tenant\GuestCLientController@guestLogin')->middleware('guest.api.login');
+Route::post('/guest-login', 'Tenant\GuestCLientLoginController@guestLogin')->middleware('guest.api.login');
+Route::post('/guest-register', 'Tenant\GuestCLientLoginController@guestRegister');
 Route::group([    
     'namespace' => 'Auth',    
     'middleware' => 'api',    
@@ -152,5 +153,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/download-client-files/{id}', 'Tenant\ShareFilesController@getClientFiles');
     Route::patch('/archive-client-files/{id}', 'Tenant\ShareFilesController@archiveClientFiles');
     Route::delete('/delete-files/{id}', 'Tenant\ShareFilesController@deleteFiles');
+
+    Route::post('/guest-invite', 'Tenant\GuestCLientLoginController@guestInvite');
 });
 
