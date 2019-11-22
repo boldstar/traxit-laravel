@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Guest;
 use App\Models\Tenant\Client;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InviteGuest;
 
 class GuestClientLoginController extends Controller
 {
@@ -53,17 +55,32 @@ class GuestClientLoginController extends Controller
             'send_to' => 'required|string'
         ]);
 
-        $client = Client::where('id', $validated->client_id)->first();
+        $client = Client::where('id', $validated['client_id'])->first();
         
-        if($validated->send_to === 'taxpayer') {
-            //send invite to taxpayer
-        } else if ($validated->send_to === 'spouse') {
-            // send invite to spouse
-        } else {
-            // send invite to both
+        try {
+            if($validated['send_to'] == 'both') {
+                Mail::to($client->email)->send(new InviteGuest([ 
+                    'client' => $client,
+                    'send_to' => $validated['send_to']
+                ]));
+            }
+            if($validated['send_to']  == 'taxpayer' && $client->email != null) {
+                Mail::to($client->email)->send(new InviteGuest([
+                    'client' => $client, 
+                    'send_to' => $validated['send_to']
+                ]));
+            }
+            if($validated['send_to'] == 'spouse' && $client->spouse_email != null) {
+                Mail::to($client->spouse_email)->send(new InviteGuest([
+                    'client' => $client,  
+                    'send_to' => $validated['send_to']
+                ]));
+            }
+        } catch(\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
         }
 
-        return response('The Contact has been invited by email')
+        return response('The Contact(s) has been invited by email');
     }
 
     public function guestRegister(Request $request)
