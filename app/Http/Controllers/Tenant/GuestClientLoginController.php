@@ -11,6 +11,6 @@ class GuestClientLoginController extends Controller
 {
     public function guestLogin()
     {
-        
+        return response('guest');
     }
 }
