@@ -82,7 +82,7 @@ return [
 
         'guests' => [
             'driver' => 'eloquent',
-            'model' => App\MOdels\Tenant\Guest::class
+            'model' => App\Models\Tenant\Guest::class
         ]
     ],
 
@@ -110,6 +110,12 @@ return [
 
         'admins' => [
             'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+        'guests' => [
+            'provider' => 'guests',
             'table' => 'password_resets',
             'expire' => 60,
         ],

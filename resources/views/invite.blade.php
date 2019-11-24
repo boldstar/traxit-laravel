@@ -15,11 +15,11 @@ margin: 25px;
  style="
  color:black;
  ">
-You are receiving this email as an invitation to our document sharing portal.<br><br> By clicking the button below you will be asked to register with our service so that we can manage documents securely with eachother.
+You are receiving this email as an invitation to our document sharing portal.<br><br> By clicking the button below you will be asked to register with our service so that we can manage documents securely with eachother.<br><br>Once registered you will be able to sign and download documents shared by us.
 </p>
 </div>
 
-<a href="http://localhost:8081/login"
+<a href="http://localhost:8081/register?client_id={{$client['client']->id}}"
  style="
  background: #0077ff;
  padding: 10px 40px;

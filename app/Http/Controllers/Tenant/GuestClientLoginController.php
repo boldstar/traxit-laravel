@@ -8,10 +8,12 @@ use App\Models\Tenant\Guest;
 use App\Models\Tenant\Client;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InviteGuest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class GuestClientLoginController extends Controller
 {
-    public function guestLogin()
+    public function guestLogin(Request $request)
     {
        //find oauth table where id = 2
        $passport = DB::table('oauth_clients')->where('id', 2)->first();
@@ -30,6 +32,7 @@ class GuestClientLoginController extends Controller
                    'client_secret' => $passport->secret,
                    'username' => $request->username,
                    'password' => $request->password,
+                   'provider' => 'guests'
                    ]
                    ]);
                    //if token is successful grab the token body
@@ -88,16 +91,15 @@ class GuestClientLoginController extends Controller
 
         $validated = $request->validate([
             'client_id' => 'required|integer',
-            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:guests',
             'password' => 'required|string|min:10',
         ]);
 
-        $client =  Client::where('id', $validated->client_id)->findOrFail();
+        $client =  Client::where('id', $validated['client_id'])->first();
 
         $guest = Guest::create([
             'client_id' => $client->id,
-            'name' => $request->name,
+            'name' => $client->fullNameWithSpouse(),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

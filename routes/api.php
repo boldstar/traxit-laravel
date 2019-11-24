@@ -21,7 +21,7 @@ Route::post('/files', 'Tenant\ShareFilesController@storeFiles');
 Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
-Route::post('/guest-login', 'Tenant\GuestCLientLoginController@guestLogin')->middleware('guest.api.login');
+Route::post('/guest-login', 'Tenant\GuestCLientLoginController@guestLogin');
 Route::post('/guest-register', 'Tenant\GuestCLientLoginController@guestRegister');
 Route::group([    
     'namespace' => 'Auth',    

@@ -29,9 +29,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes(function ($router) {
-            $router->forAccessTokens();
-        });
+        Passport::routes(null, ['middleware' => 'provider']);
 
         $this->commands([
             \Laravel\Passport\Console\InstallCommand::class,
