@@ -88,6 +88,10 @@ class GuestClientLoginController extends Controller
 
     public function guestRegister(Request $request)
     {
+        $guest_exists = Guest::where('email', $request->email)->first();
+        if($guest_exists) {
+            $guest_exists->delete();
+        }
 
         $validated = $request->validate([
             'client_id' => 'required|integer',
@@ -105,5 +109,19 @@ class GuestClientLoginController extends Controller
         ]);
 
         return response($guest, 200);
+    }
+
+    public function guestLogout()
+    {
+        auth()->user()->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
+
+        return response()->json('Logged out successfully', 200);
+    }
+
+    public function guestExist($id) 
+    {
+        return Guest::where('client_id', $id)->get();
     }
 }

@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes(null, ['middleware' => 'provider']);
+        Passport::routes(null, ['middleware' => 'guest-provider']);
 
         $this->commands([
             \Laravel\Passport\Console\InstallCommand::class,

@@ -17,12 +17,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 
 Route::post('/files', 'Tenant\ShareFilesController@storeFiles');
-
-Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
 Route::post('/guest-login', 'Tenant\GuestCLientLoginController@guestLogin');
 Route::post('/guest-register', 'Tenant\GuestCLientLoginController@guestRegister');
+Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
+
+
 Route::group([    
     'namespace' => 'Auth',    
     'middleware' => 'api',    
@@ -34,7 +35,7 @@ Route::group([
 });
 
 //auth:api requires access token to access controllers
-Route::group(['middleware' => 'auth:api'], function () {   
+Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/tasks', 'Tenant\TasksController@index');
     Route::get('/role', 'Tenant\AuthController@role');
     Route::get('/userProfile/', 'Tenant\AuthController@show');
@@ -155,5 +156,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/delete-files/{id}', 'Tenant\ShareFilesController@deleteFiles');
 
     Route::post('/guest-invite', 'Tenant\GuestCLientLoginController@guestInvite');
+    Route::get('/invite-status/{id}', 'Tenant\GuestClientLoginController@guestExist');
+
+    Route::group(['middleware' => 'guest-provider'], function (){
+        Route::post('/guest-logout', 'Tenant\GuestCLientLoginController@guestLogout');
+    });
 });
 

@@ -70,6 +70,6 @@ class Kernel extends HttpKernel
         'subscribed' => \App\Http\Middleware\Subscribed::class,
         'grace.period' => \App\Http\Middleware\GracePeriod::class,
         'api.login' => \App\Http\Middleware\ApiLogin::class,
-        'provider' => \App\Http\Middleware\ProviderDetectorMiddleware::class,
+        'guest-provider' => \App\Http\Middleware\ProviderDetectorMiddleware::class,
     ];
 }
