@@ -19,7 +19,7 @@ class CreateDocumentsTable extends Migration
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('document_name');
             $table->text('path');
-            $table->text('message');
+            $table->text('message')->nullable();
             $table->string('account');
             $table->boolean('downloadable')->default(true);
             $table->boolean('payment_required')->default(false);

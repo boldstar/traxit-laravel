@@ -155,6 +155,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('/archive-client-files/{id}', 'Tenant\ShareFilesController@archiveClientFiles');
     Route::delete('/delete-files/{id}', 'Tenant\ShareFilesController@deleteFiles');
 
+    Route::post('/portal-upload', 'Tenant\DocumentPortalController@storeDocument');
+
     Route::post('/guest-invite', 'Tenant\GuestCLientLoginController@guestInvite');
     Route::get('/invite-status/{id}', 'Tenant\GuestClientLoginController@guestExist');
 
