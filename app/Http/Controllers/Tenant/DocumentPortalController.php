@@ -12,16 +12,36 @@ use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
 class DocumentPortalController extends Controller
 {
+    public function getDocuments(Request $request)
+    {
+        return Document::where('client_id', $request->id)->get();
+    }
+
+    public function getDocument(Request $request)
+    {
+        $doc = Document::where('id', $request->id)->first();
+
+        $s3_base_url = Storage::disk('s3')->get('/'.$doc['path'].$doc['document_name']);
+
+        return $s3_base_url;
+    }
+
+
     public function storeDocument(Request $request)
     {
-        $validate = $request->validate([
+
+        $validated = $request->validate([
             'files.*' => 'required|file|mimes:jpeg,jpg,png,pdf,doc,docx,xls,xlsm,xlsx|max:2048',
             'client_id' => 'required|integer',
             'account' => 'required|string',
-            'downloadable' => 'required|boolean',
-            'payment_required' => 'required|boolean',
-            'signature_required' => 'required|boolean'
+            'downloadable' => 'required|string',
+            'payment_required' => 'required|string',
+            'signature_required' => 'required|string'
         ]);
+
+        $payment_required = json_decode($request['payment_required']);
+        $signature_required = json_decode($request['signature_required']);
+        $downloadable = json_decode($request['downloadable']);
 
         $portal = $request['account'].'/portal';
         $folder = $portal . '/';
@@ -35,29 +55,46 @@ class DocumentPortalController extends Controller
                 $name = $file->getClientOriginalName();
                 $extenstion = $name;
                 $contents = file_get_contents($path);
-                if(!Storage::exists($portal)) {
-                    Storage::makeDirectory($portal, 0755, true); //creates directory
+                if(!Storage::disk('s3')->exists($portal)) {
+                    Storage::disk('s3')->makeDirectory($portal, 0755, true); //creates directory
                 }
-                if(!Storage::exists($full_path)) {
-                    Storage::makeDirectory($full_path, 0755, true); //creates directory
+                if(!Storage::disk('s3')->exists($full_path)) {
+                    Storage::disk('s3')->makeDirectory($full_path, 0755, true); //creates directory
                 }
 
 
-                Storage::put($full_path.$extenstion, $contents);
+                Storage::disk('s3')->put($full_path.$extenstion, $contents);
             };
         }
 
         Document::create([
+            'client_id' => $request['client_id'],
             'document_name' => $extenstion,
             'path' => $full_path,
             'message' => $request['message'],
-            'payment_required' => $request['payment_required'],
-            'signature_required' => $request['signature_required'],
-            'downloadable' => $request['downloadable'],
+            'payment_required' => $payment_required,
+            'signature_required' => $signature_required,
+            'downloadable' => $downloadable,
             'uploaded_by' => auth()->user()->name,
             'account' => $request['account']
         ]);
 
-        return response('Upload Succesful', 200);
+        $documents = Document::where('client_id', $request['client_id'])->get();
+
+        return response()->json(['message' => 'Upload Succesful', 'documents' => $documents], 200);
+    }
+
+    public function getPortalFiles(Request $request)
+    {
+        return Document::where('client_id', $request->id)->get();
+    }
+
+    public function getPortalFile($id)
+    {
+        $doc = Document::where('id', $id)->first();
+
+        $s3_base_url = Storage::disk('s3')->get('/'.$doc['path'].$doc['document_name']);
+
+        return $s3_base_url;
     }
 }

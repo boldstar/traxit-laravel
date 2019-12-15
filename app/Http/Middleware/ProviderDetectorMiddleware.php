@@ -15,19 +15,19 @@ class ProviderDetectorMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $validator = validator()->make($request->all(), [
-            'provider' => 'in:guests'
-        ]);
+        // $validator = validator()->make($request->all(), [
+        //     'provider' => 'in:guests'
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => 'invalid_provider',
-                'message' => 'This provider is invalid.'
-            ], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'error' => 'invalid_provider',
+        //         'message' => 'This provider is invalid.'
+        //     ], 422);
+        // }
 
-        if ($request->input('provider')) {
-            config(['auth.guards.api.provider' => $request->input('provider')]);
+        if ($request->provider) {
+            config(['auth.guards.api.provider' => $request->provider]);
         }
 
         return $next($request);

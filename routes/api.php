@@ -156,12 +156,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/delete-files/{id}', 'Tenant\ShareFilesController@deleteFiles');
 
     Route::post('/portal-upload', 'Tenant\DocumentPortalController@storeDocument');
-
+    Route::get('/portal-files/{id}', 'Tenant\DocumentPortalController@getPortalFiles');
+    Route::get('/portal-file/{id}', 'Tenant\DocumentPortalController@getPortalFile');
     Route::post('/guest-invite', 'Tenant\GuestCLientLoginController@guestInvite');
     Route::get('/invite-status/{id}', 'Tenant\GuestClientLoginController@guestExist');
 
     Route::group(['middleware' => 'guest-provider'], function (){
         Route::post('/guest-logout', 'Tenant\GuestCLientLoginController@guestLogout');
+        Route::post('/get-guest-documents', 'Tenant\DocumentPortalController@getDocuments');
+        Route::post('/get-guest-document', 'Tenant\DocumentPortalController@getDocument');
     });
 });
 
