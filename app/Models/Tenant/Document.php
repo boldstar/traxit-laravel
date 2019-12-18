@@ -20,7 +20,8 @@ class Document extends Model
         'downloadable',
         'message',
         'account',
-        'uploaded_by'
+        'uploaded_by',
+        'tax_year'
     ];
 
     public function client()

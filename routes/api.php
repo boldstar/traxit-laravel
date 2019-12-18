@@ -165,6 +165,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/guest-logout', 'Tenant\GuestCLientLoginController@guestLogout');
         Route::post('/get-guest-documents', 'Tenant\DocumentPortalController@getDocuments');
         Route::post('/get-guest-document', 'Tenant\DocumentPortalController@getDocument');
+        Route::post('/get-guest-document-details', 'Tenant\DocumentPortalController@getDocumentDetails');
     });
 });
 

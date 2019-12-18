@@ -18,6 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('document_name');
+            $table->string('tax_year')->nullable();
             $table->text('path');
             $table->text('message')->nullable();
             $table->string('account');

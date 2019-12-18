@@ -26,6 +26,13 @@ class DocumentPortalController extends Controller
         return $s3_base_url;
     }
 
+    public function getDocumentDetails(Request $request)
+    {
+        $doc = Document::where('id', $request->id)->first();
+
+        return $doc;
+    }
+
 
     public function storeDocument(Request $request)
     {
@@ -76,7 +83,8 @@ class DocumentPortalController extends Controller
             'signature_required' => $signature_required,
             'downloadable' => $downloadable,
             'uploaded_by' => auth()->user()->name,
-            'account' => $request['account']
+            'account' => $request['account'],
+            'tax_year' => $request['tax_year']
         ]);
 
         $documents = Document::where('client_id', $request['client_id'])->get();
