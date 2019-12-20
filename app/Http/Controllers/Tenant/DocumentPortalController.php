@@ -105,4 +105,35 @@ class DocumentPortalController extends Controller
 
         return $s3_base_url;
     }
+
+    public function updatePortalFile(Request $request, Document $doc)
+    {   
+        $data = $request->validate([
+            'client_id' => 'required|integer',
+            'document_name' => 'required|string',
+            'path' => 'required|string',
+            'payment_required' => 'required|boolean',
+            'signature_required' => 'required|boolean',
+            'downloadable' => 'required|boolean',
+            'paid' => 'required|boolean',
+            'signed' => 'required|boolean',
+            'message' => 'nullable|string',
+            'account' => 'required|string',
+            'uploaded_by' => 'required|string',
+            'tax_year' => 'required|string',
+        ]);
+
+        $doc->update($data);
+
+        return response()->json(['message' => 'Document Updated', 'document' => $doc]);
+    }
+
+    public function deletePortalFile($id)
+    {
+        $doc = Document::where('id', $id)->first();
+        Storage::disk('s3')->delete($doc->path.'/'.$doc->document_name);
+        $doc->delete();
+
+        return response('Document Deleted', 200);
+    }
 }
