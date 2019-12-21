@@ -136,4 +136,5 @@ class DocumentPortalController extends Controller
 
         return response('Document Deleted', 200);
     }
+
 }

@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Guest;
 use App\Models\Tenant\Client;
+use App\Models\Tenant\Document;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use App\Mail\InviteGuest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +25,10 @@ class GuestClientLoginController extends Controller
        $hostname = $website->hostnames()->first();
        //start a new guzzle client instance
        $http = new \GuzzleHttp\Client;
+        //find client associated with guest
+       $client = Client::where('email', $request->username)
+                        ->orWhere('spouse_email', $request->username)
+                        ->first();
        //try to create access token
        try {
            $response = $http->post('http://' . $hostname->fqdn . '/oauth/token', [
@@ -40,7 +46,7 @@ class GuestClientLoginController extends Controller
                    //decode the token
                    $data = json_decode($token, true);
                    //return data to the user
-                   return response()->json(['access_token' => $data['access_token']]);
+                   return response()->json(['access_token' => $data['access_token'], 'guest' => $client]);
                } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                    if ($e->getCode() === 400) {
                        return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
@@ -123,5 +129,22 @@ class GuestClientLoginController extends Controller
     public function guestExist($id) 
     {
         return Guest::where('client_id', $id)->get();
+    }
+
+    public function deleteGuestUsers($id)
+    {
+        $guests = Guest::where('client_id', $id)->get();
+        $doc = Document::where('client_id', $id)->first();
+        $docs = Document::where('client_id', $id)->get();
+        Storage::disk('s3')->deleteDirectory($doc->path);
+
+        foreach($guests as $guest){
+            $guest->delete();
+        }
+        foreach($docs as $d) {
+            $d->delete();
+        }
+
+        return response('Portal Users Deleted', 200);
     }
 }

@@ -179,6 +179,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/portal-file/{id}', 'Tenant\DocumentPortalController@deletePortalFile');
     Route::post('/guest-invite', 'Tenant\GuestCLientLoginController@guestInvite');
     Route::get('/invite-status/{id}', 'Tenant\GuestClientLoginController@guestExist');
+    Route::delete('/delete-portal-users/{id}', 'Tenant\GuestClientLoginController@deleteGuestUsers');
 
 
     /**
