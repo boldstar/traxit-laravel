@@ -19,7 +19,7 @@ You are receiving this email as an invitation to our document sharing portal.<br
 </p>
 </div>
 
-<a href="http://localhost:8081/register?client_id={{$client['client']->id}}"
+<a href="http://localhost:8081/register?client_id={{$client['client']->id}}&client_email={{$client_email}}"
  style="
  background: #0077ff;
  padding: 10px 40px;

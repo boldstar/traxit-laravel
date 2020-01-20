@@ -38,7 +38,7 @@ class DocumentPortalController extends Controller
     {
 
         $validated = $request->validate([
-            'files.*' => 'required|file|mimes:jpeg,jpg,png,pdf,doc,docx,xls,xlsm,xlsx|max:2048',
+            'files.*' => 'required|file|mimes:pdf|max:2048',
             'client_id' => 'required|integer',
             'account' => 'required|string',
             'downloadable' => 'required|string',

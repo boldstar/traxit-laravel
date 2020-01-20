@@ -38,21 +38,21 @@ class InviteGuest extends Mailable
     public function build()
     {
         $account = Account::first();
-        $send_to = $this->client['send_to'];
         $clients = $this->client['client'];
         $sender = User::where('id', auth()->user()->id)->first();
         $email = $sender->email;
         $name = $sender->name;
+        $client_email = $this->client['send_to'] === 'taxpayer' ? $clients['email'] : $clients['spouse_email'];
 
         return $this->replyTo($email, $name)
                     ->subject('Portal Invite From ' . $account->business_name)
-                    ->cc('test@example.com')
                     ->view('invite')
                     ->with([
                         'phoneNumber' => $account->phone_number,
                         'faxNumber' => $account->fax_number,
                         'accountName' => $account->business_name,
                         'accountEmail' => $account->email,
+                        'client_email' => $client_email
                     ]);
     }
 }

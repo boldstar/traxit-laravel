@@ -68,18 +68,25 @@ class GuestClientLoginController extends Controller
         
         try {
             if($validated['send_to'] == 'both') {
-                Mail::to($client->email)->send(new InviteGuest([ 
-                    'client' => $client,
-                    'send_to' => $validated['send_to']
-                ]));
+                if($client->email) {
+                    Mail::to($client->email)->send(new InviteGuest([ 
+                        'client' => $client,
+                        'send_to' => 'taxpayer'
+                    ]));
+                } if($client->spouse_email) {
+                    Mail::to($client->spouse_email)->send(new InviteGuest([ 
+                        'client' => $client,
+                        'send_to' => 'spouse'
+                    ]));
+                }
             }
-            if($validated['send_to']  == 'taxpayer' && $client->email != null) {
+            if($validated['send_to']  == 'taxpayer' && $client->email) {
                 Mail::to($client->email)->send(new InviteGuest([
                     'client' => $client, 
                     'send_to' => $validated['send_to']
                 ]));
             }
-            if($validated['send_to'] == 'spouse' && $client->spouse_email != null) {
+            if($validated['send_to'] == 'spouse' && $client->spouse_email) {
                 Mail::to($client->spouse_email)->send(new InviteGuest([
                     'client' => $client,  
                     'send_to' => $validated['send_to']
