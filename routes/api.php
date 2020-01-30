@@ -180,7 +180,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/guest-invite', 'Tenant\GuestCLientLoginController@guestInvite');
     Route::get('/invite-status/{id}', 'Tenant\GuestClientLoginController@guestExist');
     Route::get('/portal-users/{id}', 'Tenant\GuestClientLoginController@getPortalUsers');
-    Route::delete('/delete-portal-users/{id}', 'Tenant\GuestClientLoginController@deleteGuestUsers');
+    Route::delete('/delete-portal-users/{id}', 'Tenant\GuestClientLoginController@deletePortal');
     Route::post('/remove-portal-user', 'Tenant\GuestClientLoginController@removeGuestUser');
 
 
