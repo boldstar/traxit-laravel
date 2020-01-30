@@ -138,6 +138,11 @@ class GuestClientLoginController extends Controller
         return Guest::where('client_id', $id)->get();
     }
 
+    public function getPortalUsers($id)
+    {
+        return Guest::where('client_id', $id)->get();
+    }
+
     public function deleteGuestUsers($id)
     {
         $guests = Guest::where('client_id', $id)->get();
@@ -153,5 +158,16 @@ class GuestClientLoginController extends Controller
         }
 
         return response('Portal Users Deleted', 200);
+    }
+
+    public function removeGuestUser(Request $request)
+    {
+        foreach($request->contacts as $id)
+        {
+            $guest = Guest::where('id', $id)->first();
+            $guest->delete();
+        }
+
+        return response('Portal User(s) Removed');
     }
 }

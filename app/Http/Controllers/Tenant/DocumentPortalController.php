@@ -69,8 +69,13 @@ class DocumentPortalController extends Controller
                     Storage::disk('s3')->makeDirectory($full_path, 0755, true); //creates directory
                 }
 
+                $exists = Storage::disk('s3')->exists($full_path.$extenstion);
 
-                Storage::disk('s3')->put($full_path.$extenstion, $contents);
+                if(!$exists) {
+                    Storage::disk('s3')->put($full_path.$extenstion, $contents);
+                } else {
+                    return response('A file with that name already exists. Please use a different file name', 401);
+                }
             };
         }
 
@@ -136,5 +141,21 @@ class DocumentPortalController extends Controller
 
         return response('Document Deleted', 200);
     }
+
+    public function removePortal($id)
+    {
+        $website  = app(\Hyn\Tenancy\Environment::class)->website();
+        $hostname = $website->hostnames()->first();
+        $account = $hostname->subdomain; 
+        Storage::disk('s3')->delete($account.'/portal/'.$id);
+
+        $guests = Guest::where('client_id', $id)->get();
+        foreach($guests as $g) {
+            $g->delete();
+        }
+
+        return response('Portal Deleted');
+    }
+
 
 }
