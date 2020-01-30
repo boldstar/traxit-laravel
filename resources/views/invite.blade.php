@@ -44,6 +44,9 @@ margin: 25px;
         <p
         style="
         margin: 20px;
+        margin-bottom: 30px;
+        font-weight:bold;
+        color:black;
         "
         >Please contact us if you have any issues, also if you did not request this service please ignore</p>
         </div>
