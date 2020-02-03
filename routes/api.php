@@ -80,6 +80,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/businesses', 'Tenant\BusinessesController@index');
     Route::get('/businesses/{id}', 'Tenant\BusinessesController@show');
+    Route::get('/business-engagements/{id}', 'Tenant\BusinessesController@businessEngagements');
     Route::post('/businesses', 'Tenant\BusinessesController@store');
     Route::patch('/businesses/{business}', 'Tenant\BusinessesController@update');
     Route::delete('/businesses/{business}', 'Tenant\BusinessesController@destroy');
