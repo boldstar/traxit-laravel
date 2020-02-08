@@ -59,6 +59,11 @@ class Client extends Model
         return $this->hasMany('App\Models\Tenant\Business');
     }
 
+    public function guest()
+    {
+        return $this->hasOne('App\Models\Tenant\Guest');
+    }
+
     public function fullName() {
 
         return "{$this->last_name}, {$this->first_name}";

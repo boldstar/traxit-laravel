@@ -45,6 +45,11 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+
+        'guests' => [
+            'driver' => 'passport',
+            'provider' => 'guests'
+        ]
     ],
 
     /*
@@ -75,6 +80,10 @@ return [
             'model' => App\Models\System\Admin::class,
         ],
 
+        'guests' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Tenant\Guest::class
+        ]
     ],
 
     /*
@@ -101,6 +110,12 @@ return [
 
         'admins' => [
             'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+        'guests' => [
+            'provider' => 'guests',
             'table' => 'password_resets',
             'expire' => 60,
         ],
