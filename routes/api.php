@@ -14,9 +14,20 @@ use Maatwebsite\Excel\Facades\Excel;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
+
+/**
+ * These routes are to handle things that do not require token
+ */
+Route::post('/files', 'Tenant\ShareFilesController@storeFiles');
 Route::get('/account', 'Tenant\AccountsController@account');
 Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
+Route::post('/guest-login', 'Tenant\GuestCLientLoginController@guestLogin');
+Route::post('/guest-register', 'Tenant\GuestCLientLoginController@guestRegister');
+Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
+
+/**
+ * These are for handling the resets of passwords
+ */
 Route::group([    
     'namespace' => 'Auth',    
     'middleware' => 'api',    
@@ -28,19 +39,15 @@ Route::group([
 });
 
 //auth:api requires access token to access controllers
-Route::group(['middleware' => 'auth:api'], function () {   
-    Route::get('/tasks', 'Tenant\TasksController@index');
+Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/role', 'Tenant\AuthController@role');
     Route::get('/userProfile/', 'Tenant\AuthController@show');
-    Route::patch('/tasks/{task}', 'Tenant\TasksController@update');
     Route::post('/notify-client', 'Tenant\TasksController@notifyClient');
-    Route::patch('/batchUpdateTasks', 'Tenant\TasksController@batchUpdateTasks');
-    Route::post('/engagements', 'Tenant\EngagementsController@store');
-    Route::post('/questions', 'Tenant\QuestionsController@store');
-    Route::post('/questionsEmail', 'Tenant\QuestionsController@sendMail');
-    Route::patch('/engagements/{engagement}', 'Tenant\EngagementsController@update');
-    Route::delete('/engagements/{engagement}', 'Tenant\EngagementsController@destroy');
     Route::post('/logout', 'Tenant\AuthController@logout');
+    
+    Route::get('/tasks', 'Tenant\TasksController@index');
+    Route::patch('/tasks/{task}', 'Tenant\TasksController@update');
+    Route::patch('/batchUpdateTasks', 'Tenant\TasksController@batchUpdateTasks');
 
     Route::post('/account', 'Tenant\AccountsController@store');
     Route::post('/accountsetup', 'Tenant\AccountsController@storeOnSetup');
@@ -73,10 +80,13 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/businesses', 'Tenant\BusinessesController@index');
     Route::get('/businesses/{id}', 'Tenant\BusinessesController@show');
+    Route::get('/business-engagements/{id}', 'Tenant\BusinessesController@businessEngagements');
     Route::post('/businesses', 'Tenant\BusinessesController@store');
     Route::patch('/businesses/{business}', 'Tenant\BusinessesController@update');
     Route::delete('/businesses/{business}', 'Tenant\BusinessesController@destroy');
 
+    Route::patch('/engagements/{engagement}', 'Tenant\EngagementsController@update');
+    Route::delete('/engagements/{engagement}', 'Tenant\EngagementsController@destroy');
     Route::get('/engagements-history', 'Tenant\EngagementsHistoryController@index');
     Route::get('/engagements', 'Tenant\EngagementsController@index');
     Route::get('/engagements/{id}', 'Tenant\EngagementsController@clientindex');
@@ -89,6 +99,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('/updatereceiveddate', 'Tenant\EngagementsHistoryController@updateReceivedDate');
     Route::post('/archive', 'Tenant\EngagementsController@archiveEngagement');
     Route::patch('/engagement-progress/{engagement}', 'Tenant\EngagementsController@engagementProgress');
+    Route::post('/engagements', 'Tenant\EngagementsController@store');
 
     Route::get('/e-notes/{id}', 'Tenant\EngagementNotesController@index');
     Route::get('/show-e-note/{id}', 'Tenant\EngagementNotesController@show');
@@ -101,6 +112,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('/questionsanswer/{question}', 'Tenant\QuestionsController@updateanswer');
     Route::patch('/editquestionsanswer/{question}', 'Tenant\QuestionsController@editanswer');
     Route::delete('/questions/{question}', 'Tenant\QuestionsController@destroy');
+    Route::post('/questions', 'Tenant\QuestionsController@store');
+    Route::post('/questionsEmail', 'Tenant\QuestionsController@sendMail');
 
     Route::get('/dependents/{id}', 'Tenant\DependentsController@show');
     Route::post('/dependents', 'Tenant\DependentsController@store');
@@ -136,7 +149,52 @@ Route::group(['middleware' => 'auth:api'], function () {
         return Excel::download(new ClientsExport, 'clients.xlsx');
     });
 
+    /**
+     * part of on boarding process deciding if user should see tour or not.
+     */
     Route::get('/tours', 'Tenant\TourController@index');
     Route::post('/complete-setup-tour', 'Tenant\TourController@completeSetup');
+    
+
+    /*
+    * This is for sharing files from client to there busines
+    * requests come from inbox on business side
+    */
+    Route::get('/files', 'Tenant\ShareFilesController@getFiles');
+    Route::get('/archived-files', 'Tenant\ShareFilesController@getArchivedFiles');
+    Route::get('/number-of-files', 'Tenant\ShareFilesController@numberOfFiles');
+    Route::post('/download-client-file', 'Tenant\ShareFilesController@getClientFile');
+    Route::get('/download-client-files/{id}', 'Tenant\ShareFilesController@getClientFiles');
+    Route::patch('/archive-client-files/{id}', 'Tenant\ShareFilesController@archiveClientFiles');
+    Route::delete('/delete-files/{id}', 'Tenant\ShareFilesController@deleteFiles');
+
+
+    /**
+     * This is for managing documents from business to the client
+     * Also related to portal on business side
+     */
+    Route::post('/portal-upload', 'Tenant\DocumentPortalController@storeDocument');
+    Route::get('/portal-files/{id}', 'Tenant\DocumentPortalController@getPortalFiles');
+    Route::get('/portal-file/{id}', 'Tenant\DocumentPortalController@getPortalFile');
+    Route::patch('/update-portal-file/{doc}', 'Tenant\DocumentPortalController@updatePortalFile');
+    Route::delete('/portal-file/{id}', 'Tenant\DocumentPortalController@deletePortalFile');
+    Route::post('/guest-invite', 'Tenant\GuestCLientLoginController@guestInvite');
+    Route::get('/invite-status/{id}', 'Tenant\GuestClientLoginController@guestExist');
+    Route::get('/portal-users/{id}', 'Tenant\GuestClientLoginController@getPortalUsers');
+    Route::delete('/delete-portal-users/{id}', 'Tenant\GuestClientLoginController@deletePortal');
+    Route::post('/remove-portal-user', 'Tenant\GuestClientLoginController@removeGuestUser');
+
+
+    /**
+     * This for handling read access to the business' clients documents
+     * Switching provider to guest to verify the client auth token
+     * requests come from guest portal side
+     */
+    Route::group(['middleware' => 'guest-provider'], function (){
+        Route::post('/guest-logout', 'Tenant\GuestCLientLoginController@guestLogout');
+        Route::post('/get-guest-documents', 'Tenant\DocumentPortalController@getDocuments');
+        Route::post('/get-guest-document', 'Tenant\DocumentPortalController@getDocument');
+        Route::post('/get-guest-document-details', 'Tenant\DocumentPortalController@getDocumentDetails');
+    });
 });
 

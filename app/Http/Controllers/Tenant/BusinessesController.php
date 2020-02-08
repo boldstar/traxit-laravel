@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Models\Tenant\Business;
+use App\Models\Tenant\Engagement;
+use App\Models\Tenant\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -56,6 +58,18 @@ class BusinessesController extends Controller
     public function show($id)
     {
         return Business::with('client')->find($id);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function businessEngagements($id)
+    {
+        $business = Business::where('id', $id)->first();
+        return Engagement::where(['client_id' => $business['client_id'], 'category' => 'Business'])->get();
     }
 
     /**

@@ -43,7 +43,8 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
             'tenancy.enforce',
-            'subscribed'
+            'subscribed',
+            'guest-provider'
         ],
 
     ];
@@ -69,6 +70,7 @@ class Kernel extends HttpKernel
         'tenancy.enforce' => \App\Http\Middleware\EnforceTenancy::class,
         'subscribed' => \App\Http\Middleware\Subscribed::class,
         'grace.period' => \App\Http\Middleware\GracePeriod::class,
-        'api.login' => \App\Http\Middleware\ApiLogin::class
+        'api.login' => \App\Http\Middleware\ApiLogin::class,
+        'guest-provider' => \App\Http\Middleware\ProviderDetectorMiddleware::class,
     ];
 }
