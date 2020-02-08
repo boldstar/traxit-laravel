@@ -26,7 +26,7 @@ margin: 25px;
         </p>
         </div>
         <div>
-        <a href="http://localhost:8081/register?client_id={{$client['client']->id}}&client_email={{$client_email}}"
+        <a href="https://fileshare.traxit.io/register?client_id={{$client['client']->id}}&client_email={{$client_email}}"
         style="
         background: #0077ff;
         padding: 10px 40px;
