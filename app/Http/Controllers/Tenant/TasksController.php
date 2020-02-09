@@ -23,11 +23,17 @@ class TasksController extends Controller
     public function index()
     {
 
-        return Task::where('user_id', auth()->user()->id)
+        $tasks = Task::where('user_id', auth()->user()->id)
             ->with(['engagements', 'engagements.client'])
             ->has('engagements')
             ->get();
 
+        foreach($tasks as $task) {
+            $status = Status::where(['workflow_id' => $task->engagements[0]->workflow_id, 'status' => $task->title])->first();
+            $task['state'] = $status['state'];
+        }
+
+        return $tasks;
     }
 
     /**
