@@ -24,6 +24,7 @@ Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
 Route::post('/guest-login', 'Tenant\GuestCLientLoginController@guestLogin');
 Route::post('/guest-register', 'Tenant\GuestCLientLoginController@guestRegister');
 Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
+Route::post('/create-code', 'Tenant\TwoFactorController@createCode');
 
 /**
  * These are for handling the resets of passwords

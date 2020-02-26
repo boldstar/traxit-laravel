@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Create2fasTable extends Migration
+class CreateTwoAuthsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class Create2fasTable extends Migration
      */
     public function up()
     {
-        Schema::create('2fas', function (Blueprint $table) {
+        Schema::create('two_auths', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('email');
+            $table->string('phone_number')->nullable();
+            $table->string('token');
+            $table->datetime('expires_on');
             $table->timestamps();
         });
     }
@@ -26,6 +30,8 @@ class Create2fasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('2fas');
+        Schema::table('two_auths', function (Blueprint $table) {
+            //
+        });
     }
 }
