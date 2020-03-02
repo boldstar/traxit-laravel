@@ -12,13 +12,20 @@ class Send2faToken extends Mailable
     use Queueable, SerializesModels;
 
     /**
+     * The demo object instance.
+     *
+     * @var TwoAuth
+     */
+    public $token;
+
+    /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -28,6 +35,7 @@ class Send2faToken extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->subject('Confirm Email Code')
+                    ->view('token');
     }
 }
