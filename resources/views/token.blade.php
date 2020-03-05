@@ -2,7 +2,8 @@
         text-align:center;
     "
 >
-    <img src="../../storage/app/public/logo.png" alt="logo">
+    <img src="<?php echo $message->embed($image_path); ?>" alt="logo" style="max-width:300px;height:auto;">
+    <hr style="max-width:200px">
     <p style="color:black;font-wight:bold;">Please enter the code provided below</p>
     <div style="
         margin:0 auto;

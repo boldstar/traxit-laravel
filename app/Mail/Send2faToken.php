@@ -35,7 +35,10 @@ class Send2faToken extends Mailable
      */
     public function build()
     {
-        return $this->subject('Confirm Email Code')
-                    ->view('token');
+        return $this->subject('Secure FileShare: Confirm Email Code')
+                    ->view('token')
+                    ->with([
+                        'image_path' => '../resources/logo.png',
+                    ]);
     }
 }
