@@ -39,7 +39,7 @@ class TwoFactorController extends Controller
         ]);
 
         $token = TwoAuth::where('email', $request->email)->first();
-        if(count($token) > 0) {
+        if($token && count($token) > 0) {
             $token->delete();
         }
 
@@ -58,7 +58,7 @@ class TwoFactorController extends Controller
     {
         $token = TwoAuth::where('token', $request->code)->first();
 
-        if(count($token) > 0) {
+        if($token && count($token) > 0) {
             $token->delete();
             return response('Token Confirmed.', 200);
         } else {
