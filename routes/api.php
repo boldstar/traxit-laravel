@@ -24,6 +24,9 @@ Route::post('/login', 'Tenant\AuthController@login')->middleware('api.login');
 Route::post('/guest-login', 'Tenant\GuestCLientLoginController@guestLogin');
 Route::post('/guest-register', 'Tenant\GuestCLientLoginController@guestRegister');
 Route::post('/free-trial-register', 'System\CompaniesController@freeTrialRegister');
+Route::post('/create-code', 'Tenant\TwoFactorController@createCode');
+Route::post('/create-new-code', 'Tenant\TwoFactorController@createNewCode');
+Route::post('confirm-code', 'Tenant\TwoFactorController@confirmCode')->middleware('2fa.expired');
 
 /**
  * These are for handling the resets of passwords
