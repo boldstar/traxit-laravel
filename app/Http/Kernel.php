@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'grace.period' => \App\Http\Middleware\GracePeriod::class,
         'api.login' => \App\Http\Middleware\ApiLogin::class,
         'guest-provider' => \App\Http\Middleware\ProviderDetectorMiddleware::class,
+        '2fa.expired' => \App\Http\Middleware\TwoFactorExpired::class
     ];
 }
