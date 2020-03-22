@@ -16,9 +16,9 @@ class TwoFactorController extends Controller
             'email' => 'required|string'
         ]);
 
-        $token = TwoAuth::where('email', $request->email)->first();
+        $token = TwoAuth::where('email', $request->email)->get();
         if($token && count($token) > 0) {
-            $token->delete();
+            $token[0]->delete();
         }
 
         $two_auth = TwoAuth::create([
@@ -38,9 +38,9 @@ class TwoFactorController extends Controller
             'email' => 'required|string'
         ]);
 
-        $token = TwoAuth::where('email', $request->email)->first();
+        $token = TwoAuth::where('email', $request->email)->get();
         if($token && count($token) > 0) {
-            $token->delete();
+            $token[0]->delete();
         }
 
         $two_auth = TwoAuth::create([
@@ -56,10 +56,10 @@ class TwoFactorController extends Controller
 
     public function confirmCode(Request $request)
     {
-        $token = TwoAuth::where('token', $request->code)->first();
+        $token = TwoAuth::where('token', $request->code)->get();
 
         if($token && count($token) > 0) {
-            $token->delete();
+            $token[0]->delete();
             return response('Token Confirmed.', 200);
         } else {
             return response('Please try again or request new code.', 405);
