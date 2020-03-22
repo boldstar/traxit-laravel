@@ -19,7 +19,7 @@ class TwoFactorExpired
     {
         $token = TwoAuth::where('email', $request->email)->first();
 
-        if(count($token) > 0 && Carbon::parse($token->expires_on)->isPast()) {
+        if($token && count($token) > 0 && Carbon::parse($token->expires_on)->isPast()) {
             $token->delete();
             return response('Confirmation time has expired, please try again.',  401);
         };
