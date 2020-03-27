@@ -243,8 +243,9 @@ class EngagementsController extends Controller
     {
         $engagements = $request->validate([
             'engagements' => 'required|array',
-            'assigned_to' => 'required|integer',
-            'status' => 'required|string',
+            'assigned_to' => 'nullable|integer',
+            'status' => 'nullable|string',
+            'due_date' => 'nullable|string'
         ]);
         return $engagements;
     }
@@ -259,9 +260,11 @@ class EngagementsController extends Controller
     public function updateCheckedEngagements(Request $request)
     {
         $this->validateEngagements($request);
-        $user = User::where('id', $request->assigned_to)->value('name');
+        $newlyAssigned = $request->assigned_to != 0 ? User::where('id', $request->assigned_to)->first() : null;
         $engagements = Engagement::whereIn('id', $request->engagements)->get();
         foreach($engagements as $engagement) {
+            $currentlyAssigned = User::where('name', $engagement->assigned_to)->first();
+            $newDueDate = \Carbon\Carbon::parse($request->due_date);
             if($request->status == 'Complete') {
                 $engagement->update([
                     'assigned_to' => 'Complete',
@@ -274,21 +277,22 @@ class EngagementsController extends Controller
                 $task->delete();
             }   else {
                 $engagement->update([
-                    'assigned_to' => $user,
-                    'status' => $request->status,
+                    'assigned_to' => $newlyAssigned ? $newlyAssigned->name : $currentlyAssigned->name,
+                    'status' => $request->status ? $request->status : $engagement->status,
+                    'estimated_date' => $request->due_date ? $newDueDate->toDateTimeString() : $engagement->estimated_date,
                     'in_progress' => false 
                 ]);
 
-                if($engagement->done == false) {
+                if(!$engagement->done) {
                     $engagement->tasks()->update([ 
-                        'user_id' => $request->assigned_to,
-                        'title' => $request->status 
+                        'user_id' => $newlyAssigned ? $newlyAssigned->id : $currentlyAssigned->id,
+                        'title' => $request->status ? $request->status : $engagement->status 
                     ]);
-                } else if($engagement->done == true){
+                } else if($engagement->done){
                     $engagement->update(['done' => false]);
                     $task = Task::create([
-                        'user_id' => $request->assigned_to,
-                        'title' => $request->status
+                        'user_id' => $newlyAssigned ? $newlyAssigned->id : $currentlyAssigned->id,
+                        'title' => $request->status ? $request->status : $engagement->status
                     ]);
                     $engagement->tasks()->detach();
                     $engagement->tasks()->attach($task->id);
