@@ -245,7 +245,8 @@ class EngagementsController extends Controller
             'engagements' => 'required|array',
             'assigned_to' => 'nullable|integer',
             'status' => 'nullable|string',
-            'due_date' => 'nullable|string'
+            'due_date' => 'nullable|string',
+            'priority' => 'nullable|integer'
         ]);
         return $engagements;
     }
@@ -280,6 +281,7 @@ class EngagementsController extends Controller
                     'assigned_to' => $newlyAssigned ? $newlyAssigned->name : $currentlyAssigned->name,
                     'status' => $request->status ? $request->status : $engagement->status,
                     'estimated_date' => $request->due_date ? $newDueDate->toDateTimeString() : $engagement->estimated_date,
+                    'priority' => $request->priority ? $request->priority : $engagement->priority,
                     'in_progress' => false 
                 ]);
 
@@ -299,7 +301,7 @@ class EngagementsController extends Controller
                 }       
             }
         }
-        return response()->json(['engagements' => $engagements, 'message' => 'Engagements Updated'], 200);
+        return response()->json(['engagements' => $engagements, 'message' => 'Engagement(s) Updated'], 200);
     }
     /**
      * archive an engagement
