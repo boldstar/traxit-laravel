@@ -187,6 +187,16 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/delete-portal-users/{id}', 'Tenant\GuestClientLoginController@deletePortal');
     Route::post('/remove-portal-user', 'Tenant\GuestClientLoginController@removeGuestUser');
 
+    /*
+    *This is for performing crud on bookkeeping model
+    */
+    Route::get('/bookkeeping-accounts', 'Tenant\BookkeepingController@getBookkeepingAccounts');
+    Route::post('/bookkeeping-account', 'Tenant\BookkeepingController@store');
+    Route::post('/bookkeeping-account-new-year', 'Tenant\BookkeepingController@storeNewYear');
+    Route::patch('/bookkeeping-account/{bookkeeping}', 'Tenant\BookkeepingController@updateAccount');
+    Route::patch('/update-bookkeeping-account-month/{bookkeeping}', 'Tenant\BookkeepingController@updateMonth');
+    Route::delete('/bookkeeping-account/{id}', 'Tenant\BookkeepingController@delete');
+
 
     /**
      * This for handling read access to the business' clients documents
