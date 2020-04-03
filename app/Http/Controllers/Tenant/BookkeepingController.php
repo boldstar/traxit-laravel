@@ -93,7 +93,7 @@ class BookkeepingController extends Controller
         $startDate ? $data['account_start_date'] = $startDate->toDateTimeString() : null;
         $closeDate = $data['account_close_date'] ?  \Carbon\Carbon::parse($data['account_close_date']) : null;
         $closeDate ? $data['account_close_date'] = $closeDate->toDateTimeString() : null;
-        $closeDate ? $data['account_closed'] = true : $data['account_close'] = false;
+        $closeDate ? $data['account_closed'] = true : $data['account_closed'] = false;
         $bookkeeping->update($data);
 
         return response ($bookkeeping);
