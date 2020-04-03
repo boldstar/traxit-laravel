@@ -26,6 +26,8 @@ class BookkeepingController extends Controller
             'account_start_date' => 'nullable|string',
         ]);
 
+        $data['account_start_date'] ? $data['account_start_date'] = \Carbon\Carbon::parse($data['account_start_date'])  : $data['account_start_date'] = null;
+
         $account = Bookkeeping::create($data);
 
         return response($account);
@@ -42,21 +44,23 @@ class BookkeepingController extends Controller
 
         foreach($accounts as $account)
         {
-            $newAccount = $account->replicate();
-            $newAccount['year'] = json_decode($request->year, true) + 1;
-            $newAccount['jan'] = false;
-            $newAccount['feb'] = false;
-            $newAccount['mar'] = false;
-            $newAccount['apr'] = false;
-            $newAccount['may'] = false;
-            $newAccount['jun'] = false;
-            $newAccount['jul'] = false;
-            $newAccount['aug'] = false;
-            $newAccount['sep'] = false;
-            $newAccount['oct'] = false;
-            $newAccount['nov'] = false;
-            $newAccount['dec'] = false;
-            $newAccount->save();
+            if(!$account->account_closed) {
+                $newAccount = $account->replicate();
+                $newAccount['year'] = json_decode($request->year, true) + 1;
+                $newAccount['jan'] = false;
+                $newAccount['feb'] = false;
+                $newAccount['mar'] = false;
+                $newAccount['apr'] = false;
+                $newAccount['may'] = false;
+                $newAccount['jun'] = false;
+                $newAccount['jul'] = false;
+                $newAccount['aug'] = false;
+                $newAccount['sep'] = false;
+                $newAccount['oct'] = false;
+                $newAccount['nov'] = false;
+                $newAccount['dec'] = false;
+                $newAccount->save();
+            }
         };
 
         $newAccounts = Bookkeeping::all();
@@ -80,9 +84,16 @@ class BookkeepingController extends Controller
     {
         $data = $request->validate([
             'account_name' => 'required|string',
-            'account_type' => 'required|string'
+            'account_type' => 'required|string',
+            'account_start_date' => 'nullable|string',
+            'account_close_date' => 'nullable|string'
         ]);
 
+        $startDate = $data['account_start_date'] ?  \Carbon\Carbon::parse($data['account_start_date']) : null;
+        $startDate ? $data['account_start_date'] = $startDate->toDateTimeString() : null;
+        $closeDate = $data['account_close_date'] ?  \Carbon\Carbon::parse($data['account_close_date']) : null;
+        $closeDate ? $data['account_close_date'] = $closeDate->toDateTimeString() : null;
+        $closeDate ? $data['account_closed'] = true : $data['account_close'] = false;
         $bookkeeping->update($data);
 
         return response ($bookkeeping);
@@ -94,5 +105,38 @@ class BookkeepingController extends Controller
         $bookkeeping->delete();
 
         return response('Bookkeeping Account Deleted');
+    }
+
+    public function deleteYear(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string',
+            'client_id' => 'required|integer',
+            'year' => 'required|string'
+        ]);
+
+        $accounts = Bookkeeping::where(['client_id' => $request->client_id, 'business_name' => $request->name, 'year' => $request->year])->get();
+
+        foreach($accounts  as $account)
+        {
+            $account->delete();
+        }
+
+        $updatedAccountsList = Bookkeeping::all();
+
+        return response($updatedAccountsList);
+    }
+
+    public function deleteAll($name)
+    {
+        $accounts = Bookkeeping::where('business_name', $name)->get();
+        foreach($accounts as $account)
+        {
+            $account->delete();
+        }
+
+        $updatedAccountsList = Bookkeeping::all();
+
+        return response($updatedAccountsList);
     }
 }
