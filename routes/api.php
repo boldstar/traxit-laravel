@@ -193,9 +193,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/bookkeeping-accounts', 'Tenant\BookkeepingController@getBookkeepingAccounts');
     Route::post('/bookkeeping-account', 'Tenant\BookkeepingController@store');
     Route::post('/bookkeeping-account-new-year', 'Tenant\BookkeepingController@storeNewYear');
+    Route::post('/delete-bookkeeping-year', 'Tenant\BookkeepingController@deleteYear');
     Route::patch('/bookkeeping-account/{bookkeeping}', 'Tenant\BookkeepingController@updateAccount');
     Route::patch('/update-bookkeeping-account-month/{bookkeeping}', 'Tenant\BookkeepingController@updateMonth');
     Route::delete('/bookkeeping-account/{id}', 'Tenant\BookkeepingController@delete');
+    Route::delete('/all-bookkeeping-accounts/{name}', 'Tenant\BookkeepingController@deleteAll');
 
 
     /**

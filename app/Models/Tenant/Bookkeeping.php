@@ -17,6 +17,8 @@ class Bookkeeping extends Model
         'account_type',
         'year',
         'account_start_date',
+        'account_close_date',
+        'account_closed',
         'jan',
         'feb',
         'mar',
