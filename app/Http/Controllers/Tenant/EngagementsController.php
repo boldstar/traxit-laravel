@@ -209,7 +209,8 @@ class EngagementsController extends Controller
             $engagement->update($data);
             $user = User::where('name', $request->assigned_to)->value('id');
             $engagement->tasks()->update([ 
-                'user_id' => $user 
+                'user_id' => $user,
+                'title' => $request->status
             ]);
         }
 
