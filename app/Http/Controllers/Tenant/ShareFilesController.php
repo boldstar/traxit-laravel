@@ -147,31 +147,3 @@ class ShareFilesController extends Controller
         return count(Mail::where('archived', false)->get());
     }
 }
-
-// $record = Mail::find($id);
-//         $fileName = date('Ymdhms', strtotime($record->created_at)).'_files.zip';
-//         $files = Storage::disk('s3')->files($record->path);
-
-//         return response()->streamDownload(function() use ($files, $fileName) {
-//             $opt = new ArchiveOptions();
-
-//             $opt->setContentType('application/octet-stream');
-
-//             $zip = new ZipStream($fileName, $opt);
-            
-
-//             try {
-//                 foreach ($files as $path) {
-//                     $s3Path = Storage::disk('s3')->url($path);
-//                     if($streamRead = fopen($s3Path, 'r')) {
-//                         $zip->addFile(basename($path), $streamRead, [], "store");  
-//                     } else {
-//                         return response('Something went wrong', 405);
-//                     }   
-//                 }
-//             } catch( \Exception $e) {
-//                 return response()->json(['message' => $e->getMessage()], 405);
-//             }
-
-//             $zip->finish();
-//         }, $fileName); 
