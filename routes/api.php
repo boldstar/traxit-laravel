@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/userToUpdate/{id}', 'Tenant\AuthController@userToUpdate');
     Route::patch('/users/{user}', 'Tenant\AuthController@update');
     Route::delete('/users/{user}', 'Tenant\AuthController@destroy');
+    Route::get('/user-history/{id}', 'Tenant\EngagementsHistoryController@getUserHistory');
 
     Route::get('/clients', 'Tenant\ClientsController@index');
     Route::get('/clientsWithBusinesses', 'Tenant\ClientsController@clientWithBusinesses');
