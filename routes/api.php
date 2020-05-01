@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/userToUpdate/{id}', 'Tenant\AuthController@userToUpdate');
     Route::patch('/users/{user}', 'Tenant\AuthController@update');
     Route::delete('/users/{user}', 'Tenant\AuthController@destroy');
+    Route::get('/user-history/{id}', 'Tenant\EngagementsHistoryController@getUserHistory');
 
     Route::get('/clients', 'Tenant\ClientsController@index');
     Route::get('/clientsWithBusinesses', 'Tenant\ClientsController@clientWithBusinesses');
@@ -192,6 +193,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     Route::get('/bookkeeping-accounts', 'Tenant\BookkeepingController@getBookkeepingAccounts');
     Route::post('/bookkeeping-account', 'Tenant\BookkeepingController@store');
+    Route::post('/bookkeeping-account-name', 'Tenant\BookkeepingController@updateBookkeepingName');
     Route::post('/bookkeeping-account-new-year', 'Tenant\BookkeepingController@storeNewYear');
     Route::post('/delete-bookkeeping-year', 'Tenant\BookkeepingController@deleteYear');
     Route::patch('/bookkeeping-account/{bookkeeping}', 'Tenant\BookkeepingController@updateAccount');

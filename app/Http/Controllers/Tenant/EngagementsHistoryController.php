@@ -85,4 +85,12 @@ class EngagementsHistoryController extends Controller
             'history' => $action
         ]);
     }
+
+    /**
+     * return user history
+     */
+    public function getUserHistory($id)
+    {
+        return EngagementActions::where('user_id', $id)->get();
+    }
 }

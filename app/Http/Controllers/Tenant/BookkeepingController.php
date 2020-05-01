@@ -99,6 +99,24 @@ class BookkeepingController extends Controller
         return response ($bookkeeping);
     }
 
+    public function updateBookkeepingName(Request $request)
+    {
+        $data = $request->validate([
+            'client_id' => 'required|integer',
+            'old_name' => 'required|string',
+            'name' => 'required|string'
+        ]);
+
+        $accounts = Bookkeeping::where(['business_name' => $data['old_name'], 'client_id' => $data['client_id']])->get();
+
+        foreach($accounts as $account) {
+            $account['business_name'] = $data['name'];
+            $account->save();
+        };
+
+        return response($accounts);
+    }
+
     public function delete($id)
     {
         $bookkeeping = Bookkeeping::where('id', $id)->first();
@@ -129,6 +147,8 @@ class BookkeepingController extends Controller
 
     public function deleteAll($name)
     {
+        if(is_null($name)) return response('Error', 405);
+
         $accounts = Bookkeeping::where('business_name', $name)->get();
         foreach($accounts as $account)
         {
