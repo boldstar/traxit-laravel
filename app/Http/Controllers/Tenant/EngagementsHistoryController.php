@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\EngagementActions;
+use App\Models\Tenant\Engagement;
 use Illuminate\Support\Arr;
 
 class EngagementsHistoryController extends Controller
@@ -72,10 +73,13 @@ class EngagementsHistoryController extends Controller
         ]);
 
         $history = EngagementActions::where('engagement_id', $request->id)->get();
+        $engagement = Engagement::where('id', $request->id)->first();
         $action = $history->where('action', 'created')->first();
         try {
             $action->created_at = \Carbon\Carbon::parse($request->date)->timestamp;
+            $engagement->created_at = \Carbon\Carbon::parse($request->date)->timestamp;
             $action->save();
+            $engagement->save();
         } catch(\Exception $e) {
             return response(['message' => $e->getMessage()], 422);
         }
