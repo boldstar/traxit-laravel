@@ -62,7 +62,7 @@ class StartConversation extends Mailable
         if($this->client['test'] == true) {
             return $this->replyTo($email, $name)
             ->subject($template->subject . $account->business_name)
-            ->cc('test@example.com')
+            ->bcc($account->email)
             ->view('pending')
             ->with([
                 'phoneNumber' => $account->phone_number,
@@ -77,7 +77,7 @@ class StartConversation extends Mailable
             $spouse_email = $clients->spouse_email;
             return $this->replyTo($email, $name)
                         ->cc($spouse_email)
-                        ->bcc($email, $name)
+                        ->bcc([$email, $account->email])
                         ->subject($template->subject . $account->business_name)
                         ->view('pending')
                         ->with([
@@ -90,7 +90,7 @@ class StartConversation extends Mailable
         };
 
         return $this->replyTo($email, $name)
-                    ->bcc($email, $name)
+                    ->bcc([$email, $account->email])
                     ->subject($template->subject . $account->business_name)
                     ->view('pending')
                     ->with([
