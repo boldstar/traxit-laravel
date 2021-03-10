@@ -52,6 +52,13 @@ class StartConversation extends Mailable
             file_put_contents('../resources/views/pending.blade.php', $template->html_template);
         }
 
+        $this->withSwiftMessage(function ($message) {
+            $account = Account::first();
+            $message->setFrom([
+                'email@example.com' => $account->business_name
+            ]);
+        });
+
         if($this->client['test'] == true) {
             return $this->replyTo($email, $name)
             ->subject($template->subject . $account->business_name)
@@ -65,7 +72,6 @@ class StartConversation extends Mailable
                 'userEmail' => $email
             ]);
         }
-
 
         if($send_to == 'both') {
             $spouse_email = $clients->spouse_email;
