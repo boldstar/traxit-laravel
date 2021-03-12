@@ -154,6 +154,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     /**
+     * This is for the customization routes
+     */
+    Route::post('/customization', 'Tenant\CustomizationController@create');
+    Route::post('/customizations', 'Tenant\CustomizationController@get');
+
+
+    /**
      * part of on boarding process deciding if user should see tour or not.
      */
     Route::get('/tours', 'Tenant\TourController@index');
