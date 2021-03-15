@@ -20,5 +20,6 @@ class TenantDatabaseSeeder extends Seeder
         $this->call(EmailTemplateTableSeeder::class);
         $this->call(TourTableSeeder::class);
         $this->call(WorkflowTableSeeder::class);
+        // $this->call(SettingTableSeeder::class);
     }
 }

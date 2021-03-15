@@ -160,6 +160,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/customizations', 'Tenant\CustomizationController@get');
     Route::post('/customizations-delete', 'Tenant\CustomizationController@delete');
 
+    /**
+     * This is for the settings routes
+     */
+    Route::get('/settings', 'Tenant\SettingsController@get');
+    Route::post('/setting', 'Tenant\SettingsController@update');
+
+
 
     /**
      * part of on boarding process deciding if user should see tour or not.
