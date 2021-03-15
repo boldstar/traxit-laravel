@@ -27,4 +27,23 @@ class CustomizationController extends Controller
     {
         return response(Customization::where('belongs_to', $request->belongs_to)->get());
     }
+
+    public function delete(Request $request)
+    {
+        $item_ids = $request->validate([
+            'list' => 'required|array'
+        ]);
+        
+        foreach($item_ids['list'] as $id) {
+            $option = Customization::where('id', $id)->first();
+            $belongs_to = $option->belongs_to; 
+            $option->delete();
+        }
+
+        if($belongs_to) {
+            return response(Customization::where('belongs_to', $belongs_to)->get());
+        } else {
+            return response([]);
+        }
+    }
 }

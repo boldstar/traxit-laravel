@@ -158,6 +158,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::post('/customization', 'Tenant\CustomizationController@create');
     Route::post('/customizations', 'Tenant\CustomizationController@get');
+    Route::post('/customizations-delete', 'Tenant\CustomizationController@delete');
 
 
     /**
