@@ -1,8 +1,14 @@
-Hello <i>{{ $client["client"]->first_name }}   
-        @if($client["client"]->spouse_first_name != "")
-        & {{ $client["client"]->spouse_first_name }} 
+Hello <i>@if($client["client"]->spouse_last_name && $client["client"]->spouse_last_name != $client["client"]->last_name)
+            {{ $client["client"]->first_name }}  {{ $client["client"]->last_name }} 
+            & 
+            {{ $client["client"]->spouse_first_name }} {{ $client["client"]->spouse_last_name }},
+        @else
+            {{ $client["client"]->first_name }}   
+            @if($client["client"]->spouse_first_name != "")
+            & {{ $client["client"]->spouse_first_name }} 
+            @endif
+            {{ $client["client"]->last_name }}, 
         @endif
-        {{ $client["client"]->last_name }}, 
         </i>
         
         <p>We are currently working on your <span class="year">{{ $client["engagement"]->year }}</span>, <span class="return">{{ $client["engagement"]->return_type }}</span> tax return for the name of <span class="name">{{ $client["engagement"]->name }}</span>. The following questions and issues were raised during the performance of our work. Please provide responses to the following items so that we can continue.</p>
