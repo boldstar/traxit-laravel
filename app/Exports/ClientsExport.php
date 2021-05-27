@@ -19,7 +19,7 @@ class ClientsExport implements FromCollection, WithHeadings
 
         foreach ($clients as $client) {
             if($client->dob != 'Invalid' && $client->dob != '' && $client->dob != null) {
-                $client->dob = \Carbon\Carbon::parse($client->dob)->format('m/d/Y');
+//                 $client->dob = \Carbon\Carbon::parse($client->dob)->format('m/d/Y');
             } if ($client->spouse_dob != 'Invalid' && $client->spouse_dob != '' && $client->spouse_dob != null) {
                 $client->spouse_dob = \Carbon\Carbon::parse($client->spouse_dob)->format('m/d/Y');
             }
