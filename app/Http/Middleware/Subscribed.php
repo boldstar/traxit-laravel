@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\System\Hostname as HostnameModel;
+use App\Models\System\Subscription;
 
 class Subscribed
 {
@@ -17,8 +18,9 @@ class Subscribed
     public function handle($request, Closure $next)
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
-        
-        if ($hostname && !$hostname->subscribed('main')) {
+        if ($hostname && Subscription::where('hostname_id', $hostname->id)->first()) {
+            return $next($request);
+        } else {
             $hostModel = HostnameModel::where('fqdn', $hostname->fqdn)->first();
             // if host is still during trial period don't return subscribe view
             if($hostModel->onGenericTrial()) {
@@ -27,7 +29,6 @@ class Subscribed
             // This user is not a paying customer...
             return response()->view('subscribe');
         }
-
-        return $next($request);
+    
     }
 }

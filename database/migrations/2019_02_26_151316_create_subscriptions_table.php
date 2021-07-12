@@ -13,8 +13,7 @@ class CreateSubscriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('subscriptions', function (Blueprint $table) {
-            $table->dropColumn(['title', 'amount', 'basis', 'description']);
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->unsignedInteger('hostname_id');
             $table->string('name');
             $table->string('stripe_id')->collation('utf8mb4_bin');

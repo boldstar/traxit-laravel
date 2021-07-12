@@ -12,7 +12,7 @@
 */
 
 Route::get('login', 'Auth\LoginController@index')->name('login');
-Route::domain('traxit.test')->group(function () { 
+Route::domain('traxit-laravel.test')->group(function () { 
     Route::prefix('web')->group(function () {
         Route::post('/login', 'Auth\LoginController@login');
         Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
