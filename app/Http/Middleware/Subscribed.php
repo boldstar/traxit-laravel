@@ -18,7 +18,7 @@ class Subscribed
     public function handle($request, Closure $next)
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
-        if ($hostname && Subscription::where('hostname_id', $hostname->id)->first()) {
+        if ($hostname && $hostname->subscribed('main')) {
             return $next($request);
         } else {
             $hostModel = HostnameModel::where('fqdn', $hostname->fqdn)->first();

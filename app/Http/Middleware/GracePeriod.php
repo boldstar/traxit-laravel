@@ -20,7 +20,7 @@ class GracePeriod
     public function handle($request, Closure $next)
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
-        if($hostname && Subscription::where('hostname_id', $hostname->id)->first()) {
+        if($hostname && $hostname->subscribed('main')) {
             if ($hostname && $hostname->subscription('main')->onGracePeriod()) {
                 Stripe::setApiKey(config('services.stripe.secret'));
                 $stripe = $hostname->subscription('main');
