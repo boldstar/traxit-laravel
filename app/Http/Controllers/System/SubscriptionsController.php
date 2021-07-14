@@ -100,10 +100,14 @@ class SubscriptionsController extends Controller
             $plan->amount = '$' . number_format($plan->amount/100, 2);
         };
 
-        $plan = Plan::retrieve($stripe->stripe_plan);
-        $plan->amount = '$' . number_format($plan->amount/100, 2);
+        $plan = null;
+        $subscription = null;
 
-        $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+        if($stripe) {
+            $plan = Plan::retrieve($stripe->stripe_plan);
+            $plan->amount = '$' . number_format($plan->amount/100, 2);
+            $subscription = StripeSubscription::retrieve($stripe->stripe_id);
+        }
 
         return response()->json(['plan' => $plan, 'plans' => $plans, 'subscription' => $subscription]);
     }

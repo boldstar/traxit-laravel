@@ -20,6 +20,7 @@ class ApiLogin
      */
     public function handle($request, Closure $next)
     {
+
         if($request->fqdn != null) {
             return $next($request);
         }

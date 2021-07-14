@@ -21,6 +21,7 @@ use Hyn\Tenancy\Models\Hostname;
 use App\Models\System\Hostname as HostnameModel;
 use Illuminate\Support\Facades\DB;
 use Hyn\Tenancy\Environment;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Hyn\Tenancy\Contracts\Repositories\HostnameRepository;
 use Hyn\Tenancy\Contracts\Repositories\WebsiteRepository;

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Tenant\Task;
 use App\Policies\TaskPolicy;
 use Laravel\Passport\Passport;
+use App\Models\Passport\PersonalAccessClient;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -29,14 +30,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes(null, ['middleware' => 'guest-provider']);
-
+        
         $this->commands([
             \Laravel\Passport\Console\InstallCommand::class,
             \Laravel\Passport\Console\ClientCommand::class,
             \Laravel\Passport\Console\KeysCommand::class,
         ]);
-
+        
+        Passport::routes(null, ['middleware' => 'guest-provider']);
         Passport::tokensExpireIn(now()->addDays(1));
     }
 }

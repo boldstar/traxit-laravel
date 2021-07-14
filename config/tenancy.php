@@ -8,13 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @see https://laravel-tenancy.com
+ * @see https://tenancy.dev
  * @see https://github.com/hyn/multi-tenant
  */
 
 use Hyn\Tenancy\Database\Connection;
 
 return [
+    /**
+     * Random key used for tenant database user password
+     */
+    'key' => env('TENANCY_KEY', env('APP_KEY')),
+
     'models' => [
         /**
          * Specify different models to be used for the global, system database
@@ -25,8 +30,8 @@ return [
          */
 
         // Must implement \Hyn\Tenancy\Contracts\Hostname
-        'hostname' => \App\Models\System\Hostname::class,
         // 'hostname' => \Hyn\Tenancy\Models\Hostname::class,
+        'hostname' => \App\Models\System\Hostname::class,
 
         // Must implement \Hyn\Tenancy\Contracts\Website
         'website' => \Hyn\Tenancy\Models\Website::class
@@ -109,9 +114,9 @@ return [
         'auto-delete-tenant-directory' => false,
 
         /**
-         * Time to cache websites in minutes. Set to false to disable.
+         * Time to cache websites in seconds. Set to false to disable.
          */
-        'cache' => 10,
+        'cache' => 600,
     ],
     'hostname' => [
         /**
@@ -149,9 +154,9 @@ return [
         'abort-without-identified-hostname' => env('TENANCY_ABORT_WITHOUT_HOSTNAME', false),
 
         /**
-         * Time to cache hostnames in minutes. Set to false to disable.
+         * Time to cache hostnames in seconds. Set to false to disable.
          */
-        'cache' => 10,
+        'cache' => 600,
 
         /**
          * Automatically update the app.url configured inside Laravel to match
@@ -247,6 +252,19 @@ return [
          * @info set to false to disable.
          */
         'auto-create-tenant-database-user' => true,
+
+        /**
+         * Set of database privileges to give to the tenant database user.
+         *
+         * @info Useful in case your database restricts the privileges you
+         *       can set (for example AWS RDS).
+         * @info These privileges are only used in case tenant database users
+         *       are set to be created.
+         *
+         * @info null by default means "ALL PRIVILEGES". Override with a list
+         *       of privileges as a string, e.g. 'SELECT, UPDATE'.
+         */
+        'tenant-database-user-privileges' => null,
 
         /**
          * Automatically rename the tenant database when the random id of the
