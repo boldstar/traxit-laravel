@@ -17,10 +17,10 @@ class Subscribed
      */
     public function handle($request, Closure $next)
     {
+
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
-        if ($hostname && Subscription::where('hostname_id', $hostname->id)->first()) {
-            return $next($request);
-        } else {
+        
+        if ($hostname && !Subscription::where('hostname_id', $hostname->id)->first()) {
             $hostModel = HostnameModel::where('fqdn', $hostname->fqdn)->first();
             // if host is still during trial period don't return subscribe view
             if($hostModel->onGenericTrial()) {
@@ -29,6 +29,8 @@ class Subscribed
             // This user is not a paying customer...
             return response()->view('subscribe');
         }
+
+        return $next($request);
     
     }
 }
