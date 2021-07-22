@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\System\Subscription;
 use \Stripe\Subscription as StripeSubscription;
 use \Carbon\Carbon;
 use \Stripe\Stripe;
@@ -19,7 +20,7 @@ class GracePeriod
     public function handle($request, Closure $next)
     {
         $hostname  = app(\Hyn\Tenancy\Environment::class)->hostname();
-        if($hostname && $hostname->subscribed('main')) {
+        if($hostname && Subscription::where('hostname_id', $hostname->id)->first()) {
             if ($hostname && $hostname->subscription('main')->onGracePeriod()) {
                 Stripe::setApiKey(config('services.stripe.secret'));
                 $stripe = $hostname->subscription('main');
