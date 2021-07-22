@@ -5,11 +5,11 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2",
         "barryvdh/laravel-cors": "^0.11.2",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
-        "hyn/multi-tenant": "^5.3",
+        "hyn/multi-tenant": "^5.4",
         "kub-at/php-simple-html-dom-parser": "^1.8",
         "laravel/cashier": "^9.1",
         "laravel/framework": "5.8.*",
