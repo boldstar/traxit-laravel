@@ -216,6 +216,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/bookkeeping-account/{id}', 'Tenant\BookkeepingController@delete');
     Route::delete('/all-bookkeeping-accounts/{name}', 'Tenant\BookkeepingController@deleteAll');
 
+    /**
+     * This is for automations
+     */
+    Route::get('/automations', 'Tenant\AutomationsController@get');
+    Route::post('/automations', 'Tenant\AutomationsController@create');
+    Route::post('/update-automation', 'Tenant\AutomationsController@update');
+    Route::delete('/automation/{id}', 'Tenant\AutomationsController@delete');
+
 
     /**
      * This for handling read access to the business' clients documents
