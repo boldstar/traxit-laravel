@@ -15,9 +15,12 @@ class CreateAutomationsTable extends Migration
     {
         Schema::create('automations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('workflow_id')->unsigned();
-            $table->foreign('workflow_id')->references('id')->on('workflows')->onDelete('cascade');
-            $table->string('status');
+            $table->string('category');
+            $table->integer('workflow_id')->nullable();
+            $table->string('workflow')->nullable();
+            $table->integer('status_id')->nullable();
+            $table->string('status')->nullable();
+            $table->integer('action_id');
             $table->string('action');
             $table->boolean('active')->default(true);
             $table->timestamps();

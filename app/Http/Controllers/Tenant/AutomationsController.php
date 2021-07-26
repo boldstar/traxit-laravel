@@ -16,12 +16,39 @@ class AutomationsController extends Controller
 
     public function create(Request $request)
     {
-        return response($request);
+        $data = $request->validate([
+            'category' => 'required|string',
+            'workflow_id' => 'nullable|integer',
+            'workflow' => 'nullable|string',
+            'status_id' => 'nullable|integer',
+            'status' => 'nullable|string',
+            'action_id' => 'required|integer',
+            'action' => 'required|string', 
+            'active' => 'required|boolean'
+        ]);
+
+        $automation = Automation::firstOrCreate([
+            'workflow_id' => $request->workflow_id,
+            'status_id' => $request->status_id,
+            'action_id' => $request->action_id
+        ], $data);
+
+        return response($automation, 200);
     }
 
     public function update(Request $requst)
     {
         return response($request);
+    }
+
+    public function updateState(Request $request, $id) 
+    {
+        $automation = Automation::where('id', $id)->firstOrFail();
+
+        $automation->active = !$automation->active;
+        $automation->save();
+
+        return response($automation, 200);
     }
 
     public function delete($id) {

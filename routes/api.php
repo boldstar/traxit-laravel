@@ -220,9 +220,11 @@ Route::group(['middleware' => 'auth:api'], function () {
      * This is for automations
      */
     Route::get('/automations', 'Tenant\AutomationsController@get');
-    Route::post('/automations', 'Tenant\AutomationsController@create');
+    Route::post('/automation', 'Tenant\AutomationsController@create');
     Route::post('/update-automation', 'Tenant\AutomationsController@update');
+    Route::patch('/automation-state/{id}', 'Tenant\AutomationsController@updateState');
     Route::delete('/automation/{id}', 'Tenant\AutomationsController@delete');
+    Route::post('/switch-automations-setting', 'Tenant\SettingsController@updateAutomationsSetting');
 
 
     /**
