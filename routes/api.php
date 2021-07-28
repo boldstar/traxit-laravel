@@ -226,6 +226,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/automation/{id}', 'Tenant\AutomationsController@delete');
     Route::post('/switch-automations-setting', 'Tenant\SettingsController@updateAutomationsSetting');
 
+    /**
+     * This is for the call list
+     */
+    Route::get('/call-list', 'Tenant\CallListController@index');
+    Route::get('/call-list-item/{id}', 'Tenant\CallListController@show');
+    Route::post('/call-list', 'Tenant\CallListController@store');
+    Route::patch('/call-list/{id}', 'Tenant\CallListController@update');
+    Route::delete('/call-list/{id}', 'Tenant\CallListController@destroy');
+
 
     /**
      * This for handling read access to the business' clients documents

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Models\Tenant\Automation;
 use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Client;

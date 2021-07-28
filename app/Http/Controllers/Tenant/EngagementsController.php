@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Models\Tenant\Automation;
 use App\Models\Tenant\Engagement;
 use App\Models\Tenant\Client;
 use App\Models\Tenant\Task;
@@ -230,9 +231,13 @@ class EngagementsController extends Controller
                             ->with(['client', 'questions'])
                             ->first();
 
+        $automation = Automation::where(['workflow_id' => $engagement->workflow_id, 'status' => $engagement->status])->get();
+
         return response()->json([
             'engagement' => $updatedEngagement, 
-            'message' => 'Engagement Updated Succesfully'], 
+            'message' => 'Engagement Updated Succesfully',
+            'automation' => $automation
+        ], 
             200
         );
     }
