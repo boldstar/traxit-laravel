@@ -24,6 +24,7 @@ class CreateCallListsTable extends Migration
             $table->integer('total_calls');
             $table->timestamp('last_called_date');
             $table->timestamp('first_called_date');
+            $table->boolean('archive')->default(false);
             $table->timestamps();
         });
     }

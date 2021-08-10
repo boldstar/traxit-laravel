@@ -17,7 +17,8 @@ class CallList extends Model
         'comments',
         'total_calls',
         'first_called_date',
-        'last_called_date'
+        'last_called_date',
+        'archive'
     ];
 
     public function engagement() 

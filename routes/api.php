@@ -232,8 +232,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/call-list', 'Tenant\CallListController@index');
     Route::get('/call-list-item/{id}', 'Tenant\CallListController@show');
     Route::post('/call-list', 'Tenant\CallListController@store');
-    Route::patch('/call-list/{id}', 'Tenant\CallListController@update');
-    Route::delete('/call-list/{id}', 'Tenant\CallListController@destroy');
+    Route::post('/call-list-item', 'Tenant\CallListController@update');
+    Route::post('/call-list-update-item', 'Tenant\CallListController@updateItem');
+    Route::post('/remove-from-call-list', 'Tenant\CallListController@removeFromCallList');
+    Route::delete('/call-list/{call_list}', 'Tenant\CallListController@destroy');
 
 
     /**
