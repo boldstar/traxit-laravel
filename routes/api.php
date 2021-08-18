@@ -237,6 +237,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/remove-from-call-list', 'Tenant\CallListController@removeFromCallList');
     Route::delete('/call-list/{call_list}', 'Tenant\CallListController@destroy');
 
+    /**
+     * This is for the mail controller currently used for automations
+     */
+    Route::post('notify-admin', 'Tenant\MailController@notifyAdmins');
+
 
     /**
      * This for handling read access to the business' clients documents

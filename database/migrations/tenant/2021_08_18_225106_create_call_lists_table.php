@@ -20,7 +20,7 @@ class CreateCallListsTable extends Migration
             $table->string('engagement_name');
             $table->string('user_name');
             $table->string('current_status');
-            $table->text('comments');
+            $table->text('comments')->nullable();
             $table->integer('total_calls');
             $table->timestamp('last_called_date');
             $table->timestamp('first_called_date');
