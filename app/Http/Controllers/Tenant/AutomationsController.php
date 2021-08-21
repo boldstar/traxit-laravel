@@ -36,9 +36,23 @@ class AutomationsController extends Controller
         return response($automation, 200);
     }
 
-    public function update(Request $requst)
+    public function update(Request $request, Automation $automation)
     {
-        return response($request);
+        $data = $request->validate([
+            'id' => 'required|integer',
+            'category' => 'required|string',
+            'workflow_id' => 'nullable|integer',
+            'workflow' => 'nullable|string',
+            'status_id' => 'nullable|integer',
+            'status' => 'nullable|string',
+            'action_id' => 'required|integer',
+            'action' => 'required|string', 
+            'active' => 'required|boolean'
+        ]);
+
+        $automation->update($data);
+
+        return response($automation, 200);
     }
 
     public function updateState(Request $request, $id) 
@@ -51,7 +65,8 @@ class AutomationsController extends Controller
         return response($automation, 200);
     }
 
-    public function delete($id) {
-        return response($id);
+    public function delete(Automation $automation) {
+        $automation->delete();
+        return response('Automation Deleted', 200);  
     }
 }
