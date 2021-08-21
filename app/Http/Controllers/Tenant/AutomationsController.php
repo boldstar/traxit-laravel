@@ -41,16 +41,24 @@ class AutomationsController extends Controller
         $data = $request->validate([
             'id' => 'required|integer',
             'category' => 'required|string',
-            'workflow_id' => 'nullable|integer',
+            'workflow_id' => 'required|integer',
             'workflow' => 'nullable|string',
-            'status_id' => 'nullable|integer',
+            'status_id' => 'required|integer',
             'status' => 'nullable|string',
             'action_id' => 'required|integer',
             'action' => 'required|string', 
             'active' => 'required|boolean'
         ]);
 
-        $automation->update($data);
+        if(Automation::where([
+            'workflow_id' => $request->workflow_id, 
+            'status_id' => $request->status_id, 
+            'action_id' => $request->action_id 
+        ])->exists()){
+            return response('Automation Already Exists', 400);
+        } else {
+            $automation->update($data);
+        }
 
         return response($automation, 200);
     }

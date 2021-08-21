@@ -114,13 +114,18 @@ class CallListController extends Controller
      */
     public function removeFromCallList(Request $request)
     {
-        $id = $request->validate([
-            'id' => 'required|integer'
-        ]);
-
         $callListItem = CallList::where('id', $request->id)->first();
-        $callListItem->archive = !$callListItem->archive;
-        $callListItem->save();
+
+        if($callListItem) {
+            if($callListItem->archive) {
+                return response('Call List Item Already Removed', 400);
+            } else {
+                $callListItem->archive = !$callListItem->archive;
+                $callListItem->save();
+            }
+        } else {
+            return response('Call List Item Does Not Exist', 400);
+        }
 
         return response($callListItem);
     }

@@ -231,7 +231,7 @@ class EngagementsController extends Controller
                             ->with(['client', 'questions'])
                             ->first();
 
-        $automation = Automation::where(['workflow_id' => $engagement->workflow_id, 'status' => $engagement->status])->get();
+        $automation = Automation::where(['workflow_id' => $engagement->workflow_id, 'status' => $engagement->status, 'active' => true])->get();
 
         return response()->json([
             'engagement' => $updatedEngagement, 
