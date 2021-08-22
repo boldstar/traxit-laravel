@@ -117,7 +117,7 @@ class CallListController extends Controller
         $callListItem = CallList::where('id', $request->id)->first();
 
         if($callListItem) {
-            if($callListItem->archive) {
+            if($callListItem->archive && $request->automated) {
                 return response('Call List Item Already Removed', 400);
             } else {
                 $callListItem->archive = !$callListItem->archive;
