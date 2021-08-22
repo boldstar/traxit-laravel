@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Models\Tenant\Automation;
 use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Client;
@@ -29,7 +30,10 @@ class TasksController extends Controller
             ->get();
 
         foreach($tasks as $task) {
-            $status = Status::where(['workflow_id' => $task->engagements[0]->workflow_id, 'status' => $task->title])->first();
+            $status = Status::where([
+                'workflow_id' => $task->engagements[0]->workflow_id, 
+                'status' => $task->title
+            ])->first();
             $task['state'] = $status['state'];
         }
 
@@ -75,7 +79,11 @@ class TasksController extends Controller
         $assigned_to = User::where('id', $request->user_id)->value('name');
         $task->update(['user_id' => $request->user_id,'title' => $request->status]);
         $status = $request->validate(['status' => 'required|string']);
-        $engagement->update([ 'assigned_to' => $assigned_to,'status' => $status['status'], 'in_progress' => false]);
+        $engagement->update([ 
+            'assigned_to' => $assigned_to,
+            'status' => $status['status'], 
+            'in_progress' => false
+        ]);
 
         $workflow = Workflow::where('id', $engagement->workflow_id)->with('statuses')->get();
         $statuses = $workflow->pluck('statuses')->collapse();
@@ -85,11 +93,19 @@ class TasksController extends Controller
 
         $matches = ['workflow_id' => $workflow[0]->id, 'status' => $task->title];
         $status = Status::where($matches)->first();
+        $automation = Automation::where([
+            'workflow_id' => $engagement->workflow_id, 
+            'status' => $engagement->status, 
+            'active' => true
+        ])->get();
         return response()->json([
             'task' => $task, 
             'message' => 'Task Was Updated', 
             'notify' => $notifyClient, 
-            'status' => $status], 
+            'status' => $status,
+            'automation' => $automation,
+            'engagement' => $engagement
+        ], 
             200
         );
     }

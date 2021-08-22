@@ -216,6 +216,32 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/bookkeeping-account/{id}', 'Tenant\BookkeepingController@delete');
     Route::delete('/all-bookkeeping-accounts/{name}', 'Tenant\BookkeepingController@deleteAll');
 
+    /**
+     * This is for automations
+     */
+    Route::get('/automations', 'Tenant\AutomationsController@get');
+    Route::post('/automation', 'Tenant\AutomationsController@create');
+    Route::patch('/update-automation/{automation}', 'Tenant\AutomationsController@update');
+    Route::patch('/automation-state/{id}', 'Tenant\AutomationsController@updateState');
+    Route::delete('/automation/{automation}', 'Tenant\AutomationsController@delete');
+    Route::post('/switch-automations-setting', 'Tenant\SettingsController@updateAutomationsSetting');
+
+    /**
+     * This is for the call list
+     */
+    Route::get('/call-list', 'Tenant\CallListController@index');
+    Route::get('/call-list-item/{id}', 'Tenant\CallListController@show');
+    Route::post('/call-list', 'Tenant\CallListController@store');
+    Route::post('/call-list-item', 'Tenant\CallListController@update');
+    Route::post('/call-list-update-item', 'Tenant\CallListController@updateItem');
+    Route::post('/remove-from-call-list', 'Tenant\CallListController@removeFromCallList');
+    Route::delete('/call-list/{call_list}', 'Tenant\CallListController@destroy');
+
+    /**
+     * This is for the mail controller currently used for automations
+     */
+    Route::post('notify-admin', 'Tenant\MailController@notifyAdmins');
+
 
     /**
      * This for handling read access to the business' clients documents

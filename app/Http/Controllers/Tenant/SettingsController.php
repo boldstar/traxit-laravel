@@ -31,4 +31,19 @@ class SettingsController extends Controller
 
         return response(Setting::all());
     }
+
+    public function updateAutomationsSetting(Request $request)
+    {
+
+        $setting = Setting::where('name', 'workflow_automations')->first();
+
+        if($setting) {
+            $setting->state = !$setting->state;
+            $setting->save();
+        } else {
+            Setting::create(['name' => 'workflow_automations', 'state' => true]);
+        }
+
+        return response(Setting::all());
+    }
 }
