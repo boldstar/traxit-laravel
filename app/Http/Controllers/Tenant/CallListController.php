@@ -16,7 +16,7 @@ class CallListController extends Controller
      */
     public function index()
     {
-        return CallList::all();
+        return CallList::where('archive', false)->get();
     }
 
 

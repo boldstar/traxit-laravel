@@ -307,7 +307,22 @@ class EngagementsController extends Controller
                 }       
             }
         }
-        return response()->json(['engagements' => $engagements, 'message' => 'Engagement(s) Updated'], 200);
+
+        if($engagements->count() === 1) {
+            $automation = Automation::where([
+                'workflow_id' => $engagements[0]->workflow_id, 
+                'status' => $engagements[0]->status, 
+                'active' => true
+            ])->get();
+        } else {
+            $automation = null;
+        }
+
+        return response()->json([
+            'engagements' => $engagements, 
+            'message' => 'Engagement(s) Updated',
+            'automation' => $automation
+        ], 200);
     }
     /**
      * archive an engagement
