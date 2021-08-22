@@ -22,8 +22,8 @@ class CreateCallListsTable extends Migration
             $table->string('current_status');
             $table->text('comments')->nullable();
             $table->integer('total_calls');
-            $table->timestamp('last_called_date');
-            $table->timestamp('first_called_date');
+            $table->timestamp('last_called_date')->nullable();
+            $table->timestamp('first_called_date')->nullable();
             $table->boolean('archive')->default(false);
             $table->timestamps();
         });
