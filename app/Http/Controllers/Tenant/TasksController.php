@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Models\Tenant\CallList;
 use App\Models\Tenant\Automation;
 use App\Models\Tenant\Task;
 use App\Models\Tenant\User;
@@ -98,6 +99,13 @@ class TasksController extends Controller
             'status' => $engagement->status, 
             'active' => true
         ])->get();
+
+        if(CallList::where('engagement_id', $engagement->id)->exists()) {
+            $call_list_item = CallList::where('engagement_id', $engagement->id)->first();
+            $call_list_item->user_name = $engagement->assigned_to;
+            $call_list_item->save();
+        }
+
         return response()->json([
             'task' => $task, 
             'message' => 'Task Was Updated', 
