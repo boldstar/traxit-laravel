@@ -37,8 +37,9 @@ class CallListController extends Controller
             'total_calls' => 'required|integer',
         ]);
 
-        $user = auth()->user();
-        $data['user_name'] = $user->name;
+        $engagement = Engagement::where('id', $request->engagement_id)->first();
+        $user = $engagement->assigned_to;
+        $data['user_name'] = $user;
         $data['first_called_date'] = \Carbon\Carbon::parse($request->first_called_date);
         $data['last_called_date'] = \Carbon\Carbon::parse($request->last_called_date);
         $data['comments'] = '';
@@ -75,6 +76,9 @@ class CallListController extends Controller
             'total_calls' => 'required|integer'
         ]);
 
+        $engagement = Engagement::where('id', $request->engagement_id)->first();
+        $user = $engagement->assigned_to;
+        $data['user_name'] = $user;
         $data['last_called_date'] = \Carbon\Carbon::parse($request->last_called_date);
 
         $call_list_item = CallList::where('id', $request->id)->first();
@@ -98,7 +102,10 @@ class CallListController extends Controller
             'last_called_date' => 'required|string',
             'total_calls' => 'required|integer'
         ]);
-
+        
+        $engagement = Engagement::where('id', $request->engagement_id)->first();
+        $user = $engagement->assigned_to;
+        $data['user_name'] = $user;
         $data['first_called_date'] = \Carbon\Carbon::parse($request->first_called_date);
         $data['last_called_date'] = \Carbon\Carbon::parse($request->last_called_date);
         $data['comments'] = $request->comments;
