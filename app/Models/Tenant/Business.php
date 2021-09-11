@@ -28,7 +28,8 @@ class Business extends Model
         'rt_number',
         'formation_date',
         'twc_account',
-        'qb_password'
+        'qb_password',
+        'active'
     ];
 
     protected $hidden = [
