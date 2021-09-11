@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Models\Tenant\Workflow;
 use App\Models\Tenant\Question;
 use App\Models\Tenant\Engagement;
 use App\Models\Tenant\Client;
@@ -61,6 +62,7 @@ class QuestionsController extends Controller
     {
         $engagement = Engagement::where('id', $question->engagement_id)->first();
         $client = CLient::where('id', $engagement->client_id)->first();
+        $workflow = Workflow::where('id', $engagement->workflow_id)->first();
         //determine which person to send to or both
         try {
             if($send_to == 'both') {
@@ -69,7 +71,8 @@ class QuestionsController extends Controller
                     'engagement' => $engagement, 
                     'client' => $client, 
                     'test' => false, 
-                    'send_to' => $send_to
+                    'send_to' => $send_to,
+                    'workflow' => $worklow
                 ]));
             }
             if($send_to == 'taxpayer' && $client->email != null) {
@@ -78,7 +81,8 @@ class QuestionsController extends Controller
                     'engagement' => $engagement, 
                     'client' => $client, 
                     'test' => false, 
-                    'send_to' => $send_to
+                    'send_to' => $send_to,
+                    'workflow' => $workflow
                 ]));
             }
             if($send_to == 'spouse' && $client->spouse_email != null) {
@@ -87,7 +91,8 @@ class QuestionsController extends Controller
                     'engagement' => $engagement, 
                     'client' => $client, 
                     'test' => false, 
-                    'send_to' => $send_to
+                    'send_to' => $send_to,
+                    'workflow' => $workflow
                 ]));
             }
         } catch(\Exception $e) {
@@ -109,6 +114,7 @@ class QuestionsController extends Controller
         $question = Question::where('id', $request->id)->first();
         $engagement = Engagement::where('id', $question->engagement_id)->first();
         $client = CLient::where('id', $engagement->client_id)->first();
+        $workflow = Workflow::where('id', $engagement->workflow_id)->first();
         //try to send mail, if failed catch error and send back message
         try {
             Mail::to($client->email)->send(new StartConversation([
@@ -116,7 +122,8 @@ class QuestionsController extends Controller
                 'engagement' => $engagement, 
                 'client' => $client, 
                 'test' => false,
-                'send_to' => 'both'
+                'send_to' => 'both',
+                'workflow' => $workflow
             ]));
         } catch(\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 422);
