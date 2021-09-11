@@ -15,6 +15,9 @@ class CreateBusinessNotesTable extends Migration
     {
         Schema::create('business_notes', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('business_id')->unsigned()->nullable();
+            $table->foreign('business_id')->references('id')->on('businesses')->onDelete('cascade');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

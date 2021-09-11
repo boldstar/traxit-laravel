@@ -15,6 +15,14 @@ class CreateBusinessServicesTable extends Migration
     {
         Schema::create('business_services', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('business_id')->unsigned()->nullable();
+            $table->foreign('business_id')->references('id')->on('businesses')->onDelete('cascade');
+            $table->boolean('payroll')->default(false);
+            $table->boolean('sales_tax')->default(false);
+            $table->boolean('tax_return')->default(false);
+            $table->boolean('bookkeeping')->default(false);
+            $table->boolean('tax_planning')->default(false);
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

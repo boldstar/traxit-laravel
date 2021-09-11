@@ -19,7 +19,16 @@ class Business extends Model
         'postal_code',
         'phone_number',
         'fax_number',
-        'email'
+        'email',
+        'ein',
+        'tax_return_type',
+        'state_tax_id',
+        'sos_file_number',
+        'xt_number',
+        'rt_number',
+        'formation_date',
+        'twc_account',
+        'qb_password'
     ];
 
     protected $hidden = [

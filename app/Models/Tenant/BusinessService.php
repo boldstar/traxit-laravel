@@ -8,4 +8,14 @@ use Hyn\Tenancy\Traits\UsesTenantConnection;
 class BusinessService extends Model
 {
     use UsesTenantConnection;
+
+    protected $fillable = [
+        'business_id',
+        'payroll',
+        'sales_tax',
+        'tax_return',
+        'bookkeeping',
+        'tax_planning',
+        'note',
+    ];
 }

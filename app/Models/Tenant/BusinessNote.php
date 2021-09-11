@@ -8,4 +8,9 @@ use Hyn\Tenancy\Traits\UsesTenantConnection;
 class BusinessNote extends Model
 {
     use UsesTenantConnection;
+
+    protected $fillable = [
+        'business_id',
+        'note'
+    ];
 }
