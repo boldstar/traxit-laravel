@@ -37,7 +37,16 @@ class BusinessesController extends Controller
             'postal_code' => 'nullable|string',
             'email' => 'nullable|string',
             'phone_number' => 'nullable|string',
-            'fax_number' => 'nullable|string'
+            'fax_number' => 'nullable|string',
+            'ein' => 'nullable|string',
+            'tax_return_type' => 'nullable|string',
+            'state_tax_id' => 'nullable|string',
+            'xt_number' => 'nullable|string',
+            'rt_number' => 'nullable|string',
+            'formation_date' => 'nullable|string',
+            'twc_account' => 'nullable|string',
+            'qb_password' => 'nullable|string',
+            'sos_file_number' => 'nullable|string',
         ]);
 
         $business = Business::create($data);
@@ -90,7 +99,16 @@ class BusinessesController extends Controller
             'postal_code' => 'nullable|string',
             'email' => 'nullable|string',
             'phone_number' => 'nullable|string',
-            'fax_number' => 'nullable|string',
+            'ein' => 'nullable|string',
+            'tax_return_type' => 'nullable|string',
+            'state_tax_id' => 'nullable|string',
+            'xt_number' => 'nullable|string',
+            'rt_number' => 'nullable|string',
+            'formation_date' => 'nullable|string',
+            'twc_account' => 'nullable|string',
+            'qb_password' => 'nullable|string',
+            'sos_file_number' => 'nullable|string',
+            'active' => 'required|boolean'
         ]);
 
         $business->update($data);
