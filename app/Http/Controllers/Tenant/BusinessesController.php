@@ -66,7 +66,7 @@ class BusinessesController extends Controller
      */
     public function show($id)
     {
-        return Business::with('client')->find($id);
+        return Business::with('services', 'client', 'engagements', 'notes')->find($id);
     }
 
     /**

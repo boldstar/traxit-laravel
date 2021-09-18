@@ -260,8 +260,8 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::post('business-services', 'Tenant\BusinessServicesController@create');
     Route::get('business-servcies', 'Tenant\BusinessServicesController@get');
-    Route::get('business-services/{id}', 'Tenant\BusinessServicesControllerr@show');
-    Route::post('edit-business-services', 'Tenant\BusinessServicesController@update');
+    Route::get('business-services/{id}', 'Tenant\BusinessServicesController@show');
+    Route::post('update-business-services', 'Tenant\BusinessServicesController@update');
     Route::delete('business-services/{id}', 'Tenant\BusinessServicesController@destroy');
 
 

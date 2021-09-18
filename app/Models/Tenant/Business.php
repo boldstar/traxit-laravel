@@ -39,4 +39,16 @@ class Business extends Model
     public function client() {
         return $this->belongsTo('App\Models\Tenant\Client');
     }
+
+    public function engagements() {
+        return $this->belongsTo('App\Models\Tenant\Engagement');
+    }
+
+    public function services() {
+        return $this->hasOne('App\Models\Tenant\BusinessService');
+    }
+
+    public function notes() {
+        return $this->hasOne('App\Models\Tenant\BusinessNote');
+    }
 }

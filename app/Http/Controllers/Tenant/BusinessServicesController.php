@@ -16,7 +16,8 @@ class BusinessServicesController extends Controller
     public function create(Request $request)
     {
         $data = $request->validate([
-
+            'name' => 'required|string',
+            'state' => 'required|boolean'
         ]);
 
         $business_service = BusinessService::create($data);
@@ -26,14 +27,20 @@ class BusinessServicesController extends Controller
 
     public function show($id)
     {
-        return BusinessService::where('id', $id)->first();
+        return BusinessService::where('business_id', $id)->first();
     }
 
     public function update(Request $request)
     {
-        $business_service = BusinessService::where('id', $request->id)->first();
+        $data = $request->validate([
+            'business_id' => 'required|integer',
+            'name' => 'required|string',
+            'state' => 'required|boolean'
+        ]);
 
-        $business_service->update($request);
+        $business_service = BusinessService::firstOrNew(['business_id' => $request->business_id]);
+        $business_service[$request->name] = $request->state;
+        $business_service->save();
 
         return response($business_service);
     }

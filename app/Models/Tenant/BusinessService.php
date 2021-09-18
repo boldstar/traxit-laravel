@@ -18,4 +18,9 @@ class BusinessService extends Model
         'tax_planning',
         'note',
     ];
+
+    public function business()
+    {
+        return $this->belongsTo('App\Models\Tenant\Business');
+    }
 }
