@@ -49,6 +49,6 @@ class Business extends Model
     }
 
     public function notes() {
-        return $this->hasOne('App\Models\Tenant\BusinessNote');
+        return $this->hasMany('App\Models\Tenant\BusinessNote');
     }
 }

@@ -13,4 +13,8 @@ class BusinessNote extends Model
         'business_id',
         'note'
     ];
+
+    public function business() {
+        return $this->belongsTo('App\Models\Tenant\Business');
+    }
 }

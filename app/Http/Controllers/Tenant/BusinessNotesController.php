@@ -16,12 +16,20 @@ class BusinessNotesController extends Controller
     public function create(Request $request)
     {
         $data = $request->validate([
-
+            'id' => 'nullable|integer',
+            'business_id' => 'required|integer',
+            'note' =>   'required|string'
         ]);
 
-        $business_note = BusinessNote::create($data);
+        $business_note = BusinessNote::firstOrNew(
+            ['id' => $request->id],
+            ['business_id' => $request->business_id],
+        );
 
-        return response($business_note);
+        $business_note->note = $request->note;
+        $business_note->save();
+
+        return response(BusinessNote::where('business_id', $business_note->business_id)->get());
     }
 
     public function show($id)
@@ -40,6 +48,7 @@ class BusinessNotesController extends Controller
 
     public function destroy($id)
     {
+        $business_note = BusinessNote::find($id);
         $business_note->delete();
         return response('Business Note Deleted');
     }
