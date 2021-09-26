@@ -238,6 +238,36 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/call-list/{call_list}', 'Tenant\CallListController@destroy');
 
     /**
+     * this is for the integration routes
+     */
+    Route::post('integration', 'Tenant\IntegrationsController@create');
+    Route::get('integration', 'Tenant\IntegrationsController@get');
+    Route::get('integration/{id}', 'Tenant\IntegrationsController@show');
+    Route::get('rubex-token', 'Tenant\IntegrationsController@showRubexToken');
+    Route::post('update-integration', 'Tenant\IntegrationsController@update');
+    Route::delete('rubex-token', 'Tenant\IntegrationsController@removeRubexToken');
+    Route::delete('integration/{id}', 'Tenant\IntegrationsController@destroy');
+
+    /**
+     * this is for the business notes controller
+     */
+    Route::post('business-note', 'Tenant\BusinessNotesController@create');
+    Route::get('business-note', 'Tenant\BusinessNotesController@get');
+    Route::get('business-note/{id}', 'Tenant\BusinessNotesController@show');
+    Route::post('edit-business-note', 'Tenant\BusinessNotesController@update');
+    Route::delete('business-note/{id}', 'Tenant\BusinessNotesController@destroy');
+
+    /**
+     * this is for the business services controller
+     */
+    Route::post('business-services', 'Tenant\BusinessServicesController@create');
+    Route::get('business-servcies', 'Tenant\BusinessServicesController@get');
+    Route::get('business-services/{id}', 'Tenant\BusinessServicesController@show');
+    Route::post('update-business-services', 'Tenant\BusinessServicesController@update');
+    Route::delete('business-services/{id}', 'Tenant\BusinessServicesController@destroy');
+
+
+    /**
      * This is for the mail controller currently used for automations
      */
     Route::post('notify-admin', 'Tenant\MailController@notifyAdmins');

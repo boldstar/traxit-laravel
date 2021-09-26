@@ -11,7 +11,12 @@ Hello <i>@if($client["client"]->spouse_last_name && $client["client"]->spouse_la
         @endif
         </i>
         
-        <p>We are currently working on your <span class="year">{{ $client["engagement"]->year }}</span>, <span class="return">{{ $client["engagement"]->return_type }}</span> tax return for the name of <span class="name">{{ $client["engagement"]->name }}</span>. The following questions and issues were raised during the performance of our work. Please provide responses to the following items so that we can continue.</p>
+        <p>@if($client["workflow"]->engagement_type != 'Custom')<span>We are currently working on your <span class="year">{{ $client["engagement"]->year }}</span>, 
+        <span class="return">{{ $client["engagement"]->return_type }}</span> tax return for the name of 
+        <span class="name">{{ $client["engagement"]->name }}</span>.<span>@endif 
+        The following questions and issues were raised during the performance of our work. 
+        Please provide responses to the following items so that we can continue.
+        </p>
         
         <div style="border: 1px solid blue; border-radius: 10px; text-align: left; padding: 5px">
             <h3 class="pending">Pending Questions:</h3>

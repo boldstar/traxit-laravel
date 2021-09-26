@@ -19,7 +19,17 @@ class Business extends Model
         'postal_code',
         'phone_number',
         'fax_number',
-        'email'
+        'email',
+        'ein',
+        'tax_return_type',
+        'state_tax_id',
+        'sos_file_number',
+        'xt_number',
+        'rt_number',
+        'formation_date',
+        'twc_account',
+        'qb_password',
+        'active'
     ];
 
     protected $hidden = [
@@ -28,5 +38,17 @@ class Business extends Model
 
     public function client() {
         return $this->belongsTo('App\Models\Tenant\Client');
+    }
+
+    public function engagements() {
+        return $this->belongsTo('App\Models\Tenant\Engagement');
+    }
+
+    public function services() {
+        return $this->hasOne('App\Models\Tenant\BusinessService');
+    }
+
+    public function notes() {
+        return $this->hasMany('App\Models\Tenant\BusinessNote');
     }
 }
