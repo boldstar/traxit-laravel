@@ -243,7 +243,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('integration', 'Tenant\IntegrationsController@create');
     Route::get('integration', 'Tenant\IntegrationsController@get');
     Route::get('integration/{id}', 'Tenant\IntegrationsController@show');
-    Route::post('edit-integration', 'Tenant\IntegrationsController@update');
+    Route::get('rubex-token', 'Tenant\IntegrationsController@showRubexToken');
+    Route::post('update-integration', 'Tenant\IntegrationsController@update');
+    Route::delete('rubex-token', 'Tenant\IntegrationsController@removeRubexToken');
     Route::delete('integration/{id}', 'Tenant\IntegrationsController@destroy');
 
     /**

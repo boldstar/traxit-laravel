@@ -16,6 +16,8 @@ class Integration extends Model
         'expires_in',
         'mfa_token',
         'refresh_token',
+        'access_token', 
+        'issued',
         'token_type',
         'user_id',
         'active'
